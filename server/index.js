@@ -1,8 +1,11 @@
 const express = require('express')
 const app = express() 
+const cors = require('cors')
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
+app.use(cors())
 app.use(express.json())
+
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
