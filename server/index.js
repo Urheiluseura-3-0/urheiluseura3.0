@@ -1,13 +1,15 @@
 const express = require('express')
 const app = express() 
+const cors = require('cors')
+
+app.use(cors())
+
 const { Sequelize, QueryTypes } = require('sequelize')
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: './test.sqlite'
 })
-
-
 
 app.get('/', async(request, response) => {
     const names = await sequelize.query('SELECT * FROM users', {type: QueryTypes.SELECT})
