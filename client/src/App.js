@@ -1,23 +1,55 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-const baseUrl = 'http://localhost:3001'
+import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+
 
 // App returns names requested from server
 const App = () => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [user, setUser] = useState(null)
 
-    const [names, setNames] = useState('names')
     useEffect(() => {
-        console.log('hei frontista')
-        axios.get(baseUrl)
-            .then(response => {
-                setNames(JSON.stringify(response.data.map(item => item.name)))
-                console.log('response.data',response.data)
-            })
+
+
 
     }, [])
 
+    const handleLogin = async (event) => {
+        event.preventDefault()
+        try{
+            const user = await loginService.login({
+                username, password
+            })
+            setUser(user)
+            setUsername('')
+            setPassword('')
+
+        }catch (expection) {
+            console.log('wrong username or password')
+        }
+    }
+
+
+
+
+    const logged = () => (
+        <div>
+            <p>{user.name} kirjautuneena</p>
+        </div>
+    )
+
+
     return(
-        <div>Hei <p>{ names }</p>
+        <div>
+            { !user  && <LoginForm
+                handleLogin = {handleLogin}
+                user={user}
+                setUsername= {setUsername}
+                password= {password}
+                setPassword = {setPassword}
+            /> }
+            {user && logged()}
         </div>
     )
 }
