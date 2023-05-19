@@ -9,6 +9,7 @@ app.use(cors())
 app.use(express.json())
 
 
+
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: './test.sqlite'
@@ -91,6 +92,7 @@ app.post('/login', async (request, response) => {
         ? false
         : await bcrypt.compare(password, user.password)
 
+
     if (!(user && checkPassword)) {
         response.status(401).json({error: 'invalid username or password'})
     }
@@ -99,7 +101,6 @@ app.post('/login', async (request, response) => {
         username: user.username,
         id: user.id
     }
-    console.log('SECRET', process.env.SECRET)
 
     const token = jwt.sign(
         userForToken, 
