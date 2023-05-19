@@ -1,8 +1,10 @@
+require('dotenv').config({path:'../.env'})
 const express = require('express')
 const app = express() 
 const cors = require('cors')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const { Sequelize, Model, DataTypes } = require('sequelize')
-
 app.use(cors())
 app.use(express.json())
 
@@ -47,16 +49,71 @@ app.get('/', async(request, response) => {
     response.json(names)
 })
 
-app.post('/', async(request, response) => {
-    try{
-        const user = await User.create(request.body)
+app.get('/:id', async(request, response) => {
+    const user = await User.findByPk(request.params.id)
+    if (user) {
         response.json(user)
-    } catch(error) {
-        return response.status(400).json({error})
+    }else{
+        response.status(400).end()
     }
 })
 
+app.post('/', async(request, response) => {
+    try{
+        const {id, name, username, password} = request.body
+        const saltRounds = 10
+        const passwordHash = await bcrypt.hash(password, saltRounds)
 
-const PORT = 3001
+        const user = new User({
+            id: id,
+            name: name,
+            username: username,
+            password: passwordHash,
+        })
+
+        const savedUser = await User.create(user.dataValues)
+
+        response.json(savedUser)
+    } catch(error) {
+        return response.status(400)
+    }
+})
+
+app.post('/login', async (request, response) => {
+
+    const { username, password} = request.body
+
+    const finduser = await User.findOne({where: {username: username}})
+
+    const user = finduser.dataValues
+
+    const checkPassword = user === null
+        ? false
+        : await bcrypt.compare(password, user.password)
+
+    if (!(user && checkPassword)) {
+        response.status(401).json({error: 'invalid username or password'})
+    }
+
+    const userForToken = {
+        username: user.username,
+        id: user.id
+    }
+    console.log('SECRET', process.env.SECRET)
+
+    const token = jwt.sign(
+        userForToken, 
+        process.env.SECRET,
+        { expiresIn:60*60}
+    )
+
+    response
+        .status(200)
+        .send({token, username:user.username, name:user.name})
+
+})
+
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)}) 
