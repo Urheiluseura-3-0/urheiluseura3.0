@@ -2,10 +2,7 @@
 
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './test.sqlite'
-})
+const sequelize = new Sequelize(process.env.DATABASE_URL)
 
 class User extends Model {}
 
