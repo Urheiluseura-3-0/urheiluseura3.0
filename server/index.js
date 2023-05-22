@@ -1,4 +1,4 @@
-require('dotenv').config({path:'../.env'})
+require('dotenv').config({path:'./.env'})
 const express = require('express')
 const app = express() 
 const cors = require('cors')
@@ -10,10 +10,8 @@ app.use(express.json())
 
 
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './test.sqlite'
-})
+const sequelize = new Sequelize(process.env.DATABASE_URL)
+
 
 class User extends Model {}
 
@@ -61,12 +59,11 @@ app.get('/:id', async(request, response) => {
 
 app.post('/', async(request, response) => {
     try{
-        const {id, name, username, password} = request.body
+        const {name, username, password} = request.body
         const saltRounds = 10
         const passwordHash = await bcrypt.hash(password, saltRounds)
 
         const user = new User({
-            id: id,
             name: name,
             username: username,
             password: passwordHash,
@@ -94,7 +91,7 @@ app.post('/login', async (request, response) => {
 
 
     if (!(user && checkPassword)) {
-        response.status(401).json({error: 'invalid username or password'})
+        return response.status(401).json({error: 'invalid username or password'})
     }
 
     const userForToken = {
@@ -108,7 +105,7 @@ app.post('/login', async (request, response) => {
         { expiresIn:60*60}
     )
 
-    response
+    return response
         .status(200)
         .send({token, username:user.username, name:user.name})
 
