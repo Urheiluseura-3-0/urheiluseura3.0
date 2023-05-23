@@ -1,13 +1,16 @@
 require('dotenv').config({path:'./.env'})
 const express = require('express')
+const path = require('path')
 const app = express() 
 const cors = require('cors')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const { Sequelize, Model, DataTypes } = require('sequelize')
+
 app.use(cors())
 app.use(express.json())
+app.use(express.static(path.join(__dirname, 'build')))
 app.use(cookieParser())
 
 
@@ -46,12 +49,12 @@ User.init({
 User.sync()
 
 
-app.get('/', async(request, response) => {
+app.get('/api/', async(request, response) => {
     const names = await User.findAll()
     response.json(names)
 })
 
-app.get('/:id', async(request, response) => {
+app.get('/api/:id', async(request, response) => {
     const user = await User.findByPk(request.params.id)
     if (user) {
         response.json(user)
@@ -60,11 +63,10 @@ app.get('/:id', async(request, response) => {
     }
 })
 
-app.post('/register', async(request, response) => {
+app.post('/api/register', async(request, response) => {
     try{
         const {name, newusername, newpassword} = request.body
-        console.log('Body', request.body)
-        console.log(name, newusername, newpassword)
+
         const saltRounds = 10
         const passwordHash = await bcrypt.hash(newpassword, saltRounds)
 
@@ -82,12 +84,19 @@ app.post('/register', async(request, response) => {
     }
 })
 
-app.post('/login', async (request, response) => {
+app.post('/api/login', async (request, response) => {
 
     const { username, password} = request.body
     const finduser = await User.findOne({where: {username: username}})
+    
+    let user=null
 
-    const user = finduser.dataValues
+    if (finduser) {
+        user = finduser.dataValues
+    }
+    else{
+        return response.status(401).json({error: 'invalid username or password'})  
+    }
 
     const checkPassword = user === null
         ? false
