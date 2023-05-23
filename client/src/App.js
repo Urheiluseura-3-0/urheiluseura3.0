@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import loginService from './services/login'
+import registerService from './services/register'
 import LoginForm from './components/LoginForm'
+import RegisterForm from './components/RegisterForm'
 
 
 // App returns names requested from server
@@ -8,6 +10,9 @@ const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
+    const [newusername, createUsername] = useState('')
+    const [newpassword, createPassword] = useState('')
+    const [name, setName] = useState('')
 
     useEffect(() => {
 
@@ -30,7 +35,16 @@ const App = () => {
         }
     }
 
-
+    const handleRegister = async (event) => {
+        event.preventDefault()
+        try {
+            await registerService.register({
+                name, newusername, newpassword
+            })
+        } catch (exception) {
+            console.log('Luonti ei onnistunut')
+        }
+    }
 
 
     const logged = () => (
@@ -42,6 +56,9 @@ const App = () => {
 
     return(
         <div>
+            {!user && <RegisterForm handleRegister = {handleRegister} name={name} setName={setName} username={newusername} setUsername={createUsername}
+                password={newpassword} setPassword={createPassword} />
+            }
             { !user  && <LoginForm
                 handleLogin = {handleLogin}
                 user={user}
