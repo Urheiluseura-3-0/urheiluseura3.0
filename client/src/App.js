@@ -21,7 +21,7 @@ const App = () => {
     }, [])
     const handleLogin = async (event) => {
         event.preventDefault()
-        try{
+        try {
             const user = await loginService.login({
                 username, password
             })
@@ -29,17 +29,22 @@ const App = () => {
             setUsername('')
             setPassword('')
 
-        }catch (expection) {
+        } catch (exception) {
             console.log('wrong username or password')
+            setUsername('')
+            setPassword('')
         }
     }
 
     const handleRegister = async (event) => {
         event.preventDefault()
         try {
-            await registerService.register({
+            const user = await registerService.register({
                 name, newusername, newpassword
             })
+            setUser(user)
+            createUsername('')
+            createPassword('')
         } catch (exception) {
             console.log('Luonti ei onnistunut')
         }
@@ -53,18 +58,18 @@ const App = () => {
     )
 
 
-    return(
+    return (
         <div>
-            {!user && <RegisterForm handleRegister = {handleRegister} name={name} setName={setName} username={newusername} setUsername={createUsername}
+            {!user && <RegisterForm handleRegister={handleRegister} name={name} setName={setName} username={newusername} setUsername={createUsername}
                 password={newpassword} setPassword={createPassword} />
             }
-            { !user  && <LoginForm
-                handleLogin = {handleLogin}
-                user={user}
-                setUsername= {setUsername}
-                password= {password}
-                setPassword = {setPassword}
-            /> }
+            {!user && <LoginForm
+                handleLogin={handleLogin}
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+            />}
             {user && logged()}
         </div>
     )

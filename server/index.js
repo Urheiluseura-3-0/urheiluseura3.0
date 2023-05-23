@@ -54,13 +54,20 @@ app.get('/api/', async(request, response) => {
     response.json(names)
 })
 
-app.get('/api/:id', async(request, response) => {
-    const user = await User.findByPk(request.params.id)
-    if (user) {
-        response.json(user)
-    }else{
-        response.status(400).end()
-    }
+// This currently breaks the app
+//
+// app.get('/api/:id', async(request, response) => {
+//     const user = await User.findByPk(request.params.id)
+//     if (user) {
+//         response.json(user)
+//     }else{
+//         response.status(400).end()
+//     }
+// })
+
+app.get('/api/register', async(request, response) => {
+    console.log('xd')
+    return response.status(400)
 })
 
 app.post('/api/register', async(request, response) => {
