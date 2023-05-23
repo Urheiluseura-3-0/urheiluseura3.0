@@ -60,15 +60,17 @@ app.get('/:id', async(request, response) => {
     }
 })
 
-app.post('/', async(request, response) => {
+app.post('/register', async(request, response) => {
     try{
-        const {name, username, password} = request.body
+        const {name, newusername, newpassword} = request.body
+        console.log('Body', request.body)
+        console.log(name, newusername, newpassword)
         const saltRounds = 10
-        const passwordHash = await bcrypt.hash(password, saltRounds)
+        const passwordHash = await bcrypt.hash(newpassword, saltRounds)
 
         const user = new User({
             name: name,
-            username: username,
+            username: newusername,
             password: passwordHash,
         })
 
