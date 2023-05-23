@@ -6,10 +6,14 @@ Helsingin yliopiston Ohjelmistotuotantoprojekti, kesä 2023
 
 ## Projektilinkit
 
+### Projektin tuotantoversio
+* [Production version](https://urheiluseura.fly.dev/)
+
 ### Projektin edistyminen
 * [Product backlog](https://github.com/orgs/Urheiluseura-3-0/projects/2)
 * [Task board](https://github.com/orgs/Urheiluseura-3-0/projects/2/views/3?layout=board)
 * [Working hours](https://github.com/orgs/Urheiluseura-3-0/projects/2/insights/3)
+
 
 
 ## Dokumentaatio
