@@ -1,6 +1,6 @@
 # urheiluseura3.0
 
-![GHA badge](https://github.com/Urheiluseura-3-0/urheiluseura3.0/workflows/CI/badge.svg)
+![GHA badge](https://github.com/Urheiluseura-3-0/urheiluseura3.0/workflows/main.yml/CI/badge.svg)
 
 Helsingin yliopiston Ohjelmistotuotantoprojekti, kesä 2023
 
