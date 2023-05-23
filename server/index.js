@@ -4,9 +4,12 @@ const app = express()
 const cors = require('cors')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 const { Sequelize, Model, DataTypes } = require('sequelize')
 app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
+
 
 
 
@@ -48,6 +51,7 @@ User.sync()
 app.get('/', async(request, response) => {
     const names = await User.findAll()
     response.json(names)
+    console.log('Cookies: ', request.cookies)
 })
 
 app.get('/:id', async(request, response) => {
@@ -83,7 +87,6 @@ app.post('/', async(request, response) => {
 app.post('/login', async (request, response) => {
 
     const { username, password} = request.body
-
     const finduser = await User.findOne({where: {username: username}})
 
     const user = finduser.dataValues
@@ -109,6 +112,7 @@ app.post('/login', async (request, response) => {
     )
 
     response
+        .cookie('Token', token, {maxAge: 900000, httpOnly:true})
         .status(200)
         .send({token, username:user.username, name:user.name})
 
