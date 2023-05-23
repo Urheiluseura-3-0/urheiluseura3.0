@@ -5,11 +5,14 @@ const app = express()
 const cors = require('cors')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
 app.use(cors())
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'build')))
+app.use(cookieParser())
+
 
 
 
@@ -60,15 +63,16 @@ app.get('/api/:id', async(request, response) => {
     }
 })
 
-app.post('/api/', async(request, response) => {
+app.post('/api/register', async(request, response) => {
     try{
-        const {name, username, password} = request.body
+        const {name, newusername, newpassword} = request.body
+
         const saltRounds = 10
-        const passwordHash = await bcrypt.hash(password, saltRounds)
+        const passwordHash = await bcrypt.hash(newpassword, saltRounds)
 
         const user = new User({
             name: name,
-            username: username,
+            username: newusername,
             password: passwordHash,
         })
 
@@ -83,7 +87,6 @@ app.post('/api/', async(request, response) => {
 app.post('/api/login', async (request, response) => {
 
     const { username, password} = request.body
-
     const finduser = await User.findOne({where: {username: username}})
     
     let user=null
@@ -116,6 +119,7 @@ app.post('/api/login', async (request, response) => {
     )
 
     return response
+        .cookie('Token', token, {maxAge: 900000, httpOnly:true})
         .status(200)
         .send({token, username:user.username, name:user.name})
 
