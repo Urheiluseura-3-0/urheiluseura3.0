@@ -1,6 +1,7 @@
+const config = require('../utils/config') 
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
-const sequelize = new Sequelize(process.env.DATABASE_URL)
+const sequelize = new Sequelize(config.DATABASE_URL)
 
 class User extends Model {}
 
