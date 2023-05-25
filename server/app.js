@@ -1,12 +1,10 @@
-const config = require('./utils/config')
 const express = require('express')
 const path = require('path')
 const app = express() 
 const cors = require('cors')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const loginRouter = require('./controllers/login.js')
+const registerRouter = require('./controllers/register.js')
 const cookieParser = require('cookie-parser')
-const User = require('./models/user')
 
 app.use(cors())
 app.use(express.json())
@@ -14,87 +12,7 @@ app.use(express.static(path.join(__dirname, 'build')))
 app.use(cookieParser())
 
 
-app.get('/api/', async(request, response) => {
-    const names = await User.findAll()
-    response.json(names)
-})
-
-// This currently breaks the app
-//
-// app.get('/api/:id', async(request, response) => {
-//     const user = await User.findByPk(request.params.id)
-//     if (user) {
-//         response.json(user)
-//     }else{
-//         response.status(400).end()
-//     }
-// })
-
-app.get('/api/register', async(request, response) => {
-    console.log('xd')
-    return response.status(400)
-})
-
-app.post('/api/register', async(request, response) => {
-    try{
-        const {name, newusername, newpassword} = request.body
-
-        const saltRounds = 10
-        const passwordHash = await bcrypt.hash(newpassword, saltRounds)
-
-        const user = new User({
-            name: name,
-            username: newusername,
-            password: passwordHash,
-        })
-
-        const savedUser = await User.create(user.dataValues)
-
-        response.json(savedUser)
-    } catch(error) {
-        return response.status(400)
-    }
-})
-
-app.post('/api/login', async (request, response) => {
-
-    const { username, password} = request.body
-    const finduser = await User.findOne({where: {username: username}})
-    
-    let user=null
-
-    if (finduser) {
-        user = finduser.dataValues
-    }
-    else{
-        return response.status(401).json({error: 'invalid username or password'})  
-    }
-
-    const checkPassword = user === null
-        ? false
-        : await bcrypt.compare(password, user.password)
-
-
-    if (!(user && checkPassword)) {
-        return response.status(401).json({error: 'invalid username or password'})
-    }
-
-    const userForToken = {
-        username: user.username,
-        id: user.id
-    }
-
-    const token = jwt.sign(
-        userForToken, 
-        config.SECRET,
-        { expiresIn:60*60}
-    )
-
-    return response
-        .cookie('Token', token, {maxAge: 900000, httpOnly:true})
-        .status(200)
-        .send({token, username:user.username, name:user.name})
-
-})
+app.use('/api/login', loginRouter)
+app.use('/api/register', registerRouter)
 
 module.exports = app
