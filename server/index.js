@@ -6,47 +6,12 @@ const cors = require('cors')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
-const { Sequelize, Model, DataTypes } = require('sequelize')
+const User = require('./models/user')
 
 app.use(cors())
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'build')))
 app.use(cookieParser())
-
-
-
-
-const sequelize = new Sequelize(process.env.DATABASE_URL)
-
-
-class User extends Model {}
-
-User.init({
-    id : {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    name: {
-        type: DataTypes.TEXT,
-        allowNull:false
-    },
-    username: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    password: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
-}, {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: 'user'
-})
-
-User.sync()
 
 
 app.get('/api/', async(request, response) => {

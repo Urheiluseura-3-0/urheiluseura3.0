@@ -1,5 +1,3 @@
-// TÄMÄ ON POHJA
-
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
 const sequelize = new Sequelize(process.env.DATABASE_URL)
@@ -33,4 +31,4 @@ User.init({
 
 User.sync()
 
-module.exports = {User}
+module.exports = User
