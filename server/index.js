@@ -13,10 +13,11 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, 'build')))
 app.use(cookieParser())
 
+const DATABASE_URL = process.env.NODE_ENV === 'test' 
+  ? process.env.TEST_DATABASE_URL
+  : process.env.DATABASE_URL
 
-
-
-const sequelize = new Sequelize(process.env.DATABASE_URL)
+const sequelize = new Sequelize(DATABASE_URL)
 
 
 class User extends Model {}
@@ -47,7 +48,6 @@ User.init({
 })
 
 User.sync()
-
 
 app.get('/api/', async(request, response) => {
     const names = await User.findAll()
@@ -132,7 +132,11 @@ app.post('/api/login', async (request, response) => {
 
 })
 
-
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)}) 
+    console.log(`Server running on port ${PORT}`)})
+
+module.exports = {
+    app,
+    sequelize
+}
