@@ -1,9 +1,10 @@
 import { useState }  from 'react'
 import loginService from '../services/login'
+import { useNavigate, Link } from 'react-router-dom'
 
 
 const loginForm = ({ login }) => {
-
+    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -17,6 +18,7 @@ const loginForm = ({ login }) => {
                 username, password
             })
             login()
+            navigate('/home')
             setUsername('')
             setPassword('')
 
@@ -51,6 +53,7 @@ const loginForm = ({ login }) => {
                     />
                 </div>
                 <button type="submit">kirjaudu</button>
+                <Link to="/register">Register</Link>
             </form>
         </div>
     )
