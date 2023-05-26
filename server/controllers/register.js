@@ -3,7 +3,6 @@ const registerRouter = require('express').Router()
 const {User} = require('../models/user')
 
 
-
 registerRouter.post('/', async (request, response) => {
     try {
         const name = request.body.name
