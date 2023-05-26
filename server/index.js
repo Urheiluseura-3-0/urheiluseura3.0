@@ -126,7 +126,7 @@ app.post('/api/login', async (request, response) => {
     )
 
     return response
-        .cookie('Token', token, {maxAge: 900000, httpOnly:true})
+        .cookie('Token', token, {maxAge: 900000, secure: true})
         .status(200)
         .send({token, username:user.username, name:user.name})
 
