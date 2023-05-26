@@ -2,7 +2,6 @@ const config = require('../utils/config')
 const { Sequelize, Model, DataTypes } = require('sequelize')
 
 const sequelize = new Sequelize(config.DATABASE_URL)
-console.log('database_url', config.DATABASE_URL)
 
 class User extends Model {}
 
