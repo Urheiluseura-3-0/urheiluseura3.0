@@ -14,7 +14,6 @@ const LoginForm = ({ login }) => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
-            console.log('xDDD')
             await loginService.login({
                 username, password
             })
