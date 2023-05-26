@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 import { useNavigate, Link } from 'react-router-dom'
-import '../index.css'
+import '../style.css'
 
 const LoginForm = ({ login }) => {
     const navigate = useNavigate()
