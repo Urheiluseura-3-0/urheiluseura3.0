@@ -1,13 +1,19 @@
-
+import { useNavigate } from 'react-router-dom'
 
 const userView = (props) => {
+    const navigate = useNavigate()
+
+    const logOut = () => {
+        props.logout()
+        navigate('/')
+    }
 
 
 
     return (
         <div>
             <p>Kirjautuneena</p>
-            <button onClick= {props.logout}>Kirjaudu ulos</button>
+            <button onClick= {logOut}>Kirjaudu ulos</button>
         </div>
     )
 }

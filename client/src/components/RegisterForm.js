@@ -1,21 +1,23 @@
 import { useState } from 'react'
 import registerService from '../services/register'
+import { useNavigate, Link } from 'react-router-dom'
 
 const registerForm = () => {
 
-    // eslint-disable-next-line no-unused-vars
+    const navigate = useNavigate()
     const [newusername, setUsername] = useState('')
     const [newpassword, setPassword] = useState('')
     const [name, setName] = useState('')
 
     const handleRegister = async (event) => {
-        console.log('TÄNNE')
+
         event.preventDefault()
         try {
-            const user = await registerService.register({
+            await registerService.register({
                 name, newusername, newpassword
             })
-            console.log('TÄNNE2', user)
+            navigate('/home')
+            setName('')
             setUsername('')
             setPassword('')
         } catch (exception) {
@@ -55,6 +57,7 @@ const registerForm = () => {
                     />
                 </div>
                 <button type="submit">rekisteröidy</button>
+                <Link to="/">Login</Link>
             </form>
         </div>
     )
