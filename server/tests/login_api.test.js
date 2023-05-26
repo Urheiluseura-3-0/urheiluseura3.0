@@ -6,10 +6,6 @@ const app = require('../app')
 const api = supertest(app)
 
 beforeEach(async () => {
-    User.destroy({
-        where: {},
-        truncate: true
-    })
     const saltRounds = 10
     const passwordHash = await bcrypt.hash('salainen', saltRounds)
 
@@ -20,8 +16,25 @@ beforeEach(async () => {
             password: passwordHash,
         }
     ]
+    await User.destroy({
+        where: {},
+        truncate: true
+    })
     await User.create(initialUser[0])
 })
+
+test('non-existing user can not log in', async () => {
+    const nonexistingUser = {
+        username: 'Jaakko35',
+        password: 'salainen2'
+    }
+
+    await api
+        .post('/api/login')
+        .send(nonexistingUser)
+        .expect(401)
+})
+
 
 test('existing user can log in', async () => {
     const existingUser = {
@@ -33,17 +46,5 @@ test('existing user can log in', async () => {
         .post('/api/login')
         .send(existingUser)
         .expect(200)
-})
-
-test('non-existing user can not log in', async () => {
-    const existingUser = {
-        username: 'Jaakko35',
-        password: 'salainen2'
-    }
-
-    await api
-        .post('/api/login')
-        .send(existingUser)
-        .expect(401)
 })
 
