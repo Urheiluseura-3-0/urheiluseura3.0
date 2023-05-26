@@ -4,18 +4,18 @@ import registerService from '../services/register'
 const registerForm = () => {
 
     // eslint-disable-next-line no-unused-vars
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [newusername, setUsername] = useState('')
+    const [newpassword, setPassword] = useState('')
     const [name, setName] = useState('')
 
     const handleRegister = async (event) => {
+        console.log('TÄNNE')
         event.preventDefault()
         try {
-            // eslint-disable-next-line no-unused-vars
             const user = await registerService.register({
-                name, username, password
+                name, newusername, newpassword
             })
-
+            console.log('TÄNNE2', user)
             setUsername('')
             setPassword('')
         } catch (exception) {
@@ -40,7 +40,7 @@ const registerForm = () => {
                 <div>
     käyttäjänimi <input
                         type="text"
-                        value={username}
+                        value={newusername}
                         name="username"
                         onChange={({ target }) => setUsername(target.value)}
                     />
@@ -49,7 +49,7 @@ const registerForm = () => {
     salasana
                     <input
                         type="password"
-                        value={password}
+                        value={newpassword}
                         name="newpassword"
                         onChange={({ target }) => setPassword(target.value)}
                     />

@@ -34,7 +34,7 @@ const App = () => {
                 ?
                 <>
                     <RegisterForm />
-                    <LoginForm login = {handleLogin} setToken ={setToken}/>
+                    <LoginForm login = {handleLogin}/>
                 </>
                 :
                 <UserView logout= {handleLogout} />
