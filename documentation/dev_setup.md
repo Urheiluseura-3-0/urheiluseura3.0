@@ -50,18 +50,6 @@
 
 
 
-### Tietokannan käyttö komentoriviltä kehitysympäristössä
-
-1. Kehitystietokantaan voit muodostaa yhteyden seuraavasti:
-```docker exec -it postgres-dev psql -U postgres```
-
-2. Testitietokantaan voit muodostaa yhteyden seuraavasti:
-```docker exec -it postgres-test psql -U postgres```
-
-
-
-
-
 ## Tailwindin käyttöönotto
 
 1. Mene client-kansion juureen ja suorita komennot
