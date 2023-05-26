@@ -19,6 +19,4 @@ Helsingin yliopiston Ohjelmistotuotantoprojekti, kesä 2023
 ## Dokumentaatio
 
 * [Definition of Done](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/definition_of_done.md)
-
-* [Kehitysympäristön käynnistys](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md
-)
+* [Kehitysympäristön käynnistys](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md)
