@@ -3,6 +3,7 @@ import loginService from './services/login'
 import registerService from './services/register'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
+import './index.css'
 
 
 // App returns names requested from server
