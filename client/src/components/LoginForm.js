@@ -1,3 +1,5 @@
+import '../index.css'
+
 const LoginForm = ({ handleLogin, username, setUsername, password, setPassword }) => {
 
 
