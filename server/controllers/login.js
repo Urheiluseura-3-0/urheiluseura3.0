@@ -39,7 +39,7 @@ loginRouter.post('/', async (request, response) => {
     )
 
     return response
-        .cookie('Token', token, {maxAge: 900000, httpOnly:true})
+        .cookie('Token', token, {maxAge: 900000})
         .status(200)
         .send({token, username:user.username, name:user.name})
 
