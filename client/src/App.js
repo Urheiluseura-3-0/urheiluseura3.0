@@ -1,78 +1,50 @@
+
 import { useState, useEffect } from 'react'
-import loginService from './services/login'
-import registerService from './services/register'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
+import UserView from './components/UserView'
+import Cookies from 'universal-cookie'
 
 
-// App returns names requested from server
+
 const App = () => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null)
-    const [newusername, createUsername] = useState('')
-    const [newpassword, createPassword] = useState('')
-    const [name, setName] = useState('')
+    const navigate = useNavigate()
+    const cookies = new Cookies()
+    const [token, setToken] = useState(cookies.get('Token'))
+
+
+    const handleLogout = () => {
+        cookies.remove('Token')
+        setToken('')
+    }
+
+    const handleLogin = () => {
+        const value= (cookies.get('Token'))
+        setToken(value)
+    }
 
     useEffect(() => {
-
-
+        if(!token){
+            navigate('/')
+        }else{
+            navigate('/home')
+        }
 
     }, [])
-    const handleLogin = async (event) => {
-        event.preventDefault()
-        try {
-            const user = await loginService.login({
-                username, password
-            })
-            setUser(user)
-            setUsername('')
-            setPassword('')
-
-        } catch (exception) {
-            console.log('wrong username or password')
-            setUsername('')
-            setPassword('')
-        }
-    }
-
-    const handleRegister = async (event) => {
-        event.preventDefault()
-        try {
-            const user = await registerService.register({
-                name, newusername, newpassword
-            })
-            setUser(user)
-            createUsername('')
-            createPassword('')
-        } catch (exception) {
-            console.log('Luonti ei onnistunut')
-        }
-    }
-
-
-    const logged = () => (
-        <div>
-            <p>{user.name} kirjautuneena</p>
-        </div>
-    )
 
 
     return (
         <div>
-            {!user && <RegisterForm handleRegister={handleRegister} name={name} setName={setName} username={newusername} setUsername={createUsername}
-                password={newpassword} setPassword={createPassword} />
-            }
-            {!user && <LoginForm
-                handleLogin={handleLogin}
-                username={username}
-                setUsername={setUsername}
-                password={password}
-                setPassword={setPassword}
-            />}
-            {user && logged()}
+            <Routes>
+                <Route path="/" element={<LoginForm login = {handleLogin}/>}/>
+                <Route path="/register" element = {<RegisterForm/>}/>
+                <Route path="/home" element = {<UserView logout= {handleLogout} />}/>
+            </Routes>
         </div>
     )
+
 }
 
 export default App
