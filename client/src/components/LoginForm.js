@@ -39,6 +39,7 @@ const LoginForm = ({ login }) => {
                         <div className='pt-3'>
                             <label className='block'>Käyttäjänimi</label>
                             <input
+                                id='username'
                                 type='text'
                                 value={username}
                                 name='username'
@@ -49,6 +50,7 @@ const LoginForm = ({ login }) => {
                         <div>
                             <label className='block'>Salasana</label>
                             <input
+                                id='password'
                                 type='password'
                                 value={password}
                                 name='password'
@@ -57,7 +59,7 @@ const LoginForm = ({ login }) => {
                             />
                         </div>
                         <div>
-                            <button className='bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white'
+                            <button id='login-button' className='bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white'
                                 type='submit'>
                                 Kirjaudu</button>
                         </div>
