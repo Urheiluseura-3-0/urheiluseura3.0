@@ -8,8 +8,6 @@ const userView = (props) => {
         navigate('/')
     }
 
-
-
     return (
         <div>
             <p>Kirjautuneena</p>

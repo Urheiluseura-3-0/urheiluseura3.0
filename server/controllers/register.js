@@ -5,16 +5,15 @@ const {validateRegisterInput} = require('./validate_input.js')
 
 registerRouter.post('/', async (request, response) => {
     try {
-        const name = request.body.name
+        const username = request.body.username
+        const password = request.body.password
+        const firstName = request.body.firstName
         const lastName = request.body.lastName
-        const username = request.body.newusername
-        const password = request.body.newpassword
         const address = request.body.address
         const city = request.body.city
         const postalCode = request.body.postalCode
         const phoneNumber = request.body.phoneNumber
         const email = request.body.email
-        const identityCode = request.body.identityCode
         
         const finduser = await User.findOne({where: {username: username}})
         
@@ -33,16 +32,15 @@ registerRouter.post('/', async (request, response) => {
         const user = new User({
             username: username,
             password: passwordHash,
-            name: name,
+            firstName: firstName,
             lastName: lastName,
             address: address,
             city: city,
             postalCode: postalCode,
             phoneNumber: phoneNumber,
-            email: email,
-            identityCode: identityCode
+            email: email
         })
-
+        
         const savedUser = await User.create(user.dataValues)
 
         return response.status(200).json(savedUser)
