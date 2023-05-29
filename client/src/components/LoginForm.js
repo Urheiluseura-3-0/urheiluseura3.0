@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 import { useNavigate, Link } from 'react-router-dom'
+import Notification from './Notification'
 import '../style.css'
 
 const LoginForm = ({ login }) => {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-
+    const [alertMessage, setAlertMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
+    const [isInputValid, setIsInputValid] = useState(false)
 
 
 
@@ -19,14 +22,22 @@ const LoginForm = ({ login }) => {
             })
             login()
             navigate('/home')
-            setUsername('')
-            setPassword('')
+            resetFields()
 
         } catch (exception) {
-            console.log('wrong username or password')
-            setUsername('')
-            setPassword('')
+            setAlertMessage(exception.response.data.error)
+            resetFields()
+            setShowAlert(true)
+            setTimeout(() => {
+                setShowAlert(false)
+            }, 3000)
         }
+    }
+
+    const resetFields = () => {
+        setUsername('')
+        setPassword('')
+        setIsInputValid(false)
     }
 
 
@@ -34,36 +45,51 @@ const LoginForm = ({ login }) => {
         <div className='flex justify-center items-center h-screen bg-stone-100'>
             <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
                 <h1 className='font-bold text-2xl text-center text-teal-500'>Kirjaudu sisään</h1>
+                {showAlert && <Notification message={alertMessage} />}
                 <form onSubmit={handleLogin}>
                     <div className='space-y-3'>
                         <div className='pt-3'>
                             <label className='block'>Käyttäjänimi</label>
                             <input
+                                id='username'
                                 type='text'
                                 value={username}
+                                maxLength={15}
                                 name='username'
-                                onChange={({ target }) => setUsername(target.value)}
-                                className='required border border-gray-300 rounded p-2 w-full'
+                                onChange={({ target }) => {
+                                    setUsername(target.value)
+                                    setIsInputValid(target.value.length >= 5 && password.length >= 10)
+                                }}
+                                className='border border-gray-300 rounded p-2 w-full'
                             />
                         </div>
                         <div>
                             <label className='block'>Salasana</label>
                             <input
+                                id='password'
                                 type='password'
                                 value={password}
+                                maxLength={30}
                                 name='password'
-                                onChange={({ target }) => setPassword(target.value)}
+                                onChange={({ target }) => {
+                                    setPassword(target.value)
+                                    setIsInputValid(username.length >= 5 && target.value.length >= 10)
+                                }}
                                 className='required border border-gray-300 rounded p-2 w-full'
                             />
                         </div>
                         <div>
-                            <button className='bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white'
+                            <button
+                                className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                                disabled={!isInputValid}
+                                title={isInputValid ? '' : 'Syötä käyttäjätunnus ja salasana'}
                                 type='submit'>
                                 Kirjaudu</button>
                         </div>
                     </div>
                     <div>
-                        <Link className='text-blue-700 underline'to="/register">Rekisteröidy</Link>
+                        <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
+                        <Link className='text-sm text-blue-700 underline' to="/register">Rekisteröidy</Link>
                     </div>
                 </form>
             </div>
