@@ -5,26 +5,37 @@ import { useNavigate, Link } from 'react-router-dom'
 const registerForm = () => {
 
     const navigate = useNavigate()
-    const [newusername, setUsername] = useState('')
-    const [newpassword, setPassword] = useState('')
-    const [name, setName] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const[lastName, setLastName] = useState('')
+    const[address, setAddress] = useState('')
+    const[postalCode, setPostalCode] = useState('')
+    const[city, setCity] = useState('')
+    const[phoneNumber, setPhoneNumber] = useState('')
+    const[email, setEmail] = useState('')
 
     const handleRegister = async (event) => {
 
         event.preventDefault()
         try {
             await registerService.register({
-                name, newusername, newpassword
+                username, password, firstName, lastName, address, postalCode, city, phoneNumber, email
             })
             navigate('/home')
-            setName('')
             setUsername('')
             setPassword('')
+            setFirstName('')
+            setLastName('')
+            setAddress('')
+            setPostalCode('')
+            setCity('')
+            setPhoneNumber('')
+            setEmail('')
         } catch (exception) {
             console.log('Luonti ei onnistunut')
         }
     }
-
 
 
     return(
@@ -32,17 +43,9 @@ const registerForm = () => {
             <h1>Rekisteröidy</h1>
             <form onSubmit = { handleRegister }>
                 <div>
-        nimi <input
-                        type="text"
-                        value={name}
-                        name="name"
-                        onChange={({ target }) => setName(target.value)}
-                    />
-                </div>
-                <div>
     käyttäjänimi <input
                         type="text"
-                        value={newusername}
+                        value={username}
                         name="username"
                         onChange={({ target }) => setUsername(target.value)}
                     />
@@ -51,9 +54,65 @@ const registerForm = () => {
     salasana
                     <input
                         type="password"
-                        value={newpassword}
-                        name="newpassword"
+                        value={password}
+                        name="password"
                         onChange={({ target }) => setPassword(target.value)}
+                    />
+                </div>
+                <div>
+        etunimi <input
+                        type="text"
+                        value={firstName}
+                        name="firstname"
+                        onChange={({ target }) => setFirstName(target.value)}
+                    />
+                </div>
+                <div>
+        sukunimi <input
+                        type="text"
+                        value={lastName}
+                        name="lastname"
+                        onChange={({ target }) => setLastName(target.value)}
+                    />
+                </div>
+                <div>
+        osoite <input
+                        type="text"
+                        value={address}
+                        name="address"
+                        onChange={({ target }) => setAddress(target.value)}
+                    />
+                </div>
+                <div>
+        postinumero <input
+                        type="text"
+                        value={postalCode}
+                        name="postalCode"
+                        onChange={({ target }) => setPostalCode(target.value)}
+                    />
+                </div>
+                <div>
+        kaupunki <input
+                        type="text"
+                        value={city}
+                        name="city"
+                        onChange={({ target }) => setCity(target.value)}
+                    />
+                </div>
+                <div>
+        puhelinnumero <input
+                        type="text"
+                        value={phoneNumber}
+                        name="phoneNumber"
+                        onChange={({ target }) => setPhoneNumber(target.value)}
+                    />
+                </div>
+                <div>
+        email <input
+                        type="text"
+                        value={email}
+                        name="email"
+                        onChange={({ target }) => setEmail(target.value)}
                     />
                 </div>
                 <button type="submit">rekisteröidy</button>
