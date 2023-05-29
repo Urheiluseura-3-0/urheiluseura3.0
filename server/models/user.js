@@ -22,15 +22,11 @@ User.init({
         type: DataTypes.TEXT,
         allowNull: false,
     },
-    name: {
+    firstName: {
         type: DataTypes.TEXT,
         allowNull: false,
     },
     lastName: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-    },
-    identityCode: {
         type: DataTypes.TEXT,
         allowNull: true,
     },
@@ -53,6 +49,11 @@ User.init({
     email: {
         type: DataTypes.TEXT,
         allowNull: true,
+    },
+    personNumber: {
+        type: DataTypes.INTEGER,
+        allowNull:false,
+        defaultValue: -1
     },
     adminApproved: {
         type: DataTypes.INTEGER,
