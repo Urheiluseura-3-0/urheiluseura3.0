@@ -25,9 +25,9 @@ const LoginForm = ({ login }) => {
             resetFields()
 
         } catch (exception) {
-            setAlertMessage('Väärä käyttäjänimi tai salasana')
-            setShowAlert(true)
+            setAlertMessage(exception.response.data.error)
             resetFields()
+            setShowAlert(true)
             setTimeout(() => {
                 setShowAlert(false)
             }, 3000)
@@ -37,14 +37,13 @@ const LoginForm = ({ login }) => {
     const resetFields = () => {
         setUsername('')
         setPassword('')
+        setIsInputValid(false)
     }
 
 
     return (
         <div className='flex justify-center items-center h-screen bg-stone-100'>
-
             <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
-
                 <h1 className='font-bold text-2xl text-center text-teal-500'>Kirjaudu sisään</h1>
                 {showAlert && <Notification message={alertMessage} />}
                 <form onSubmit={handleLogin}>
@@ -59,12 +58,10 @@ const LoginForm = ({ login }) => {
                                 name='username'
                                 onChange={({ target }) => {
                                     setUsername(target.value)
-                                    setIsInputValid(target.value.length >= 5 && password.length > 0)
-                                    console.log(isInputValid)
+                                    setIsInputValid(target.value.length >= 5 && password.length >= 10)
                                 }}
-                                className='peer border border-gray-300 rounded p-2 w-full ${isInputValid && border-red-500}'
+                                className='border border-gray-300 rounded p-2 w-full'
                             />
-                            <p className='invisible peer-invalid:visible peer-invalid:mt-2 text-slate-500 text-sm'>Käyttäjätunnus on 5-15 merkkiä pitkä</p>
                         </div>
                         <div>
                             <label className='block'>Salasana</label>
@@ -72,10 +69,11 @@ const LoginForm = ({ login }) => {
                                 id='password'
                                 type='password'
                                 value={password}
+                                maxLength={30}
                                 name='password'
                                 onChange={({ target }) => {
                                     setPassword(target.value)
-                                    setIsInputValid(username.length >= 5 && target.value.length > 0)
+                                    setIsInputValid(username.length >= 5 && target.value.length >= 10)
                                 }}
                                 className='required border border-gray-300 rounded p-2 w-full'
                             />
@@ -90,11 +88,11 @@ const LoginForm = ({ login }) => {
                         </div>
                     </div>
                     <div>
-                        <Link className='text-blue-700 underline' to="/register">Rekisteröidy</Link>
+                        <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
+                        <Link className='text-sm text-blue-700 underline' to="/register">Rekisteröidy</Link>
                     </div>
                 </form>
             </div>
-
         </div>
     )
 }
