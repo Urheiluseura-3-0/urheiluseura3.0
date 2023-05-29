@@ -21,9 +21,11 @@ registerRouter.post('/', async (request, response) => {
             return response.status(401).json({error: 'Käyttäjätunnus on jo olemassa.'}) 
         }
 
-        if (!validateRegisterInput(name, lastName, username, password, address, city, 
-            postalCode, phoneNumber, email, identityCode)) {
-            return response.status(401).json({error: 'Virheellinen syöte.'})
+        const checkInputErrors = validateRegisterInput(firstName, lastName, username, password, address, city, 
+            postalCode, phoneNumber, email)
+
+        if (checkInputErrors.length > 0) {
+            return response.status(401).json({error: `${checkInputErrors}`})
         }
 
         const saltRounds = 10
@@ -40,7 +42,7 @@ registerRouter.post('/', async (request, response) => {
             phoneNumber: phoneNumber,
             email: email
         })
-        
+
         const savedUser = await User.create(user.dataValues)
 
         return response.status(200).json(savedUser)

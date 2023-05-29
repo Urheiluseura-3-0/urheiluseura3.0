@@ -11,7 +11,7 @@ beforeEach(async () => {
 
     const initialUser = [
         {
-            name: 'Pekka Testinen',
+            firstName: 'Pekka Testinen',
             username: 'Pekka35',
             password: passwordHash,
         }
@@ -25,23 +25,56 @@ beforeEach(async () => {
 
 test('can register with non-existing username', async () => {
     const newUser = {
-        name: 'Jaakko',
-        newusername: 'Jaakko35',
-        newpassword: 'salainen2'
+        firstName: 'Jaakko',
+        username: 'Jaakko35',
+        password: 'salainen22'
     }
 
     await api
         .post('/api/register')
         .send(newUser)
         .expect(200)
+    
+    const users = await User.findAll()
+    expect(users.length).toBe(2)
 })
 
+test('correct number of users in database', async () => {
+    const newUser = {
+        firstName: 'Jaakko',
+        username: 'Jaakko35',
+        password: 'salainen22'
+    }
+
+    const existingUser = {
+        firstName: 'Pekka',
+        username: 'Pekka35',
+        password: 'salainen'
+    }
+
+    let users = await User.findAll()
+    expect(users.length).toBe(1)
+
+    await api
+        .post('/api/register')
+        .send(newUser)
+
+    users = await User.findAll()
+    expect(users.length).toBe(2)
+
+    await api
+        .post('/api/register')
+        .send(existingUser)
+
+    users = await User.findAll()
+    expect(users.length).toBe(2)
+})
 
 test('cannot register with existing username', async () => {
     const existingUser = {
-        name: 'Pekka',
-        newusername: 'Pekka35',
-        newpassword: 'salainen'
+        firstName: 'Pekka',
+        username: 'Pekka35',
+        password: 'salainen'
     }
 
     await api
@@ -52,9 +85,9 @@ test('cannot register with existing username', async () => {
 
 test('cannot register if mandatory values are missing', async () => {
     const newUser = {
-        name: 'Jaakko',
-        newusername: 'Jaakko35',
-        newpassword: ''
+        firstName: 'Jaakko',
+        username: 'Jaakko35',
+        password: ''
     }
 
     await api
