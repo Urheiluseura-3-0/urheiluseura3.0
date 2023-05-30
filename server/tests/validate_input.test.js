@@ -1,8 +1,8 @@
 const {validateNotEmpty, validateLength} = require('../controllers/validate_input')
+const {validateOnlyNumbers} = require('../controllers/validate_input')
 
 test('not empty returns true if not empty', () => {
-    const input = ['Testinimi', 'Testisalasana']
-    const result = validateNotEmpty(input)
+    const result = validateNotEmpty('Testisyöte')
     expect(result).toBe(true)
 })
 
@@ -25,3 +25,14 @@ test('validate length returns false if input is too long', () => {
     const result = validateLength('testisana123456789', 5, 15)
     expect(result).toBe(false)
 })
+
+test('validate only numbers returns true if input contains only numbers', () => {
+    const result = validateOnlyNumbers('12345')
+    expect (result).toBe(true)
+})
+
+test('validate only numbers returns false if input does not contain only numbers', () => {
+    const result = validateOnlyNumbers('12a45')
+    expect (result).toBe(false)
+})
+
