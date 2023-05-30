@@ -16,7 +16,7 @@ registerRouter.post('/', async (request, response) => {
         const email = request.body.email
         
         const finduser = await User.findOne({where: {username: username}})
-        
+
         if (finduser) {
             return response.status(401).json({error: 'Käyttäjätunnus on jo olemassa.'}) 
         }
