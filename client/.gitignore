@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+cypress/videos
 
 # development config
 tailwind.config.js
