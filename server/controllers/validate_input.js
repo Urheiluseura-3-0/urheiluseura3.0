@@ -41,7 +41,7 @@ const validateMandatoryField = (value, field, min, max) => {
     return errors
 }
 
-const validatePostalCode = (value, field, min, max) => {
+const validatePostalCodeField = (value, field, min, max) => {
     const errors = []
     if (!validateOnlyNumbers(value)) {
         errors.push(` ${field} saa sisältää vain numeroita`)
@@ -57,18 +57,51 @@ const validatePostalCode = (value, field, min, max) => {
     return errors
 }
 
+const validatePhoneNumber = (value) => {
+    const stripped = value.replaceAll(' ','').replaceAll('-','')
+
+    if (stripped.match(/^[+]?\d{3,14}$/) != null) {
+        return true
+    }
+
+    return false
+
+}
+
+const validatePhoneNumberField = (value, field, min, max) => {
+    const errors = []
+    if (!validatePhoneNumber(value)) {
+        errors.push(` ${field} voi alkaa numerolla tai merkillä + ja sisältää muuten vain numeroita, välilyöntejä ja yhdysmerkkejä`)
+    } else if (!validateNotEmpty(value)) {
+        errors.push(` ${field} ei saa olla tyhjä`)
+    } else if (!validateLength(value, min, max)) {
+        if (min === max) {
+            errors.push(` Sallittu pituus kentälle ${field} on ${min} merkkiä`)
+        } else {
+            errors.push(` Sallittu pituus kentälle ${field} on ${min}-${max} merkkiä`)
+        }
+    }
+    return errors
+}
+
+const validateEmail = (value) => {
+    if (value.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g) != null) {
+        return true
+    }
+    return false
+}
 
 const validateRegisterInput = (firstName, lastName, username, password, address, city,
     postalCode, phoneNumber, email) => {
     let errors = []
-    errors = errors.concat(validateMandatoryField(firstName, 'Etunimi', 2, 40))
-    errors = errors.concat(validateMandatoryField(lastName, 'Sukunimi', 2, 40))
     errors = errors.concat(validateMandatoryField(username, 'Käyttäjätunnus', 5, 15))
     errors = errors.concat(validateMandatoryField(password, 'Salasana', 10, 30))
+    errors = errors.concat(validateMandatoryField(firstName, 'Etunimi', 2, 40))
+    errors = errors.concat(validateMandatoryField(lastName, 'Sukunimi', 2, 40))
     errors = errors.concat(validateMandatoryField(address, 'Osoite', 2, 40))
+    errors = errors.concat(validatePostalCodeField(postalCode, 'Postinumero', 5, 5))
     errors = errors.concat(validateMandatoryField(city, 'Kaupunki', 2, 40))
-    errors = errors.concat(validatePostalCode(postalCode, 'Postinumero', 5, 5))
-    errors = errors.concat(validateMandatoryField(phoneNumber, 'Puhelinnumero', 5, 15))
+    errors = errors.concat(validatePhoneNumberField(phoneNumber, 'Puhelinnumero', 5, 15))
     errors = errors.concat(validateMandatoryField(email, 'E-mail', 5, 40))
 
     return errors
@@ -81,4 +114,10 @@ const validateLoginInput = (username, password) => {
     return errors
 }
 
-module.exports = {validateRegisterInput, validateLoginInput, validateLength, validateNotEmpty, validateOnlyNumbers}
+module.exports = {validateRegisterInput,
+    validateLoginInput,
+    validateLength,
+    validateNotEmpty,
+    validateOnlyNumbers,
+    validatePhoneNumber,
+    validateEmail}
