@@ -1,124 +1,181 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import registerService from '../services/register'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import Notification from './Notification'
+import Step0 from './steps/Step0'
+import Step1 from './steps/Step1'
+import Step2 from './steps/Step2'
 
 const registerForm = () => {
 
     const navigate = useNavigate()
+    const [step, setStep] = useState(0)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [passwordConfirm, setPasswordConfirm] = useState('')
     const [firstName, setFirstName] = useState('')
-    const[lastName, setLastName] = useState('')
-    const[address, setAddress] = useState('')
-    const[postalCode, setPostalCode] = useState('')
-    const[city, setCity] = useState('')
-    const[phoneNumber, setPhoneNumber] = useState('')
-    const[email, setEmail] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [address, setAddress] = useState('')
+    const [postalCode, setPostalCode] = useState('')
+    const [city, setCity] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
+    const [email, setEmail] = useState('')
+    const [alertMessage, setAlertMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
+    const [isInputValid, setIsInputValid] = useState(false)
 
-    const handleRegister = async (event) => {
 
-        event.preventDefault()
+    const handleNext = () => {
+        setStep(step + 1)
+    }
+
+    const handleBack = () => {
+        setStep(step - 1)
+    }
+
+    const handleRegister = async() => {
+
         try {
             await registerService.register({
-                username, password, firstName, lastName, address, postalCode, city, phoneNumber, email
+                username, password, passwordConfirm, firstName, lastName, address, postalCode, city, phoneNumber, email
             })
             navigate('/home')
-            setUsername('')
-            setPassword('')
-            setFirstName('')
-            setLastName('')
-            setAddress('')
-            setPostalCode('')
-            setCity('')
-            setPhoneNumber('')
-            setEmail('')
+            resetFields()
+
         } catch (exception) {
-            console.log('Luonti ei onnistunut')
+            setAlertMessage(exception.response.data.error)
+            setShowAlert(true)
+            resetFields()
+            setTimeout(() => {
+                setShowAlert(false)
+            }, 3000)
+        }
+    }
+
+    const resetFields = () => {
+        setUsername('')
+        setPassword('')
+        setPasswordConfirm('')
+        setFirstName('')
+        setLastName('')
+        setAddress('')
+        setPostalCode('')
+        setCity('')
+        setPhoneNumber('')
+        setEmail('')
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target
+
+        switch (name) {
+        case 'username':
+            setUsername(value)
+            break
+        case 'password':
+            setPassword(value)
+            break
+        case 'passwordConfirm':
+            setPasswordConfirm(value)
+            break
+        case 'firstname':
+            setFirstName(value)
+            break
+        case 'lastname':
+            setLastName(value)
+            break
+        case 'address':
+            setAddress(value)
+            break
+        case 'postalCode':
+            setPostalCode(value)
+            break
+        case 'city':
+            setCity(value)
+            break
+        case 'phoneNumber':
+            setPhoneNumber(value)
+            break
+        case 'email':
+            setEmail(value)
+            break
+        default:
+            break
         }
     }
 
 
-    return(
-        <div>
-            <h1>Rekisteröidy</h1>
-            <form onSubmit = { handleRegister }>
-                <div>
-    käyttäjänimi <input
-                        type="text"
-                        value={username}
-                        name="username"
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
-                </div>
-                <div>
-    salasana
-                    <input
-                        type="password"
-                        value={password}
-                        name="password"
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
-                </div>
-                <div>
-        etunimi <input
-                        type="text"
-                        value={firstName}
-                        name="firstname"
-                        onChange={({ target }) => setFirstName(target.value)}
-                    />
-                </div>
-                <div>
-        sukunimi <input
-                        type="text"
-                        value={lastName}
-                        name="lastname"
-                        onChange={({ target }) => setLastName(target.value)}
-                    />
-                </div>
-                <div>
-        osoite <input
-                        type="text"
-                        value={address}
-                        name="address"
-                        onChange={({ target }) => setAddress(target.value)}
-                    />
-                </div>
-                <div>
-        postinumero <input
-                        type="text"
-                        value={postalCode}
-                        name="postalCode"
-                        onChange={({ target }) => setPostalCode(target.value)}
-                    />
-                </div>
-                <div>
-        kaupunki <input
-                        type="text"
-                        value={city}
-                        name="city"
-                        onChange={({ target }) => setCity(target.value)}
-                    />
-                </div>
-                <div>
-        puhelinnumero <input
-                        type="text"
-                        value={phoneNumber}
-                        name="phoneNumber"
-                        onChange={({ target }) => setPhoneNumber(target.value)}
-                    />
-                </div>
-                <div>
-        email <input
-                        type="text"
-                        value={email}
-                        name="email"
-                        onChange={({ target }) => setEmail(target.value)}
-                    />
-                </div>
-                <button type="submit">rekisteröidy</button>
-                <Link to="/">Login</Link>
-            </form>
-        </div>
+    const validateFields = () => {
+        const isUsernameValid = username.length >= 5
+        const isPasswordValid = password.length >= 10 &&
+            password.localeCompare(passwordConfirm) === 0
+        const isPasswordConfirmValid = passwordConfirm.length >= 10 &&
+            passwordConfirm.localeCompare(password) === 0
+        const isFirstNameValid = firstName.length > 0
+        const isLastNameValid = true
+        const isAddressValid = true
+        const isPostalCodeValid = true
+        const isCityValid = true
+        const isPhoneNumberValid = phoneNumber.length > 0
+        const isEmailValid = true
+
+        setIsInputValid(
+            (step === 0 &&
+                isFirstNameValid &&
+                isLastNameValid &&
+                isAddressValid &&
+                isPostalCodeValid &&
+                isCityValid) ||
+            (step === 1 &&
+                isPhoneNumberValid &&
+                isEmailValid) ||
+            (step === 2 &&
+                isUsernameValid &&
+                isPasswordValid &&
+                isPasswordConfirmValid)
+        )
+    }
+
+    useEffect(() => {
+        validateFields()
+    }, [username, password, passwordConfirm, firstName, lastName, address, postalCode,
+        city, phoneNumber, email])
+
+    return (
+        < div className='flex justify-center items-center h-screen bg-stone-100' >
+            <div className='p-6 max-w-l bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
+                <h1 className='font-bold text-2xl text-center text-teal-500'>Rekisteröidy</h1>
+                {showAlert && <Notification message={alertMessage} />}
+                {step === 0 &&
+                    <Step0
+                        onNext={handleNext}
+                        onChange={handleChange}
+                        firstName={firstName}
+                        lastName={lastName}
+                        postalCode={postalCode}
+                        city={city}
+                        isInputValid={isInputValid} />}
+                {step === 1 &&
+                    <Step1
+                        onNext={handleNext}
+                        onBack={handleBack}
+                        onChange={handleChange}
+                        phoneNumber={phoneNumber}
+                        email={email}
+                        isInputValid={isInputValid} />}
+                {step === 2 &&
+                    <Step2
+                        onBack={handleBack}
+                        onChange={handleChange}
+                        onSubmit={handleRegister}
+                        username={username}
+                        password={password}
+                        passwordConfirm={passwordConfirm}
+                        isInputValid={isInputValid}
+                    />}
+            </div >
+        </div >
+
     )
 }
 
