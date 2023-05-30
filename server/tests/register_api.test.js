@@ -11,9 +11,15 @@ beforeEach(async () => {
 
     const initialUser = [
         {
-            firstName: 'Pekka Testinen',
+            firstName: 'Pekka',
+            lastName: 'Testinen',
             username: 'Pekka35',
             password: passwordHash,
+            address: 'Osoite',
+            postalCode: '00300',
+            city: 'Helsinki',
+            phoneNumber: '0509876543',
+            email: 'osoite@email.com'
         }
     ]
     await User.destroy({
@@ -26,8 +32,14 @@ beforeEach(async () => {
 test('can register with non-existing username', async () => {
     const newUser = {
         firstName: 'Jaakko',
+        lastName: 'Testaaja',
         username: 'Jaakko35',
-        password: 'salainen22'
+        password: 'salainen22',
+        address: 'Osoite',
+        postalCode: '00300',
+        city: 'Helsinki',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
     }
 
     await api
@@ -42,14 +54,25 @@ test('can register with non-existing username', async () => {
 test('correct number of users in database', async () => {
     const newUser = {
         firstName: 'Jaakko',
+        lastName: 'Testaaja',
         username: 'Jaakko35',
-        password: 'salainen22'
+        password: 'salainen22',
+        address: 'Osoite',
+        postalCode: '00300',
+        city: 'Helsinki',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
     }
 
     const existingUser = {
         firstName: 'Pekka',
         username: 'Pekka35',
-        password: 'salainen'
+        password: 'salainen',
+        address: 'Osoite',
+        postalCode: '00300',
+        city: 'Helsinki',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
     }
 
     let users = await User.findAll()
@@ -74,7 +97,12 @@ test('cannot register with existing username', async () => {
     const existingUser = {
         firstName: 'Pekka',
         username: 'Pekka35',
-        password: 'salainen'
+        password: 'salainen',
+        address: 'Osoite',
+        city: 'Helsinki',
+        postalCode: '00300',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
     }
 
     await api
@@ -87,7 +115,12 @@ test('cannot register if mandatory values are missing', async () => {
     const newUser = {
         firstName: 'Jaakko',
         username: 'Jaakko35',
-        password: ''
+        password: '',
+        address: 'Osoite',
+        city: 'Helsinki',
+        postalCode: '00300',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
     }
 
     await api

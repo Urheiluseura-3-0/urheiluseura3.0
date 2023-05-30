@@ -3,10 +3,18 @@ const jwt = require('jsonwebtoken')
 const loginRouter = require('express').Router()
 const config = require('../utils/config')
 const {User} = require('../models/user')
+const {validateLoginInput} = require('./validate_input.js')
 
 loginRouter.post('/', async (request, response) => {
 
     const { username, password} = request.body
+
+    const checkInputErrors = validateLoginInput(username, password)
+
+    if (checkInputErrors.length > 0) {
+        return response.status(401).json({error: `${checkInputErrors}`})
+    }
+
     const finduser = await User.findOne({where: {username: username}})
     
     let user=null
