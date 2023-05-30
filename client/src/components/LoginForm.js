@@ -2,7 +2,6 @@ import { useState } from 'react'
 import loginService from '../services/login'
 import { useNavigate, Link } from 'react-router-dom'
 import Notification from './Notification'
-import '../style.css'
 
 const LoginForm = ({ login }) => {
     const navigate = useNavigate()
@@ -80,6 +79,7 @@ const LoginForm = ({ login }) => {
                         </div>
                         <div>
                             <button
+                                id='login-button'
                                 className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                                 disabled={!isInputValid}
                                 title={isInputValid ? '' : 'Syötä käyttäjätunnus ja salasana'}

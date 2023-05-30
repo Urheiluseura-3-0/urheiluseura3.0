@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
 import UserView from './components/UserView'
 import Cookies from 'universal-cookie'
+import './style.css'
 
 
 
