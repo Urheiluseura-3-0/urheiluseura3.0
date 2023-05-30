@@ -11,7 +11,7 @@ const userView = (props) => {
     return (
         <div>
             <p>Kirjautuneena</p>
-            <button onClick= {logOut}>Kirjaudu ulos</button>
+            <button id='logout-button' onClick= {logOut}>Kirjaudu ulos</button>
         </div>
     )
 }

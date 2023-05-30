@@ -5,7 +5,7 @@ describe('Login ', function() {
             firstName: 'Tiina',
             lastName: 'Testaaja',
             username: 'Tiina14',
-            password: 'salainen',
+            password: 'salainen1234',
 
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
@@ -17,13 +17,25 @@ describe('Login ', function() {
 
     it('user can login', function() {
         cy.get('#username').type('Tiina14')
-        cy.get('#password').type('salainen')
+        cy.get('#password').type('salainen1234')
         cy.get('#login-button').click()
+        cy.contains('Kirjautuneena')
     })
+
+    it('user can logout', function() {
+        cy.get('#username').type('Tiina14')
+        cy.get('#password').type('salainen1234')
+        cy.get('#login-button').click()
+        cy.contains('Kirjautuneena')
+        cy.get('#logout-button').click()
+        cy.contains('Kirjaudu sisään')
+    })
+
     it('non-existing user cannot login', function() {
         cy.get('#username').type('Tarja')
         cy.get('#password').type('tarjansalainen')
         cy.get('#login-button').click()
+        cy.contains('invalid username or password')
 
 
     })
