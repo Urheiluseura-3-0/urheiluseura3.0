@@ -11,7 +11,7 @@ beforeEach(async () => {
 
     const initialUser = [
         {
-            name: 'Pekka Testinen',
+            firstName: 'Pekka Testinen',
             username: 'Pekka35',
             password: passwordHash,
         }
