@@ -59,6 +59,7 @@ const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm
                         Takaisin
                     </button>
                     <button
+                        id='register-button'
                         className={`bg-teal-400 hover:bg-teal-600 px-3 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}
