@@ -106,10 +106,10 @@ const registerForm = () => {
 
 
     const validateFields = () => {
-        const isUsernameValid = username.length >= 5
-        const isPasswordValid = password.length >= 10 &&
+        const isUsernameValid = username.length >= 5 && username.length <= 15
+        const isPasswordValid = password.length >= 10 && password.length <= 30 &&
             password.localeCompare(passwordConfirm) === 0
-        const isPasswordConfirmValid = passwordConfirm.length >= 10 &&
+        const isPasswordConfirmValid = passwordConfirm.length >= 10 && passwordConfirm.length <= 30 &&
             passwordConfirm.localeCompare(password) === 0
         const isFirstNameValid = firstName.length > 0
         const isLastNameValid = true
@@ -138,7 +138,7 @@ const registerForm = () => {
 
     useEffect(() => {
         validateFields()
-    }, [username, password, passwordConfirm, firstName, lastName, address, postalCode,
+    }, [step, username, password, passwordConfirm, firstName, lastName, address, postalCode,
         city, phoneNumber, email])
 
     return (

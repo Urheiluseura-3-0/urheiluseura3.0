@@ -14,7 +14,7 @@ const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className='grid grid-cols-3 gap-4'>
+            <div className='grid grid-cols-1 gap-4'>
                 <div className='flex flex-col'>
                     <label className='block'>Käyttäjänimi</label>
                     <input
@@ -66,10 +66,10 @@ const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm
                     >
                         Rekisteröidy
                     </button>
-                    <div>
-                        <span className='text-sm text-teal-500'>Onko sinulla jo käyttäjätunnus? </span>
-                        <Link className='text-sm text-blue-700 underline' to='/'>Kirjaudu</Link>
-                    </div>
+                </div>
+                <div>
+                    <span className='text-sm text-teal-500'>Onko sinulla jo käyttäjätunnus? </span>
+                    <Link className='text-sm text-blue-700 underline' to='/'>Kirjaudu</Link>
                 </div>
             </div>
 

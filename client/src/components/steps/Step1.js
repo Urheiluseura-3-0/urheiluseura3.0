@@ -13,7 +13,7 @@ const Step1 = ({ onNext, onBack, onChange, phoneNumber, email, isInputValid }) =
 
     return (
         <form onSubmit={handleNext}>
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 gap-4'>
                 <div className='flex flex-col'>
                     <label className='block'>Puhelinnumero</label>
                     <input
@@ -51,10 +51,10 @@ const Step1 = ({ onNext, onBack, onChange, phoneNumber, email, isInputValid }) =
                     >
                         Seuraava
                     </button>
-                    <div className='flex-end'>
-                        <span className='text-sm text-teal-500'>Onko sinulla jo käyttäjätunnus? </span>
-                        <Link className='text-sm text-blue-700 underline' to='/'>Kirjaudu</Link>
-                    </div>
+                </div>
+                <div className='flex-end'>
+                    <span className='text-sm text-teal-500'>Onko sinulla jo käyttäjätunnus? </span>
+                    <Link className='text-sm text-blue-700 underline' to='/'>Kirjaudu</Link>
                 </div>
 
             </div>

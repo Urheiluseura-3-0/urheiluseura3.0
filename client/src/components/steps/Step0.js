@@ -9,7 +9,7 @@ const Step0 = ({ onNext, onChange, firstName, lastName, address, postalCode, cit
 
     return (
         <form onSubmit={handleNext}>
-            <div className='grid grid-cols-3 gap-4'>
+            <div className='grid grid-cols-1 gap-4'>
                 <div className='flex flex-col'>
                     <label className='block'>Etunimi</label>
                     <input
@@ -30,6 +30,7 @@ const Step0 = ({ onNext, onChange, firstName, lastName, address, postalCode, cit
                         className='border border-gray-300 rounded p-2 w-full'
                     />
                 </div>
+                <hr></hr>
                 <div className='flex flex-col'>
                     <label className='block'>Osoite</label>
                     <input
@@ -73,11 +74,11 @@ const Step0 = ({ onNext, onChange, firstName, lastName, address, postalCode, cit
                 </div>
 
             </div>
-            <div>
+            <div className='mt-3'>
                 <span className='text-sm text-teal-500'>Onko sinulla jo käyttäjätunnus? </span>
                 <Link className='text-sm text-blue-700 underline' to='/'>Kirjaudu</Link>
             </div>
-        </form>
+        </form >
     )
 }
 
