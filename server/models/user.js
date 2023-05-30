@@ -14,6 +14,7 @@ User.init({
     username: {
         type: DataTypes.TEXT,
         allowNull: false,
+        unique: true,
         validate: {
             len: [5,15]
         }
@@ -25,30 +26,51 @@ User.init({
     firstName: {
         type: DataTypes.TEXT,
         allowNull: false,
+        validate: {
+            len: [2, 40]
+        }
     },
     lastName: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            len: [2, 40]
+        }
     },
     address: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            len: [2, 40]
+        }
     },
     postalCode: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            len: [5, 5]
+        }
     },
     city: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            len: [2, 40]
+        }
     },
     phoneNumber: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            len: [5, 15]
+        }
     },
     email: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+        validate: {
+            len: [5, 40]
+        }
     },
     personNumber: {
         type: DataTypes.INTEGER,
