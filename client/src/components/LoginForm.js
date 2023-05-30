@@ -74,7 +74,7 @@ const LoginForm = ({ login }) => {
                                 className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid ? 'border-gray-300' : 'border-red-500'
                                 }`}
                             />{username.length === 0 || isUsernameValid ? null : (
-                                <p className='peer-focus:hidden text-red-500 text-sm'>
+                                <p id='username-error' className='peer-focus:hidden text-red-500 text-sm'>
                                     Käyttäjänimen minimipituus on 5 merkkiä
                                 </p>
                             )}
@@ -94,7 +94,7 @@ const LoginForm = ({ login }) => {
                                 className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid ? 'border-gray-300' : 'border-red-500'
                                 }`}
                             />{password.length === 0 || isPasswordValid ? null : (
-                                <p className='peer-focus:hidden text-red-500 text-sm'>
+                                <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
                                     Salasanan minimipituus on 10 merkkiä
                                 </p>
                             )}

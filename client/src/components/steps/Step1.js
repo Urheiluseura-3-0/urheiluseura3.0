@@ -1,7 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Step1 = ({ onNext, onBack, onChange, phoneNumber, email, isInputValid }) => {
+const Step1 = ({
+    onNext,
+    onBack,
+    onChange,
+    phoneNumber,
+    email,
+    isInputValid,
+    isPhoneNumberValid,
+    isEmailValid
+}) => {
     const handleNext = (e) => {
         e.preventDefault()
         onNext()
@@ -20,9 +29,15 @@ const Step1 = ({ onNext, onBack, onChange, phoneNumber, email, isInputValid }) =
                         type='text'
                         value={phoneNumber}
                         name='phoneNumber'
+                        maxLength={15}
                         onChange={onChange}
-                        className='border border-gray-300 rounded p-2 w-full'
-                    />
+                        className={`peer border rounded p-2 w-full ${phoneNumber.length === 0 || isPhoneNumberValid ? 'border-gray-300' : 'border-red-500'
+                        }`}
+                    />{phoneNumber.length === 0 || isPhoneNumberValid ? null : (
+                        <p id='phoneNumber-error' className='peer-focus:hidden text-red-500 text-sm'>
+                            Tarkista numero
+                        </p>
+                    )}
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Sähköposti</label>
@@ -30,9 +45,15 @@ const Step1 = ({ onNext, onBack, onChange, phoneNumber, email, isInputValid }) =
                         type='text'
                         value={email}
                         name='email'
+                        maxLength={40}
                         onChange={onChange}
-                        className='border border-gray-300 rounded p-2 w-full'
-                    />
+                        className={`peer border rounded p-2 w-full ${email.length === 0 || isEmailValid ? 'border-gray-300' : 'border-red-500'
+                        }`}
+                    />{email.length === 0 || isEmailValid ? null : (
+                        <p id='email-error' className='peer-focus:hidden text-red-500 text-sm'>
+                            Tarkista sähköpostiosoite
+                        </p>
+                    )}
                 </div>
                 <div className='flex justify-between items-center space-x-5'>
 
