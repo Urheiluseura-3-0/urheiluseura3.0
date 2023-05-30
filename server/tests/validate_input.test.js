@@ -76,13 +76,13 @@ test('validate email returns false if email is incorrect', () => {
 
 test('validate register input returns an empty array if everything is ok', () => {
     const result = validateRegisterInput('Nimi', 'Sukunimi', 'testaaja', 'salasana123', 'Jokukatu 23',
-        '02200', 'Espoo', '050 123 4567', 'nimi@gmail.com')
+        'Espoo', '02200', '050 123 4567', 'nimi@gmail.com')
     expect (result).toHaveLength(0)
 })
 
 test('validate register input returns errors if something is wrong', () => {
     const result = validateRegisterInput('Nimi', 'Sukunimi', 'testaaja', 'salasana123', 'Jokukatu 23',
-        '0220', 'Espoo', '050 123 4567', 'nimigmail.com')
+        'Espoo', '0220', '050 123 4567', 'nimigmail.com')
     expect (result).toHaveLength(2)
 })
 

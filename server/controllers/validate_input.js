@@ -72,8 +72,8 @@ const validateMandatoryField = (value, field, min, max) => {
 }
 
 
-const validateRegisterInput = (firstName, lastName, username, password, address,
-    postalCode, city, phoneNumber, email) => {
+const validateRegisterInput = (firstName, lastName, username, password, address, city,
+    postalCode, phoneNumber, email) => {
     let errors = []
     errors = errors.concat(validateMandatoryField(username, 'Käyttäjätunnus', 5, 15))
     errors = errors.concat(validateMandatoryField(password, 'Salasana', 10, 30))
