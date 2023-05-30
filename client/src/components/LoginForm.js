@@ -71,8 +71,13 @@ const LoginForm = ({ login }) => {
                                     setUsername(target.value)
                                     setIsUsernameValid(target.value.length >= 5 && target.value.length <= 15)
                                 }}
-                                className='border border-gray-300 rounded p-2 w-full'
-                            />
+                                className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid ? 'border-gray-300' : 'border-red-500'
+                                }`}
+                            />{username.length === 0 || isUsernameValid ? null : (
+                                <p className='peer-focus:hidden text-red-500 text-sm'>
+                                    Käyttäjänimen minimipituus on 5 merkkiä
+                                </p>
+                            )}
                         </div>
                         <div>
                             <label className='block'>Salasana</label>
@@ -86,8 +91,13 @@ const LoginForm = ({ login }) => {
                                     setPassword(target.value)
                                     setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
                                 }}
-                                className='required border border-gray-300 rounded p-2 w-full'
-                            />
+                                className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid ? 'border-gray-300' : 'border-red-500'
+                                }`}
+                            />{password.length === 0 || isPasswordValid ? null : (
+                                <p className='peer-focus:hidden text-red-500 text-sm'>
+                                    Salasanan minimipituus on 10 merkkiä
+                                </p>
+                            )}
                         </div>
                         <div>
                             <button
