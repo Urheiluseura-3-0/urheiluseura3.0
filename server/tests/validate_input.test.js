@@ -1,5 +1,5 @@
-const {validateNotEmpty, validateLength} = require('../controllers/validate_input')
-const {validateOnlyNumbers, validatePhoneNumber, validateEmail} = require('../controllers/validate_input')
+const {validateRegisterInput, validateLoginInput} = require('../controllers/validate_input')
+const {validateOnlyNumbers, validatePhoneNumber, validateEmail, validateNotEmpty, validateLength} = require('../controllers/validate_input')
 
 test('not empty returns true if not empty', () => {
     const result = validateNotEmpty('Testisyöte')
@@ -72,4 +72,26 @@ test('validate email returns false if email is incorrect', () => {
     expect (result2).toBe(false)
     const result3 = validateEmail('joku_nimi@palvelin_fi')
     expect (result3).toBe(false)
+})
+
+test('validate register input returns an empty array if everything is ok', () => {
+    const result = validateRegisterInput('Nimi', 'Sukunimi', 'testaaja', 'salasana123', 'Jokukatu 23',
+        '02200', 'Espoo', '050 123 4567', 'nimi@gmail.com')
+    expect (result).toHaveLength(0)
+})
+
+test('validate register input returns errors if something is wrong', () => {
+    const result = validateRegisterInput('Nimi', 'Sukunimi', 'testaaja', 'salasana123', 'Jokukatu 23',
+        '0220', 'Espoo', '050 123 4567', 'nimigmail.com')
+    expect (result).toHaveLength(2)
+})
+
+test('validate login input returns an empty array if everything is ok', () => {
+    const result = validateLoginInput('testaaja', 'salasana123')
+    expect (result).toHaveLength(0)
+})
+
+test('validate login input returns errors if something is wrong', () => {
+    const result = validateLoginInput('test', 'salasana123')
+    expect (result).toHaveLength(1)
 })
