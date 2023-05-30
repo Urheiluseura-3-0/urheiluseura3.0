@@ -88,8 +88,9 @@ const registerForm = () => {
             break
         case 'password':
             setPassword(value)
-            setIsPasswordValid(value.length >= 10 && value.length <= 30 &&
-                    value.localeCompare(passwordConfirm) === 0)
+            setIsPasswordValid(value.length >= 10 && value.length <= 30)
+            setIsPasswordConfirmValid(value.length >= 10 && value.length <= 30 &&
+                    value.localeCompare(password) === 0)
             break
         case 'passwordConfirm':
             setPasswordConfirm(value)
@@ -118,7 +119,7 @@ const registerForm = () => {
             break
         case 'phoneNumber':
             setPhoneNumber(value)
-            setIsPhoneNumberValid(value.length >= 2 && value.length <= 40 && validatePhoneNumber(value))
+            setIsPhoneNumberValid(value.length >= 5 && value.length <= 15 && validatePhoneNumber(value))
             break
         case 'email':
             setEmail(value)
