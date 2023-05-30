@@ -9,7 +9,9 @@ import Step2 from './steps/Step2'
 const registerForm = () => {
 
     const navigate = useNavigate()
+    const [showAlert, setShowAlert] = useState(false)
     const [step, setStep] = useState(0)
+
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirm, setPasswordConfirm] = useState('')
@@ -21,8 +23,21 @@ const registerForm = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [email, setEmail] = useState('')
     const [alertMessage, setAlertMessage] = useState('')
-    const [showAlert, setShowAlert] = useState(false)
+
     const [isInputValid, setIsInputValid] = useState(false)
+    const [isUsernameValid, setIsUsernameValid] = useState(false)
+    const [isPasswordValid, setIsPasswordValid] = useState(false)
+    const [isPasswordConfirmValid, setIsPasswordConfirmValid] = useState(false)
+    const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false)
+    const [isEmailValid, setIsEmailValid] = useState(false)
+    const [isFirstNameValid, setIsFirstNameValid] = useState(false)
+    const [isLastNameValid, setIsLastNameValid] = useState(false)
+    const [isAddressValid, setIsAddressValid] = useState(false)
+    const [isPostalCodeValid, setIsPostalCodeValid] = useState(false)
+    const [isCityValid, setIsCityValid] = useState(false)
+
+
+
 
 
     const handleNext = () => {
@@ -33,8 +48,7 @@ const registerForm = () => {
         setStep(step - 1)
     }
 
-    const handleRegister = async() => {
-
+    const handleRegister = async () => {
         try {
             await registerService.register({
                 username, password, passwordConfirm, firstName, lastName, address, postalCode, city, phoneNumber, email
@@ -70,69 +84,108 @@ const registerForm = () => {
         switch (name) {
         case 'username':
             setUsername(value)
+            setIsUsernameValid(value.length >= 5 && value.length <= 15)
             break
         case 'password':
             setPassword(value)
+            setIsPasswordValid(value.length >= 10 && value.length <= 30 &&
+                    value.localeCompare(passwordConfirm) === 0)
             break
         case 'passwordConfirm':
             setPasswordConfirm(value)
+            setIsPasswordConfirmValid(value.length >= 10 && value.length <= 30 &&
+                    value.localeCompare(password) === 0)
             break
         case 'firstname':
             setFirstName(value)
+            setIsFirstNameValid(value.length >= 2 && value.length <= 40)
             break
         case 'lastname':
             setLastName(value)
+            setIsLastNameValid(value.length >= 2 && value.length <= 40)
             break
         case 'address':
             setAddress(value)
+            setIsAddressValid(value.length >= 2 && value.length <= 40)
             break
         case 'postalCode':
             setPostalCode(value)
+            setIsPostalCodeValid(value.length === 5 && validatePostalCode(value))
             break
         case 'city':
             setCity(value)
+            setIsCityValid(value.length >= 2 && value.length <= 40)
             break
         case 'phoneNumber':
             setPhoneNumber(value)
+            setIsPhoneNumberValid(value.length >= 2 && value.length <= 40 && validatePhoneNumber(value))
             break
         case 'email':
             setEmail(value)
+            setIsEmailValid(value.length >= 5 && value.length <= 40 && validateEmail(value))
             break
         default:
             break
         }
     }
 
+    const validateEmail = (email) => {
+        const emailPattern = /.+@.+\.[A-Za-z]+$/
+        return emailPattern.test(email)
+    }
+
+    const validatePostalCode = (postalCode) => {
+        const postalCodePattern = /^\d+$/
+        return postalCodePattern.test(postalCode)
+    }
+
+    const sanitizePhoneNumber = (phoneNumber) => {
+        return phoneNumber.replace(/[ -]/g, '')
+    }
+
+    const validatePhoneNumber = (phoneNumber) => {
+        const sanitizedPhoneNumber = sanitizePhoneNumber(phoneNumber)
+        const phoneNumberPattern = /^(\+\d+|\d+)$/
+        return phoneNumberPattern.test(sanitizedPhoneNumber)
+    }
 
     const validateFields = () => {
-        const isUsernameValid = username.length >= 5 && username.length <= 15
-        const isPasswordValid = password.length >= 10 && password.length <= 30 &&
-            password.localeCompare(passwordConfirm) === 0
-        const isPasswordConfirmValid = passwordConfirm.length >= 10 && passwordConfirm.length <= 30 &&
-            passwordConfirm.localeCompare(password) === 0
-        const isFirstNameValid = firstName.length > 0
-        const isLastNameValid = true
-        const isAddressValid = true
-        const isPostalCodeValid = true
-        const isCityValid = true
-        const isPhoneNumberValid = phoneNumber.length > 0
-        const isEmailValid = true
-
-        setIsInputValid(
-            (step === 0 &&
+        if (step === 2) {
+            setIsInputValid(
+                isUsernameValid &&
+                isPasswordValid &&
+                isPasswordConfirmValid &&
+                isPhoneNumberValid &&
+                isEmailValid &&
                 isFirstNameValid &&
                 isLastNameValid &&
                 isAddressValid &&
                 isPostalCodeValid &&
-                isCityValid) ||
-            (step === 1 &&
+                isCityValid
+            )
+        }
+        else if (step === 1) {
+            setIsInputValid(
                 isPhoneNumberValid &&
-                isEmailValid) ||
-            (step === 2 &&
-                isUsernameValid &&
-                isPasswordValid &&
-                isPasswordConfirmValid)
-        )
+                isEmailValid &&
+                isFirstNameValid &&
+                isLastNameValid &&
+                isAddressValid &&
+                isPostalCodeValid &&
+                isCityValid
+            )
+        }
+        else {
+            setIsInputValid(
+                isFirstNameValid &&
+                isLastNameValid &&
+                isAddressValid &&
+                isPostalCodeValid &&
+                isCityValid)
+        }
+
+
+
     }
 
     useEffect(() => {
@@ -151,9 +204,16 @@ const registerForm = () => {
                         onChange={handleChange}
                         firstName={firstName}
                         lastName={lastName}
+                        address={address}
                         postalCode={postalCode}
                         city={city}
-                        isInputValid={isInputValid} />}
+                        isInputValid={isInputValid}
+                        isFirstNameValid={isFirstNameValid}
+                        isLastNameValid={isLastNameValid}
+                        isAddressValid={isAddressValid}
+                        isPostalCodeValid={isPostalCodeValid}
+                        isCityValid={isCityValid}
+                    />}
                 {step === 1 &&
                     <Step1
                         onNext={handleNext}
@@ -161,7 +221,10 @@ const registerForm = () => {
                         onChange={handleChange}
                         phoneNumber={phoneNumber}
                         email={email}
-                        isInputValid={isInputValid} />}
+                        isInputValid={isInputValid}
+                        isPhoneNumberValid={isPhoneNumberValid}
+                        isEmailValid={isEmailValid}
+                    />}
                 {step === 2 &&
                     <Step2
                         onBack={handleBack}
@@ -171,6 +234,9 @@ const registerForm = () => {
                         password={password}
                         passwordConfirm={passwordConfirm}
                         isInputValid={isInputValid}
+                        isUsernameValid={isUsernameValid}
+                        isPasswordValid={isPasswordValid}
+                        isPasswordConfirmValid={isPasswordConfirmValid}
                     />}
             </div >
         </div >

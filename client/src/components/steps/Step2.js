@@ -1,7 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm, isInputValid }) => {
+const Step2 = ({
+    onBack,
+    onChange,
+    onSubmit,
+    username,
+    password,
+    passwordConfirm,
+    isInputValid,
+    isUsernameValid,
+    isPasswordValid,
+    isPasswordConfirmValid
+}) => {
     const handleSubmit = (e) => {
         e.preventDefault()
         onSubmit()
@@ -24,8 +35,12 @@ const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm
                         maxLength={15}
                         name='username'
                         onChange={onChange}
-                        className='border border-gray-300 rounded p-2'
-                    />
+                        className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid ? 'border-gray-300' : 'border-red-500'}`}
+                    />{username.length === 0 || isUsernameValid ? null : (
+                        <p id='username-error' className='peer-focus:hidden text-red-500 text-sm'>
+                            Käyttäjänimen minimipituus on 5 merkkiä
+                        </p>
+                    )}
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Salasana</label>
@@ -36,8 +51,12 @@ const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm
                         maxLength={30}
                         name='password'
                         onChange={onChange}
-                        className='required border border-gray-300 rounded p-2 w-full'
-                    />
+                        className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid ? 'border-gray-300' : 'border-red-500'}`}
+                    />{password.length === 0 || isPasswordValid ? null : (
+                        <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
+                            Salasanan minimipituus on 10 merkkiä
+                        </p>
+                    )}
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Vahvista Salasana</label>
@@ -48,8 +67,12 @@ const Step2 = ({ onBack, onChange, onSubmit, username, password, passwordConfirm
                         maxLength={30}
                         name='passwordConfirm'
                         onChange={onChange}
-                        className='required border border-gray-300 rounded p-2 w-full'
-                    />
+                        className={`peer border rounded p-2 w-full ${passwordConfirm.length === 0 || isPasswordConfirmValid ? 'border-gray-300' : 'border-red-500'}`}
+                    />{passwordConfirm.length === 0 || isPasswordConfirmValid ? null : (
+                        <p id='passwordConfirm-error' className='peer-focus:hidden text-red-500 text-sm'>
+                            Salasanat eivät täsmää tai se on liian lyhyt
+                        </p>
+                    )}
                 </div>
                 <div className='flex justify-between items-center space-x-5'>
                     <button
