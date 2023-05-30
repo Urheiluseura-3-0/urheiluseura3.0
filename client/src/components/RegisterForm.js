@@ -45,7 +45,6 @@ const registerForm = () => {
         } catch (exception) {
             setAlertMessage(exception.response.data.error)
             setShowAlert(true)
-            resetFields()
             setTimeout(() => {
                 setShowAlert(false)
             }, 3000)
