@@ -1,21 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Step0 = ({
-    onNext,
-    onChange,
-    firstName,
-    lastName,
-    address,
-    postalCode,
-    city,
-    isInputValid,
-    isFirstNameValid,
-    isLastNameValid,
-    isAddressValid,
-    isPostalCodeValid,
-    isCityValid
-}) => {
+const Step0 = ({ onNext, onChange, firstName, lastName, address, postalCode, city, isInputValid }) => {
     const handleNext = (e) => {
         e.preventDefault()
         onNext()
@@ -30,15 +16,9 @@ const Step0 = ({
                         type='text'
                         value={firstName}
                         name='firstname'
-                        maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${firstName.length === 0 || isFirstNameValid ? 'border-gray-300' : 'border-red-500'
-                        }`}
-                    />{firstName.length === 0 || isFirstNameValid ? null : (
-                        <p id='firstname-error' className='peer-focus:hidden text-red-500 text-sm'>
-                            Etunimen on oltava vähintään 2 merkkiä
-                        </p>
-                    )}
+                        className='border border-gray-300 rounded p-2 w-full'
+                    />
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Sukunimi</label>
@@ -46,15 +26,9 @@ const Step0 = ({
                         type='text'
                         value={lastName}
                         name='lastname'
-                        maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${lastName.length === 0 || isLastNameValid ? 'border-gray-300' : 'border-red-500'
-                        }`}
-                    />{lastName.length === 0 || isLastNameValid ? null : (
-                        <p id='lastname-error' className='peer-focus:hidden text-red-500 text-sm'>
-                            Sukunimen on oltava vähintään 2 merkkiä
-                        </p>
-                    )}
+                        className='border border-gray-300 rounded p-2 w-full'
+                    />
                 </div>
                 <hr></hr>
                 <div className='flex flex-col'>
@@ -63,15 +37,9 @@ const Step0 = ({
                         type='text'
                         value={address}
                         name='address'
-                        maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${address.length === 0 || isAddressValid ? 'border-gray-300' : 'border-red-500'
-                        }`}
-                    />{address.length === 0 || isAddressValid ? null : (
-                        <p id='address-error' className='peer-focus:hidden text-red-500 text-sm'>
-                            Osoitteen on oltava vähintään 2 merkkiä
-                        </p>
-                    )}
+                        className='border border-gray-300 rounded p-2 w-full'
+                    />
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Postinumero</label>
@@ -79,15 +47,9 @@ const Step0 = ({
                         type='text'
                         value={postalCode}
                         name='postalCode'
-                        maxLength={5}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${postalCode.length === 0 || isPostalCodeValid ? 'border-gray-300' : 'border-red-500'
-                        }`}
-                    />{postalCode.length === 0 || isPostalCodeValid ? null : (
-                        <p id='postalCode-error' className='peer-focus:hidden text-red-500 text-sm'>
-                        Postinumero on aina 5 numeroa pitkä
-                        </p>
-                    )}
+                        className='border border-gray-300 rounded p-2 w-full'
+                    />
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Postitoimipaikka</label>
@@ -95,19 +57,14 @@ const Step0 = ({
                         type='text'
                         value={city}
                         name='city'
-                        maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${city.length === 0 || isCityValid ? 'border-gray-300' : 'border-red-500'
-                        }`}
-                    />{city.length === 0 || isCityValid ? null : (
-                        <p id='city-error' className='peer-focus:hidden text-red-500 text-sm'>
-                        Nimen oltava vähintään 2 merkkiä pitkä
-                        </p>
-                    )}
+                        className='border border-gray-300 rounded p-2 w-full'
+                    />
                 </div>
 
                 <div className='flex justify-end'>
                     <button
+                        id='next-button'
                         className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}
