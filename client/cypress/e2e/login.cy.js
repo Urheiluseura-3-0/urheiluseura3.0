@@ -4,6 +4,11 @@ describe('Login ', function() {
         const user = {
             firstName: 'Tiina',
             lastName: 'Testaaja',
+            address: 'Testauskatu 10',
+            postalCode: '00100',
+            city: 'Helsinki',
+            phoneNumber: '0401234567',
+            email: 'tiina.testaaja@keskitty.com',
             username: 'Tiina14',
             password: 'salainen1234',
 
