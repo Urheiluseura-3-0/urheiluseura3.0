@@ -15,19 +15,25 @@
 
 ## E2E-tests
 
-1. Käynnistetään serveri testi-moodissa:
+1. Käynnistä testitietokanta (ks. tarvittaessa tietokantojen asennusohjeet: https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md)
+
+```shell
+~$ docker start postgres-test
+```
+
+2. Käynnistetään serveri testi-moodissa:
 
 ```shell
 ~/server$ npm run start:test
 ```
 
-2. Käynnistetään React-sovellus:
+3. Käynnistetään React-sovellus:
 
 ```shell
 ~/client$ npm start
 ```
 
-3. Aja Cypress-testit joko...:
+4. Aja Cypress-testit joko...:
 
 ..visuaalisessa testiohjelmassa:
 
