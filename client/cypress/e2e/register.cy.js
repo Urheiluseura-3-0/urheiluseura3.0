@@ -143,10 +143,9 @@ describe('Register', () => {
         it ('name of the city must contain at least two characters', function(){
 
             cy.get('input[name="city"]').type('A')
-            cy.get('#next-button').should('be.disabled')
             cy.get('#city-error')
-
                 .should('be.visible')
+            cy.get('#next-button').should('be.disabled')
 
         })
 
@@ -158,7 +157,7 @@ describe('Register', () => {
     })
 
 
-    describe.skip('Step changes', function () {
+    describe('Step changes', function () {
 
         beforeEach(() => {
             cy.get('input[name="firstname"]').type('Olli')
@@ -169,11 +168,15 @@ describe('Register', () => {
         })
 
         it('Step1 follows when step0 is ready', function() {
-            cy.window().then((win) => {
-                cy.spy(win, 'handleNext').as('handleNextSpy')
-            })
             cy.get('#next-button').click()
-            cy.get('@handleNextSpy').should('have.been.calledOnce')
+            cy.contains('Puhelinnumero')
+        })
+
+        it('Back button changes view on step1', function() {
+            cy.get('#next-button').click()
+            cy.contains('Puhelinnumero')
+            cy.get('#back-button').click()
+            cy.contains('Etunimi')
         })
 
         it('Step2 follows when step1 is ready', function() {
@@ -182,11 +185,22 @@ describe('Register', () => {
             cy.get('input[name="phoneNumber"]').type('0450985677')
             cy.get('input[name="email"]').type('esimerkki@jippii.fi')
 
-            cy.window().then((win) => {
-                cy.spy(win, 'handleNext').as('handleNextSpy')
-            })
             cy.get('#next-button').click()
-            cy.get('@handleNextSpy').should('have.been.calledOnce')
+
+            cy.contains('Käyttäjänimi')
+        })
+
+        it ('Back button changes views on step2', function() {
+            cy.get('#next-button').click()
+
+            cy.get('input[name="phoneNumber"]').type('0450985677')
+            cy.get('input[name="email"]').type('esimerkki@jippii.fi')
+
+            cy.get('#next-button').click()
+
+            cy.contains('Käyttäjänimi')
+            cy.get('#back-button').click()
+            cy.contains('Puhelinnumero')
         })
 
         it('Login view is followed when step2 is ready', function() {
@@ -197,14 +211,12 @@ describe('Register', () => {
 
             cy.get('#next-button').click()
 
+            cy.get('input[name="username"]').type('OlliKor')
             cy.get('input[name="password"]').type('salainen123')
             cy.get('input[name="passwordConfirm"]').type('salainen123')
 
-            cy.window().then((win) => {
-                cy.spy(win, 'handleSubmit').as('handleSubmitSpy')
-            })
             cy.get('#register-button').click()
-            cy.get('@handleSubmiySpy').should('have.been.calledOnce')
+            cy.contains('Kirjautuneena')
 
         })
 
@@ -229,9 +241,17 @@ describe('Register', () => {
             cy.get('input[name="phoneNumber"]').type('24')
             cy.get('#next-button').should('be.disabled')
             cy.get('#phoneNumber-error')
-
                 .should('be.visible')
         })
+
+        it('Phone number must only contain numbers', function() {
+            cy.get('input[name="email"]').type('esimerkki@jippii.fi')
+            cy.get('input[name="phoneNumber"]').type('abcdefghijklmnopqr')
+            cy.get('#next-button').should('be.disabled')
+            cy.get('#phoneNumber-error')
+                .should('be.visible')
+        })
+
         it ('phone number maximum is 15 characters', function() {
             cy.get('input[name="phoneNumber"]').type('034035454039583745')
             cy.get('input[name="phoneNumber"]').invoke('val').should('have.length', 15)
@@ -242,14 +262,29 @@ describe('Register', () => {
             cy.get('input[name="email"]').type('i@fi')
             cy.get('#next-button').should('be.disabled')
             cy.get('#email-error')
-
                 .should('be.visible')
         })
 
         it ('email length max is 40 characters', function() {
             cy.get('input[name="phoneNumber"]').type('0450985677')
             cy.get('input[name="email"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg@email.fi')
-            cy.get('input[name="firstname"]').invoke('val').should('have.length', 40)
+            cy.get('input[name="email"]').invoke('val').should('have.length', 40)
+        })
+
+        it('email must contain at sign', function () {
+            cy.get('input[name="phoneNumber"]').type('0450985677')
+            cy.get('input[name="email"]').type('thisemailisfalsy.fi')
+            cy.get('#next-button').should('be.disabled')
+            cy.get('#email-error')
+                .should('be.visible')
+        })
+
+        it('email must contain dot', function () {
+            cy.get('input[name="phoneNumber"]').type('0450985677')
+            cy.get('input[name="email"]').type('thisemailisfalsy@fi')
+            cy.get('#next-button').should('be.disabled')
+            cy.get('#email-error')
+                .should('be.visible')
         })
     })
 
@@ -283,17 +318,15 @@ describe('Register', () => {
             it ('username must contain at least two characters', function(){
 
                 cy.get('input[name="username"]').type('A')
+                cy.get('#username-error').should('be.visible')
                 cy.get('#register-button').should('be.disabled')
-                cy.get('#username-error')
-
-                    .should('be.visible')
 
             })
 
             it ('username max length is 15 characters', function(){
 
                 cy.get('input[name="username"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-                cy.get('input[name="address"]').invoke('val').should('have.length', 15)
+                cy.get('input[name="username"]').invoke('val').should('have.length', 15)
             })
         })
 
@@ -314,8 +347,8 @@ describe('Register', () => {
             it('password max length is 30', function() {
                 cy.get('input[name="password"]').type('salainensalasananionylikolmekymmentä')
                 cy.get('input[name="passwordConfirm"]').type('salainensalasananionylikolmekymmentä')
-                cy.get('input[name="password"]').invoke('val').should('have.length', 40)
-                cy.get('input[name="passwordConfirm"]').invoke('val').should('have.length', 40)
+                cy.get('input[name="password"]').invoke('val').should('have.length', 30)
+                cy.get('input[name="passwordConfirm"]').invoke('val').should('have.length', 30)
 
             })
 
