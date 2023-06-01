@@ -58,6 +58,7 @@ const Step1 = ({
                 <div className='flex justify-between items-center space-x-5'>
 
                     <button
+                        id='back-button'
                         className='bg-gray-200 hover:bg-gray-400 px-5 py-1 leading-5 rounded-full font-semibold text-black'
                         onClick={handleBack}
                     >
@@ -65,6 +66,7 @@ const Step1 = ({
                     </button>
 
                     <button
+                        id='next-button'
                         className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}

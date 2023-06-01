@@ -111,7 +111,7 @@ const LoginForm = ({ login }) => {
                     </div>
                     <div>
                         <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
-                        <Link className='text-sm text-blue-700 underline' to="/register">Rekisteröidy</Link>
+                        <Link id='register-link' className='text-sm text-blue-700 underline' to="/register">Rekisteröidy</Link>
                     </div>
                 </form>
             </div>

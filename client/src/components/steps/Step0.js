@@ -108,6 +108,7 @@ const Step0 = ({
 
                 <div className='flex justify-end'>
                     <button
+                        id='next-button'
                         className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}
