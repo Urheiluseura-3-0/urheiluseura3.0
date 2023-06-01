@@ -95,10 +95,23 @@ const validateLoginInput = (username, password) => {
     return errors
 }
 
+const validateEventInput = (team, opponent, location, description)=> {
+    let errors =[]
+
+    errors.errors.concat(validateMandatoryField(team, 'Joukkue', 2, 40))
+    errors.errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
+    errors.errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
+    errors.errors.concat(validateLength(description, 0, 200))
+
+    return errors
+}
+
 module.exports = {validateRegisterInput,
     validateLoginInput,
     validateLength,
     validateNotEmpty,
     validateOnlyNumbers,
     validatePhoneNumber,
-    validateEmail}
+    validateEmail,
+    validateEventInput
+}

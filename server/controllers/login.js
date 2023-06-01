@@ -7,49 +7,55 @@ const {validateLoginInput} = require('./validate_input.js')
 
 loginRouter.post('/', async (request, response) => {
 
-    const { username, password} = request.body
+    try{
 
-    const checkInputErrors = validateLoginInput(username, password)
+        const { username, password} = request.body
 
-    if (checkInputErrors.length > 0) {
-        return response.status(401).json({error: `${checkInputErrors}`})
-    }
+        const checkInputErrors = validateLoginInput(username, password)
 
-    const finduser = await User.findOne({where: {username: username}})
+        if (checkInputErrors.length > 0) {
+            return response.status(401).json({error: `${checkInputErrors}`})
+        }
+
+        const finduser = await User.findOne({where: {username: username}})
     
-    let user=null
+        let user=null
 
-    if (finduser) {
-        user = finduser.dataValues
+        if (finduser) {
+            user = finduser.dataValues
+        }
+        else{
+            return response.status(401).json({error: 'virheellinen käyttäjänimi tai salasana'})  
+        }
+
+        const checkPassword = user === null
+            ? false
+            : await bcrypt.compare(password, user.password)
+
+
+        if (!(user && checkPassword)) {
+            return response.status(401).json({error: 'virheellinen käyttäjänimi tai salasana'})
+        }
+
+        const userForToken = {
+            username: user.username,
+            id: user.id
+        }
+
+        const token = jwt.sign(
+            userForToken, 
+            config.SECRET,
+            { expiresIn:60*60}
+        )
+
+        return response
+            .cookie('Token', token, {maxAge: 900000})
+            .status(200)
+            .send({token, username:user.username, name:user.name})
+    
+    }catch(error){
+        return response.status(400)
     }
-    else{
-        return response.status(401).json({error: 'virheellinen käyttäjänimi tai salasana'})  
-    }
-
-    const checkPassword = user === null
-        ? false
-        : await bcrypt.compare(password, user.password)
-
-
-    if (!(user && checkPassword)) {
-        return response.status(401).json({error: 'virheellinen käyttäjänimi tai salasana'})
-    }
-
-    const userForToken = {
-        username: user.username,
-        id: user.id
-    }
-
-    const token = jwt.sign(
-        userForToken, 
-        config.SECRET,
-        { expiresIn:60*60}
-    )
-
-    return response
-        .cookie('Token', token, {maxAge: 900000})
-        .status(200)
-        .send({token, username:user.username, name:user.name})
 
 })
 
