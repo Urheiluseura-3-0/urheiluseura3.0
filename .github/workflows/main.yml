@@ -2,14 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches-ignore: []
   pull_request:
     branches: [main]
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres
@@ -24,20 +23,28 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with: 
-          node-version: '20'
-      - name: Install dependencies frontend
-        run: |
-          cd client
-          npm install
+          node-version: '16'
       - name: Install dependencies backend
         run: |
           cd server
           npm install
-      - name: Check style
+      - name: Test backend
+        run: |
+          cd server
+          npm run test
+        env:
+          TEST_DATABASE_URL: postgres://test:test@localhost:${{ job.services.postgres.ports['5432'] }}/test
+          SECRET: testkey
+      - name: Install dependencies frontend
+        run: |
+          cd client
+          npm install
+      - name: Check style - Backend
         run: |
           cd server
           npm run eslint
-          cd ..
+      - name: Check style - Frontend
+        run: |
           cd client
           npm run eslint
       - name: open backend for e2e-tests
@@ -47,7 +54,6 @@ jobs:
           sleep 10
         env:
           TEST_DATABASE_URL: postgres://test:test@localhost:${{ job.services.postgres.ports['5432'] }}/test
-          DATABASE_URL: postgres://test:test@localhost:${{ job.services.postgres.ports['5432'] }}/test
           SECRET: testkey
       - name: open frontend for e2e-tests
         run: |
