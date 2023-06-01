@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const loginRouter = require('express').Router()
 const config = require('../utils/config')
-const {User} = require('../models/user')
+const { User } = require('../models')
 const {validateLoginInput} = require('./validate_input.js')
 
 loginRouter.post('/', async (request, response) => {
