@@ -11,6 +11,7 @@ describe('Login ', function() {
             email: 'tiina.testaaja@keskitty.com',
             username: 'Tiina14',
             password: 'salainen1234',
+            passwordConfirm: 'salainen1234'
 
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
