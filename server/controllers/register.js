@@ -7,6 +7,7 @@ registerRouter.post('/', async (request, response) => {
     try {
         const username = request.body.username
         const password = request.body.password
+        const passwordConfirm = request.body.passwordConfirm
         const firstName = request.body.firstName
         const lastName = request.body.lastName
         const address = request.body.address
@@ -14,6 +15,10 @@ registerRouter.post('/', async (request, response) => {
         const postalCode = request.body.postalCode
         const phoneNumber = request.body.phoneNumber
         const email = request.body.email
+
+        if (password != passwordConfirm) {
+            return response.status(401).json({error: 'Salasanat eivät täsmää.'})
+        }
         
         const finduser = await User.findOne({where: {username: username}})
 

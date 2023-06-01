@@ -29,12 +29,13 @@ beforeEach(async () => {
     await User.create(initialUser[0])
 })
 
-test('can register with non-existing username', async () => {
+test('can register with non-existing username and otherwise correct input', async () => {
     const newUser = {
         firstName: 'Jaakko',
         lastName: 'Testaaja',
         username: 'Jaakko35',
         password: 'salainen22',
+        passwordConfirm: 'salainen22',
         address: 'Osoite',
         postalCode: '00300',
         city: 'Helsinki',
@@ -57,6 +58,7 @@ test('correct number of users in database', async () => {
         lastName: 'Testaaja',
         username: 'Jaakko35',
         password: 'salainen22',
+        passwordConfirm: 'salainen22',
         address: 'Osoite',
         postalCode: '00300',
         city: 'Helsinki',
@@ -66,8 +68,10 @@ test('correct number of users in database', async () => {
 
     const existingUser = {
         firstName: 'Pekka',
+        lastName: 'Testinen',
         username: 'Pekka35',
-        password: 'salainen',
+        password: 'salainen123',
+        passwordConfirm: 'salainen123',
         address: 'Osoite',
         postalCode: '00300',
         city: 'Helsinki',
@@ -93,11 +97,13 @@ test('correct number of users in database', async () => {
     expect(users.length).toBe(2)
 })
 
-test('cannot register with existing username', async () => {
+test('cannot register with existing username and otherwise correct input', async () => {
     const existingUser = {
         firstName: 'Pekka',
+        lastName: 'Testaaja',
         username: 'Pekka35',
-        password: 'salainen',
+        password: 'salainen123',
+        passwordConfirm: 'salainen123',
         address: 'Osoite',
         city: 'Helsinki',
         postalCode: '00300',
@@ -114,8 +120,10 @@ test('cannot register with existing username', async () => {
 test('cannot register if mandatory values are missing', async () => {
     const newUser = {
         firstName: 'Jaakko',
+        lastName: '',
         username: 'Jaakko35',
-        password: '',
+        password: 'salainen123',
+        passwordConfirm: 'salainen123',
         address: 'Osoite',
         city: 'Helsinki',
         postalCode: '00300',
@@ -127,4 +135,44 @@ test('cannot register if mandatory values are missing', async () => {
         .post('/api/register')
         .send(newUser)
         .expect(401)
+})
+
+test('cannot register if input is invalid', async () => {
+    const newUser = {
+        firstName: 'Jaakko',
+        lastName: 'Testaaja',
+        username: 'Jaakko35',
+        password: 'salainen123',
+        passwordConfirm: 'salainen123',
+        address: 'Osoite',
+        postalCode: '0030',
+        city: 'Helsinki',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
+    }
+
+    await api
+        .post('/api/register')
+        .send(newUser)
+        .expect(401)    
+})
+
+test('cannot register if passwords do not match', async () => {
+    const newUser = {
+        firstName: 'Jaakko',
+        lastName: 'Testaaja',
+        username: 'Jaakko35',
+        password: 'salainen22',
+        passwordConfirm: 'salainen123',
+        address: 'Osoite',
+        postalCode: '00300',
+        city: 'Helsinki',
+        phoneNumber: '0509876543',
+        email: 'osoite@email.com'
+    }
+
+    await api
+        .post('/api/register')
+        .send(newUser)
+        .expect(401)    
 })
