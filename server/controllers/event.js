@@ -8,10 +8,15 @@ const jwt = require('jsonwebtoken')
 eventRouter.post('/', async(request, response) => {
 
     try{
+        
 
+        console.log(request.body)
         const { team, opponent, location, date, time, description, token } = request.body
 
+        console.log(config.SECRET)
         const decodedToken = jwt.verify(token, config.SECRET) 
+
+
     
         if (!decodedToken){
             return response.status(401).json({error: 'invalid token'})
@@ -24,30 +29,45 @@ eventRouter.post('/', async(request, response) => {
         if (finduser) {
             user = finduser.dataValues
         }
+        
+
+        console.log(date, time)
+
+        const newdate = new Date(date)
+        const [hours, minutes] = time.split(':')
+
+        newdate.setHours(hours)
+        newdate.setMinutes(minutes)
+
+        console.log(newdate)
+
+        const checkEventErrors = validateEventInput(team, opponent, newdate, location, description)
 
 
-        const checkEventErrors = validateEventInput(team, opponent, date, time, location, description)
+
+       
 
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
         }
 
-        const[year, month, day] = date.split('-')
-        const[hours, minutes] = time.split('-')
-
-        const dateTime = new Date(year, month, -1, day, hours, minutes)
+        
 
         const event = new Event({
 
             userId:user.id,
-            team:team,
             opponent:opponent,
             location:location,
-            dateTime : dateTime,
-            description: description
+            dateTime : newdate,
+            description: description,
+            teamId: 1
         })
 
+        
+
         const savedEvent = await Event.create(event.dataValues)
+
+        console.log('SAVED', event)
     
         return response.status(200).json(savedEvent)
     }catch(error){
