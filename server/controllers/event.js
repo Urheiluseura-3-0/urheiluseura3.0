@@ -1,7 +1,7 @@
 const eventRouter = require('express').Router()
 const config = require('../utils/config')
-const {Event} = require('../models/event')
-const {User} = require('../models/user')
+const {Event} = require('../models')
+const {User} = require('../models')
 const {validateEventInput} = require('./validate_input.js')
 const jwt = require('jsonwebtoken')
 
@@ -26,11 +26,16 @@ eventRouter.post('/', async(request, response) => {
         }
 
 
-        const checkEventErrors = validateEventInput(team, opponent, location, description)
+        const checkEventErrors = validateEventInput(team, opponent, date, time, location, description)
 
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
         }
+
+        const[year, month, day] = date.split('-')
+        const[hours, minutes] = time.split('-')
+
+        const dateTime = new Date(year, month, -1, day, hours, minutes)
 
         const event = new Event({
 
@@ -38,8 +43,7 @@ eventRouter.post('/', async(request, response) => {
             team:team,
             opponent:opponent,
             location:location,
-            date:date,
-            time:time,
+            dateTime : dateTime,
             description: description
         })
 

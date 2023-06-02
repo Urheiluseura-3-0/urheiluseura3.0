@@ -42,6 +42,19 @@ const validateEmail = (value) => {
     }
     return false
 }
+const validateDate = (value) => {
+    if(value.match(/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|(([1][26]|[2468][048]|[3579][26])00))))$/g) != null){
+        return true
+    }
+    return false
+}
+
+const validateTime = (value) => {
+    if(value.match(/^^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)){
+        return true
+    }
+    return false
+}
 
 const validateMandatoryField = (value, field, min, max) => {
     const errors = []
@@ -66,7 +79,16 @@ const validateMandatoryField = (value, field, min, max) => {
         if (!validateEmail(value)) {
             errors.push(` ${field} ei ole oikean muotoinen`)
         }
+    }else if(field == 'Päivämäärä'){
+        if (!validateDate(value)){
+            errors.push(`${field} on virheellinen`)
+        }
+    }else if(field == 'Kellonaika'){
+        if (!validateTime(value)){
+            errors.push(`${field} on virheellinen`)
+        }
     }
+    
 
     return errors
 }
@@ -95,12 +117,15 @@ const validateLoginInput = (username, password) => {
     return errors
 }
 
-const validateEventInput = (team, opponent, location, description)=> {
+
+const validateEventInput = (team, opponent, location, date, time, description)=> {
     let errors =[]
 
     errors.errors.concat(validateMandatoryField(team, 'Joukkue', 2, 40))
     errors.errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
     errors.errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
+    errors.errors.concat(validateMandatoryField(date, 'Päivämäärä'))
+    errors.errors.concat(validateMandatoryField(time, 'Kellonaika'))
     errors.errors.concat(validateLength(description, 0, 200))
 
     return errors
