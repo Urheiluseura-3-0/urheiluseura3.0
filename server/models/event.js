@@ -25,10 +25,7 @@ Event.init({
     },
     dateTime:{
         type: DataTypes.DATE,
-        allowNull: false,
-        validate: {
-            len: [2, 40]
-        }
+        allowNull: false
     },
     description:{
         type: DataTypes.TEXT,
