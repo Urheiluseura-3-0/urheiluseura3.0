@@ -6,7 +6,6 @@ const app = require('../app')
 
 const api = supertest(app)
 
-// DATE TIME FORMAT TO BE CONFIRMED
 beforeEach(async () => {
 
     const saltRounds = 10
