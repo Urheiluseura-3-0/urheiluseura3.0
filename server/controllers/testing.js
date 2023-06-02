@@ -5,7 +5,8 @@ const { User } = require('../models')
 router.post('/reset', async (request, response) => {
     await User.destroy({
         where: {},
-        truncate: true
+        truncate: true,
+        cascade: true
     })
 
     response.status(204).end()
