@@ -5,10 +5,6 @@ const app = require('../app')
 
 const api = supertest(app)
 
-beforeAll(async () => {
-    await User.sync({ alter: true })
-})
-
 beforeEach(async () => {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash('salainen12', saltRounds)

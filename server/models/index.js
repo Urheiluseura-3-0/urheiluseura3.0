@@ -18,11 +18,6 @@ Event.belongsTo(Supervisor, { foreignKey: 'confirmedBySupervisorId', as: 'confir
 Supervisor.belongsTo(User, { allowNull: false, foreignKey: 'userId', as: 'user' })
 Supervisor.belongsTo(Team, { allowNull: false, foreignKey: 'teamId', as: 'team' })
 
-User.sync({ alter:true })
-Team.sync({ alter:true })
-Supervisor.sync({ alter:true })
-Event.sync({ alter:true })
-
 module.exports = {
     User,
     Team,

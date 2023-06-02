@@ -6,6 +6,7 @@ const sequelize = new Sequelize(config.DATABASE_URL)
 const connectToDatabase = async () => {
     try {
         await sequelize.authenticate()
+        await sequelize.sync()
         console.log('Connected to the database')
     } catch (err) {
         console.log('Failed to connect to the database')
@@ -15,4 +16,9 @@ const connectToDatabase = async () => {
     return null
 }
 
-module.exports = { connectToDatabase, sequelize }
+const closeConnectionToDatabase = async () => {
+    sequelize.close()
+}
+
+
+module.exports = { closeConnectionToDatabase, connectToDatabase, sequelize }
