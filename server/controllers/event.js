@@ -1,7 +1,7 @@
 const eventRouter = require('express').Router()
 const config = require('../utils/config')
-const {Event} = require('../models/event')
-const {User} = require('../models/user')
+const {Event} = require('../models')
+const {User} = require('../models')
 const {validateEventInput} = require('./validate_input.js')
 const jwt = require('jsonwebtoken')
 
