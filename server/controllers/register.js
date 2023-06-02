@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const registerRouter = require('express').Router()
-const {User} = require('../models/user')
+const {User} = require('../models')
 const {validateRegisterInput} = require('./validate_input.js')
 
 registerRouter.post('/', async (request, response) => {
