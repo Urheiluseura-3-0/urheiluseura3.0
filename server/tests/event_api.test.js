@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const { User } = require('../models/user')
-//const { Event } =  require('../models/event')
+const { User } = require('../models')
+const { Event } =  require('../models')
 const app = require('../app')
 
 const api = supertest(app)
@@ -79,6 +79,31 @@ test('event can be added with correct input', async () => {
         .send(newEvent)
         .expect(200)
 })
+
+test('event can be added without description', async () => {
+
+    const user = {username: 'Pekka35', password: 'salainen'}
+    const loggedUser = await api.post('/api/login').send(user)
+
+    const cryptedToken = loggedUser.body.token
+
+    const newEvent = {
+
+        team: 'Miehet I B',
+        opponent: 'Honka I B',
+        location: 'Espoonlahden urheiluhalli',
+        date:'2023-06-19',
+        time:'12:30',
+        token: cryptedToken
+    }
+
+    await api
+        .post('/api/event')
+        .send(newEvent)
+        .expect(200)
+})
+
+
 
 
 test('cannot add an event if team is missing', async () => {
@@ -225,6 +250,8 @@ test('correct number of events in database', async () => {
     const user = {username: 'Pekka35', password: 'salainen'}
     const loggedUser = await api.post('/api/login').send(user)
 
+    const cryptedToken = loggedUser.body.token
+    
     const firstNewEvent = {
 
         team: 'Miehet I B',
@@ -259,10 +286,10 @@ test('correct number of events in database', async () => {
     
     await api
         .post('/api/event')
-        .send(firstNewEvent)
+        .send(secondNewEvent)
 
-        events = await Event.findAll()
-        expect(events.length).toBe(3)
+    events = await Event.findAll()
+    expect(events.length).toBe(3)
 
 
 })
