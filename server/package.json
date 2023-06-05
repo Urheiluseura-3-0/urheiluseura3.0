@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "eslint": "eslint .",
-    "start:test": "NODE_ENV=test node index.js"
+    "start:test": "NODE_ENV=test node index.js",
+    "migration:down": "node utils/rollback.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +24,8 @@
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.11.0",
     "react-cookie": "^4.1.1",
-    "sequelize": "^6.31.1"
+    "sequelize": "^6.31.1",
+    "umzug": "^3.2.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -34,6 +36,9 @@
     "supertest": "^6.3.3"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setupTests.js"
+    ]
   }
 }
