@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom'
+import EventList from './EventList'
+//import EventList2 from './EventList2'
 
 const userView = (props) => {
     const navigate = useNavigate()
@@ -10,8 +12,16 @@ const userView = (props) => {
 
     return (
         <div>
-            <p>Kirjautuneena</p>
-            <button id='logout-button' onClick= {logOut}>Kirjaudu ulos</button>
+            <div>
+                <p>Kirjautuneena</p>
+                <button id='logout-button' onClick= {logOut}>Kirjaudu ulos</button>
+            </div>
+            <div>
+                <EventList />
+            </div>
+            <div>
+
+            </div>
         </div>
     )
 }
