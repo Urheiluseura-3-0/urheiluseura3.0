@@ -70,13 +70,6 @@ eventRouter.post('/', async(request, response) => {
             return response.status(401).json({error: 'team missing or incorrect team'})
         }
 
-        console.log('createdByUserId', user.id,
-            'opponent',opponent,
-            'location',location,
-            'dateTime', newdate,
-            'description',description,
-            'teamId',findteam.id)
-
         const event = new Event({
             createdByUserId: user.id,
             opponent:opponent,

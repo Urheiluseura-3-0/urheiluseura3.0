@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
 const { User } = require('../models')
-//const { Event } =  require('../models')
+const { Event } =  require('../models')
 const { Team } =  require('../models')
 const app = require('../app')
 
@@ -40,7 +40,11 @@ beforeEach(async () => {
         {
             name: 'EBT SB',
             category: 'N4D'
-        }
+        },
+        {
+            name: 'EBT',
+            category: 'N3D'
+        },
     ]
     await Team.destroy({
         where: {},
@@ -49,8 +53,9 @@ beforeEach(async () => {
     })
     await Team.create(initialTeams[0])
     await Team.create(initialTeams[1])
+    await Team.create(initialTeams[2])
 
-/*
+/* Event initialization does not work
     const initialEvent = [
         {   
             opponent: 'Honka I B',
@@ -315,7 +320,7 @@ test('cannot add an event if token is invalid', async () => {
     expect(result.body.error).toBe('token missing')
 })
 
-/*
+
 test('correct number of events in database', async () => {
 
     const user = {username: 'Pekka35', password: 'salainen1234'}
@@ -325,7 +330,7 @@ test('correct number of events in database', async () => {
     
     const firstNewEvent = {
 
-        team: 'EBT SB',
+        team: 'EBT',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date: '2023-06-19',
@@ -334,32 +339,13 @@ test('correct number of events in database', async () => {
         token: cryptedToken
     }
 
-    const secondNewEvent = {
-
-        team: 'Naiset 3',
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken
-    }
-
-    let events = await Event.findAll()
-    expect(events.length).toBe(1)
-    
     await api
         .post('/api/event')
         .send(firstNewEvent)
+        .expect(200)
+    
+    const events = await Event.findAll()
+    console.log('events', events)
+    expect(events.length).toBe(1)
 
-    events = await Event.findAll()
-    expect(events.length).toBe(2)
-
-    await api
-        .post('/api/event')
-        .send(secondNewEvent)
-
-    events = await Event.findAll()
-    expect(events.length).toBe(3)
 })
-*/
