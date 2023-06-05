@@ -42,6 +42,13 @@ const validateEmail = (value) => {
     }
     return false
 }
+const validateDate = (value) => {
+    if(value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/) != false){
+        return true
+    }
+    return false
+}
+
 
 const validateMandatoryField = (value, field, min, max) => {
     const errors = []
@@ -66,7 +73,12 @@ const validateMandatoryField = (value, field, min, max) => {
         if (!validateEmail(value)) {
             errors.push(` ${field} ei ole oikean muotoinen`)
         }
+    }else if(field == 'Päivämäärä'){
+        if (!validateDate(value)){
+            errors.push(`${field} on virheellinen`)
+        }
     }
+    
 
     return errors
 }
@@ -95,13 +107,22 @@ const validateLoginInput = (username, password) => {
     return errors
 }
 
-const validateEventInput = (team, opponent, location, description)=> {
+
+const validateEventInput = (team, opponent, location, newdate, description)=> {
     let errors =[]
 
-    errors.errors.concat(validateMandatoryField(team, 'Joukkue', 2, 40))
-    errors.errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
-    errors.errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
-    errors.errors.concat(validateLength(description, 0, 200))
+
+
+    errors = errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
+    errors = errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
+    errors = errors.concat(validateMandatoryField(newdate, 'Päivämäärä', 0, 100) )
+    
+    if(validateLength(description, 0, 200) == false){
+        errors = errors.concat('Lisätietoja-kenttä on liian pitkä')
+    }
+    if(validateLength(team, 2, 40) == false){
+        errors = errors.concat('Vastustajan nimen pituus on virheellinen')
+    }
 
     return errors
 }
