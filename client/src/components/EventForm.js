@@ -21,8 +21,6 @@ const EventForm = () => {
 
     const handleEvent = async (event) => {
         console.log('input', team, opponent, location, date, time, description)
-        console.log('length', team.length, opponent.length, location.length, date.length, time.length, description.length)
-        console.log(isInputValid, isTeamValid, isOpponentValid, isLocationValid, isDateValid, isTimeValid, isDescriptionValid)
         event.preventDefault()
         if (isInputValid) {
             try {
@@ -31,10 +29,12 @@ const EventForm = () => {
                 })
                 navigate('/home')
                 resetFields()
+                window.location.reload()
             } catch (exception) {
                 const syote = `Joukkue: ${team} Vastustaja: ${opponent} Paikka ${location} Päivä: ${date} Aika: ${time} Kuvaus: ${description}`
                 console.log(syote)
                 resetFields()
+                window.location.reload()
             }
         } else {
             console.log('Virheellinen syöte')
@@ -85,20 +85,22 @@ const EventForm = () => {
         validateFields()
     }, [team, opponent, location, date, time, description])
 
-
     return (
         <div>
             <h1>Lisää tapahtuma</h1>
             <form>
                 <div>
                     <label>Joukkue</label>
-                    <select id='team' defaultValue={teams[0]} onChange={({ target }) => {
+                    <select id='team' onChange={({ target }) => {
                         setTeam(target.value)
                         setIsTeamValid(target.value !== 0)
                     }}>
                         <option value='0'>Valitse joukkue</option>
                         {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
                     </select>
+                    {isTeamValid ? null : (
+                        <p id='team-error'>Valitse jokin joukkue</p>
+                    )}
                 </div>
                 <div>
                     <label>Vastustaja</label>
@@ -128,10 +130,9 @@ const EventForm = () => {
                         onChange={({ target }) => {
                             setDate(target.value)
                             setIsDateValid(validateDate(target.value))
-                        }}/>{isDateValid ? null : (
-                        <p id='date-error'>
-                                Tarkista päivämäärä
-                        </p>
+                        }}/>
+                    {isDateValid ? null : (
+                        <p id='date-error'>Tarkista päivämäärä</p>
                     )}
                 </div>
                 <div>
@@ -141,6 +142,9 @@ const EventForm = () => {
                             setTime(target.value)
                             setIsTimeValid(validateTime(target.value))
                         }}/>
+                    {isTimeValid ? null : (
+                        <p id='time-error'>Tarkista kellonaika</p>
+                    )}
                 </div>
                 <div>
                     <label>Lisätietoja</label>
