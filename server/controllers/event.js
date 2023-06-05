@@ -79,7 +79,6 @@ eventRouter.post('/', async(request, response) => {
             teamId: findteam.id
         })
         
-        console.log('event', event)
         const savedEvent = await Event.create(event.dataValues)
 
         
