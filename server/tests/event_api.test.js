@@ -30,7 +30,7 @@ beforeEach(async () => {
         truncate: true,
         cascade: true
     })
-    await User.create(initialUser[0])
+    const user = await User.create(initialUser[0])
 
     const initialTeams = [
         {
@@ -51,27 +51,34 @@ beforeEach(async () => {
         truncate:true,
         cascade: true
     })
-    await Team.create(initialTeams[0])
+    const team = await Team.create(initialTeams[0])
     await Team.create(initialTeams[1])
     await Team.create(initialTeams[2])
 
-/* Event initialization does not work
+    const dateString = '2023-06-19T12:30:00.000Z'
+    const timestamp = Date.parse(dateString)
+    const dateTime = new Date(timestamp)
+
     const initialEvent = [
         {   
+
             opponent: 'Honka I B',
             location: 'Espoonlahden urheiluhalli',
-            dateTime:'2023-06-19T12.30.00.000Z',
+            dateTime: dateTime,
             description: 'Tuomarointi',
+            teamId: team.id,
+            createdById: user.id,
             
         }
     ]
+    
     await Event.destroy({
         where: {},
         truncate: true,
         cascade: true
     })
     await Event.create(initialEvent[0])
-*/
+
 })
 
 test('event can be added with correct input', async () => {
@@ -335,7 +342,7 @@ test('correct number of events in database', async () => {
         location: 'Espoonlahden urheiluhalli',
         date: '2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
+        description: 'Siivous',
         token: cryptedToken
     }
 
@@ -345,7 +352,6 @@ test('correct number of events in database', async () => {
         .expect(200)
     
     const events = await Event.findAll()
-    console.log('events', events)
-    expect(events.length).toBe(1)
+    expect(events.length).toBe(2)
 
 })
