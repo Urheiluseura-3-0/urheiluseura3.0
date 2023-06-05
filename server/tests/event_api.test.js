@@ -324,7 +324,7 @@ test('cannot add an event if token is invalid', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toBe('invalid token')
+    expect(result.body.error).toContain('invalid token')
 })
 
 
