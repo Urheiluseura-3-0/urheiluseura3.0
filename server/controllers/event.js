@@ -71,7 +71,7 @@ eventRouter.post('/', async(request, response) => {
         }
 
         const event = new Event({
-            createdByUserId: user.id,
+            createdById: user.id,
             opponent:opponent,
             location:location,
             dateTime : newdate,
