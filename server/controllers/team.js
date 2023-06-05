@@ -15,11 +15,11 @@ teamRouter.get('/', async (request,response) => {
 teamRouter.get('/:id', async (request,response) => {
 
     try{
-        const team = await Team.findByPK(request.params.id)
+        const team = await Team.findByPk(request.params.id)
         if(team){
-            response.json(team)
+            return response.json(team)
         }else{
-            response.status(404).end()
+            return response.status(404).end()
         }
 
     }catch(error){
