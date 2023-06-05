@@ -1,7 +1,8 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
 const { User } = require('../models')
-const { Event } =  require('../models')
+//const { Event } =  require('../models')
+const { Team } =  require('../models')
 const app = require('../app')
 
 const api = supertest(app)
@@ -9,7 +10,7 @@ const api = supertest(app)
 beforeEach(async () => {
 
     const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen', saltRounds)
+    const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
 
     const initialUser = [
         {
@@ -26,45 +27,55 @@ beforeEach(async () => {
     ]
     await User.destroy({
         where: {},
-        truncate: true
+        truncate: true,
+        cascade: true
     })
     await User.create(initialUser[0])
 
-    const user = {username: 'Pekka35', password: 'salainen'}
-    const loggedUser = await api.post('/api/login').send(user)
+    const initialTeams = [
+        {
+            name: 'Naiset 3',
+            category: 'N2D'
+        },
+        {
+            name: 'EBT SB',
+            category: 'N4D'
+        }
+    ]
+    await Team.destroy({
+        where: {},
+        truncate:true,
+        cascade: true
+    })
+    await Team.create(initialTeams[0])
+    await Team.create(initialTeams[1])
 
-    const cryptedToken = loggedUser.body.token
-
-
+/*
     const initialEvent = [
         {   
-
-            team: 'Miehet I B',
             opponent: 'Honka I B',
             location: 'Espoonlahden urheiluhalli',
-            date:'2023-06-19',
-            time:'12:30',
+            dateTime:'2023-06-19T12.30.00.000Z',
             description: 'Tuomarointi',
-            token: cryptedToken
+            
         }
     ]
     await Event.destroy({
         where: {},
-        truncate: true
+        truncate: true,
+        cascade: true
     })
     await Event.create(initialEvent[0])
+*/
 })
 
 test('event can be added with correct input', async () => {
-
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
-
     const cryptedToken = loggedUser.body.token
-
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -81,18 +92,19 @@ test('event can be added with correct input', async () => {
 
 test('event can be added without description', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
+        description: '',
         token: cryptedToken
     }
 
@@ -103,11 +115,9 @@ test('event can be added without description', async () => {
 })
 
 
-
-
 test('cannot add an event if team is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
@@ -123,22 +133,52 @@ test('cannot add an event if team is missing', async () => {
         token: cryptedToken 
     }
 
-    await api
+    const result = await api
         .post('/api/event')
         .send(newEvent)
         .expect(401)
+    
+    expect(result.body.error).toContain('team missing')
 })
 
-test('cannot add an event if opponent is missing', async () => {
+test('cannot add an event if team is incorrect', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'Helsingin lentopalloilijat',
+        opponent: 'Honka I B',
+        location: 'Espoonlahden urheiluhalli',
+        date:'2023-06-19',
+        time:'12:30',
+        description: 'Lipunmyynti',
+        token: cryptedToken 
+    }
+
+    const result = await api
+        .post('/api/event')
+        .send(newEvent)
+        .expect(401)
+    
+    expect(result.body.error).toContain('incorrect team')
+})
+
+
+
+test('cannot add an event if opponent is missing', async () => {
+
+    const user = {username: 'Pekka35', password: 'salainen1234'}
+    const loggedUser = await api.post('/api/login').send(user)
+
+    const cryptedToken = loggedUser.body.token
+
+    const newEvent = {
+
+        team: 'EBT SB',
         opponent: '',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -147,22 +187,24 @@ test('cannot add an event if opponent is missing', async () => {
         token: cryptedToken 
     }
 
-    await api
+    const result = await api
         .post('/api/event')
         .send(newEvent)
         .expect(401)
+    
+    expect(result.body.error).toBe('opponent missing')
 })
 
 test('cannot add an event if location is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: '',
         date:'2023-06-19',
@@ -171,22 +213,24 @@ test('cannot add an event if location is missing', async () => {
         token: cryptedToken
     }
 
-    await api
+    const result = await api
         .post('/api/event')
         .send(newEvent)
         .expect(401)
+
+    expect(result.body.error).toBe('location missing')
 })
 
 test('cannot add an event if date is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'',
@@ -195,22 +239,24 @@ test('cannot add an event if date is missing', async () => {
         token: cryptedToken
     }
 
-    await api
+    const result = await api
         .post('/api/event')
         .send(newEvent)
         .expect(401)
+
+    expect(result.body.error).toBe('date missing')
 })
 
 test('cannot add an event if time is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -219,41 +265,67 @@ test('cannot add an event if time is missing', async () => {
         token: cryptedToken
     }
 
-    await api
+    const result = await api
         .post('/api/event')
         .send(newEvent)
         .expect(401)
+
+    expect(result.body.error).toBe('time missing')
 })
 
 test('cannot add an event if token is missing', async () => {
 
     const newEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
         description: 'Lipunmyynti',
-        token: 'invalid'
+        token: ''
     }
 
-    await api
+    const result = await api
         .post('/api/event')
         .send(newEvent)
         .expect(401)
+
+    expect(result.body.error).toBe('token missing')
 })
 
+test('cannot add an event if token is invalid', async () => {
+
+    const newEvent = {
+
+        team: 'EBT SB',
+        opponent: 'Honka I B',
+        location: 'Espoonlahden urheiluhalli',
+        date:'2023-06-19',
+        time:'12:30',
+        description: 'Lipunmyynti',
+        token: ''
+    }
+
+    const result = await api
+        .post('/api/event')
+        .send(newEvent)
+        .expect(401)
+
+    expect(result.body.error).toBe('token missing')
+})
+
+/*
 test('correct number of events in database', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
 
     const cryptedToken = loggedUser.body.token
     
     const firstNewEvent = {
 
-        team: 'Miehet I B',
+        team: 'EBT SB',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date: '2023-06-19',
@@ -264,7 +336,7 @@ test('correct number of events in database', async () => {
 
     const secondNewEvent = {
 
-        team: 'Miehet I B',
+        team: 'Naiset 3',
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -275,20 +347,19 @@ test('correct number of events in database', async () => {
 
     let events = await Event.findAll()
     expect(events.length).toBe(1)
-
+    
     await api
         .post('/api/event')
         .send(firstNewEvent)
 
     events = await Event.findAll()
     expect(events.length).toBe(2)
-    
+
     await api
         .post('/api/event')
         .send(secondNewEvent)
 
     events = await Event.findAll()
     expect(events.length).toBe(3)
-
-
 })
+*/

@@ -10,13 +10,33 @@ eventRouter.post('/', async(request, response) => {
 
     try{
         
-
         const { team, opponent, location, date, time, description, token } = request.body
 
-       
-        const decodedToken = jwt.verify(token, config.SECRET) 
+        if (!team) {
+            return response.status(401).json({error: 'team missing'})           
+        }
 
+        if (!opponent) {
+            return response.status(401).json({error: 'opponent missing'})           
+        }
 
+        if (!location) {
+            return response.status(401).json({error: 'location missing'})           
+        }
+
+        if (!date) {
+            return response.status(401).json({error: 'date missing'})           
+        }
+
+        if (!time) {
+            return response.status(401).json({error: 'time missing'})           
+        }
+
+        if (!token) {
+            return response.status(401).json({error: 'token missing'})           
+        }
+
+        const decodedToken = jwt.verify(token, config.SECRET)
     
         if (!decodedToken){
             return response.status(401).json({error: 'invalid token'})
@@ -30,8 +50,6 @@ eventRouter.post('/', async(request, response) => {
             user = finduser.dataValues
         }
         
-
-
         const newdate = new Date(date)
         const [hours, minutes] = time.split(':')
 
@@ -48,10 +66,19 @@ eventRouter.post('/', async(request, response) => {
         }
 
         const findteam = await Team.findOne({where: {name: team}})
+        if (!findteam) {
+            return response.status(401).json({error: 'team missing or incorrect team'})
+        }
 
+        console.log('createdByUserId', user.id,
+            'opponent',opponent,
+            'location',location,
+            'dateTime', newdate,
+            'description',description,
+            'teamId',findteam.id)
 
         const event = new Event({
-            createdByUserId:user.id,
+            createdByUserId: user.id,
             opponent:opponent,
             location:location,
             dateTime : newdate,
@@ -59,7 +86,7 @@ eventRouter.post('/', async(request, response) => {
             teamId: findteam.id
         })
         
-
+        console.log('event', event)
         const savedEvent = await Event.create(event.dataValues)
 
         
