@@ -26,9 +26,6 @@ Event.init({
     dateTime:{
         type: DataTypes.DATE,
         allowNull: false,
-        validate: {
-            len: [2, 40]
-        }
     },
     description:{
         type: DataTypes.TEXT,
