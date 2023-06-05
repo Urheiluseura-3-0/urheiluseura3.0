@@ -2,6 +2,7 @@ const eventRouter = require('express').Router()
 const config = require('../utils/config')
 const {Event} = require('../models')
 const {User} = require('../models')
+const {Team} = require('../models')
 const {validateEventInput} = require('./validate_input.js')
 const jwt = require('jsonwebtoken')
 
@@ -10,10 +11,9 @@ eventRouter.post('/', async(request, response) => {
     try{
         
 
-        console.log(request.body)
         const { team, opponent, location, date, time, description, token } = request.body
 
-        console.log(config.SECRET)
+       
         const decodedToken = jwt.verify(token, config.SECRET) 
 
 
@@ -31,7 +31,6 @@ eventRouter.post('/', async(request, response) => {
         }
         
 
-        console.log(date, time)
 
         const newdate = new Date(date)
         const [hours, minutes] = time.split(':')
@@ -39,35 +38,31 @@ eventRouter.post('/', async(request, response) => {
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
 
-        console.log(newdate)
+        
 
         const checkEventErrors = validateEventInput(team, opponent, newdate, location, description)
 
-
-
-       
 
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
         }
 
-        
+        const findteam = await Team.findOne({where: {name: team}})
+
 
         const event = new Event({
-
-            userId:user.id,
+            createdByUserId:user.id,
             opponent:opponent,
             location:location,
             dateTime : newdate,
             description: description,
-            teamId: 1
+            teamId: findteam.id
         })
-
         
 
         const savedEvent = await Event.create(event.dataValues)
 
-        console.log('SAVED', event)
+        
     
         return response.status(200).json(savedEvent)
     }catch(error){
