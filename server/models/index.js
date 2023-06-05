@@ -13,10 +13,10 @@ Team.belongsToMany(User, { through: 'Supervisor', foreignKey: 'teamId' })
 
 Event.belongsTo(User, { foreignKey: 'createdByUserId', as: 'createdBy' })
 Event.belongsTo(Team, { foreignKey: 'teamId', as: 'team' })
-Event.belongsTo(Supervisor, { foreignKey: 'confirmedBySupervisorId', as: 'confirmedBy' })
+Event.belongsTo(User, { foreignKey: 'confirmedBySupervisorId', as: 'confirmedBy' })
 
-Supervisor.belongsTo(User, { allowNull: false, foreignKey: 'userId', as: 'user' })
-Supervisor.belongsTo(Team, { allowNull: false, foreignKey: 'teamId', as: 'team' })
+Supervisor.belongsTo(User)
+Supervisor.belongsTo(Team)
 
 module.exports = {
     User,
