@@ -6,7 +6,7 @@ teamRouter.get('/', async (request,response) => {
 
     try{
         const teams = await Team.findAll()
-        response.json(teams)
+        return response.json(teams)
 
     }catch(error){
         return response.status(400)
@@ -23,7 +23,7 @@ teamRouter.get('/:id', async (request,response) => {
         }
 
     }catch(error){
-        return response.status(400)
+        return response.status(400).end()
     }
 })
 module.exports =  teamRouter

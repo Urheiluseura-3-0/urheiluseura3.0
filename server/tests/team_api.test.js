@@ -36,3 +36,10 @@ test('Get by id returns correct team', async () => {
     expect(response.body.name).toContain('EBT SB')
 
 })
+
+test('Incorrect id returns error code', async () => {
+    const invalidId = 'thisIdISInvalid'
+    await api
+        .get(`/api/team/${invalidId}`)
+        .expect(400)
+})
