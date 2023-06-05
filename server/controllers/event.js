@@ -36,12 +36,12 @@ eventRouter.post('/', async(request, response) => {
             return response.status(401).json({error: 'token missing'})           
         }
 
-        const decodedToken = jwt.verify(token, config.SECRET)
-    
-        if (!decodedToken){
+        try {jwt.verify(token, config.SECRET)
+        }catch(error){
             return response.status(401).json({error: 'invalid token'})
         }
 
+        const decodedToken = jwt.verify(token, config.SECRET)
         const finduser = await User.findByPk(decodedToken.id)
 
         let user = null
