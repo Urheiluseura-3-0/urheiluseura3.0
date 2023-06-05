@@ -230,6 +230,7 @@ module.exports = {
                     model: 'users',
                     key: 'id',
                 },
+                onDelete: 'SET NULL',
             },
             created_at: {
                 type: DataTypes.DATE,
@@ -254,7 +255,6 @@ module.exports = {
                     model: 'users',
                     key: 'id',
                 },
-                onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
             team_id: {
@@ -264,7 +264,6 @@ module.exports = {
                     model: 'teams',
                     key: 'id',
                 },
-                onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
             created_at: {
@@ -276,100 +275,12 @@ module.exports = {
                 allowNull: false,
             },
         })
-
-        // await queryInterface.addConstraint('supervisors', {
-        //     fields: ['user_id', 'team_id'],
-        //     type: 'unique',
-        //     name: 'supervisors_user_id_team_id_key',
-        // })
-
-        // await queryInterface.addConstraint('users', {
-        //     fields: ['created_by_id'],
-        //     type: 'foreign key',
-        //     name: 'users_created_by_id_fkey',
-        //     references: {
-        //         model: 'events',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'SET NULL',
-        // })
-
-        // await queryInterface.addConstraint('users', {
-        //     fields: ['confirmed_by_id'],
-        //     type: 'foreign key',
-        //     name: 'users_confirmed_by_id_fkey',
-        //     references: {
-        //         model: 'events',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'SET NULL',
-        // })
-
-        // await queryInterface.addConstraint('teams', {
-        //     fields: ['teamId'],
-        //     type: 'foreign key',
-        //     name: 'teams_teamId_fkey',
-        //     references: {
-        //         model: 'supervisors',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'CASCADE',
-        //     onUpdate: 'CASCADE',
-        // })
-
-        // await queryInterface.addConstraint('teams', {
-        //     fields: ['userId'],
-        //     type: 'foreign key',
-        //     name: 'teams_userId_fkey',
-        //     references: {
-        //         model: 'supervisors',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'CASCADE',
-        //     onUpdate: 'CASCADE',
-        // })
-
-        // await queryInterface.addConstraint('events', {
-        //     fields: ['created_by_id'],
-        //     type: 'foreign key',
-        //     name: 'events_created_by_id_fkey',
-        //     references: {
-        //         model: 'users',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'CASCADE',
-        //     onUpdate: 'CASCADE',
-        // })
-
-        // await queryInterface.addConstraint('events', {
-        //     fields: ['teamId'],
-        //     type: 'foreign key',
-        //     name: 'events_teamId_fkey',
-        //     references: {
-        //         model: 'teams',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'CASCADE',
-        //     onUpdate: 'CASCADE',
-        // })
-
-        // await queryInterface.addConstraint('events', {
-        //     fields: ['confirmedBySupervisorId'],
-        //     type: 'foreign key',
-        //     name: 'events_confirmedBySupervisorId_fkey',
-        //     references: {
-        //         model: 'supervisors',
-        //         field: 'id',
-        //     },
-        //     onDelete: 'SET NULL',
-        //     onUpdate: 'CASCADE',
-        // })
     },
 
-    down: async (queryInterface) => {
+    down: async ({context:queryInterface}) => {
         await queryInterface.dropTable('events')
+        await queryInterface.dropTable('supervisors')
         await queryInterface.dropTable('teams')
         await queryInterface.dropTable('users')
-        await queryInterface.dropTable('supervisors')
     },
 }
