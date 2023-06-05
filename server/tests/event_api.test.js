@@ -316,7 +316,7 @@ test('cannot add an event if token is invalid', async () => {
         date:'2023-06-19',
         time:'12:30',
         description: 'Lipunmyynti',
-        token: ''
+        token: 'invalid'
     }
 
     const result = await api
@@ -324,7 +324,7 @@ test('cannot add an event if token is invalid', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toBe('token missing')
+    expect(result.body.error).toBe('invalid token')
 })
 
 
@@ -335,7 +335,7 @@ test('correct number of events in database', async () => {
 
     const cryptedToken = loggedUser.body.token
     
-    const firstNewEvent = {
+    const NewEvent = {
 
         team: 'EBT',
         opponent: 'Honka I B',
@@ -348,7 +348,7 @@ test('correct number of events in database', async () => {
 
     await api
         .post('/api/event')
-        .send(firstNewEvent)
+        .send(NewEvent)
         .expect(200)
     
     const events = await Event.findAll()
