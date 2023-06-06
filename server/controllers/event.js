@@ -5,10 +5,15 @@ const {User} = require('../models')
 const {Team} = require('../models')
 const {validateEventInput} = require('./validate_input.js')
 const jwt = require('jsonwebtoken')
+const Cookies = require('universal-cookie')
 
 const getTokenFrom = request => {
-    const authorization = request.get('authorization')
+    const cookies = new Cookies(request.headers.cookie)
+    console.log('COOKIES!', cookies)
+    const authorization = cookies.get('Token')
+    console.log('authorization', authorization)
     if (authorization && authorization.startsWith('Bearer ')) {
+
         return authorization.replace('Bearer ', '')
     }
     return null

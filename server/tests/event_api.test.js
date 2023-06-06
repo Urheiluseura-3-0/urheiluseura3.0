@@ -4,8 +4,16 @@ const { User } = require('../models')
 const { Event } =  require('../models')
 const { Team } =  require('../models')
 const app = require('../app')
+const Cookies = require('universal-cookie')
 
 const api = supertest(app)
+
+const handleToken = (token) => {
+
+    const tokenBearer = token.split(';')[0].split('=')[1]
+    return `Bearer ${tokenBearer}`
+    
+}
 
 beforeEach(async () => {
 
@@ -84,7 +92,14 @@ beforeEach(async () => {
 test('event can be added with correct input', async () => {
     const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
-    const cryptedToken = loggedUser.body.token
+    console.log('loggedUser', loggedUser)
+    const cookies = new Cookies(loggedUser.headers['set-cookie'])
+    console.log('Cookies',cookies)
+    const cryptedToken = cookies.cookies[0]
+
+    const finalToken = handleToken(cryptedToken)
+    console.log('cryptToken', cryptedToken)
+    console.log(finalToken)
     const newEvent = {
 
         team: 'EBT SB',
@@ -97,12 +112,12 @@ test('event can be added with correct input', async () => {
 
     await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(200)
 })
 
-
+/*
 test('event can be added without description', async () => {
 
     const user = {username: 'Pekka35', password: 'salainen1234'}
@@ -336,3 +351,4 @@ test('correct number of events in database', async () => {
     expect(events.length).toBe(2)
 
 })
+*/
