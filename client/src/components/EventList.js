@@ -57,14 +57,16 @@ const EventList = () => {
             }
         })
 
-        if (sortedByTeam === '1') {
-            setAllEvents(sorted)
-            setSortedByTeam('0')
-        } else {
-            setAllEvents(sorted.reverse())
-            setSortedByTeam('1')
-        }
         setClicked('')
+
+        if (sortedByTeam === '1') {
+            setSortedByTeam('0')
+            return sorted
+        } else {
+            setSortedByTeam('1')
+            return sorted.reverse()
+        }
+
     }
 
     const sortByOpponent = (event) => {
@@ -206,12 +208,12 @@ const EventList = () => {
         <div>
             <h2>Lisätyt tapahtumat</h2>
             <label>Tapahtumat alkaen</label>
-            <input type='date' value={selectedDateFrom} onChange={({ target }) => {
+            <input type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
                 setDateFrom(target.value)
                 setClicked('')
             }}></input>
             <label>Tapahtumat asti</label>
-            <input type='date' value={selectedDateTo} onChange={({ target }) => {
+            <input type='date' id='dateto' value={selectedDateTo} onChange={({ target }) => {
                 setDateTo(target.value)
                 setClicked('')
             }}></input>
@@ -224,14 +226,14 @@ const EventList = () => {
                 <option value='1'>Hyväksytty</option>
                 <option value='0'>Odottaa hyväksyntää</option>
             </select>
-            <table>
+            <table id='events'>
                 <tbody>
                     <tr>
-                        <th name='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                        <th name='opponent' onClick={(event) => sortByOpponent(event)}>Vastustaja</th>
-                        <th name='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                        <th name='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                        <th name='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                        <th id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                        <th id='opponent' onClick={(event) => sortByOpponent(event)}>Vastustaja</th>
+                        <th id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                        <th id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                        <th id='status' onClick={(event) => sortByStatus(event)}>Status</th>
                     </tr>
                     {showEvents.map((one_event) =>
                         <tr key = {one_event.id} onClick={(event) => handleClick(event, one_event)}>
