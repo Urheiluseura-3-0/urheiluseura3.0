@@ -9,14 +9,8 @@ const Cookies = require('universal-cookie')
 
 const getTokenFrom = request => {
     const cookies = new Cookies(request.headers.cookie)
-    console.log('COOKIES!', cookies)
     const authorization = cookies.get('Token')
-    console.log('authorization', authorization)
-    if (authorization && authorization.startsWith('Bearer ')) {
-
-        return authorization.replace('Bearer ', '')
-    }
-    return null
+    return authorization
 }
 
 
@@ -25,11 +19,9 @@ eventRouter.post('/', async(request, response) => {
     try{
         
         const { team, opponent, location, date, time, description} = request.body
-    
         if (!team) {
             return response.status(401).json({error: 'team missing'})           
         }
-
         if (!opponent) {
             return response.status(401).json({error: 'opponent missing'})           
         }
@@ -59,7 +51,6 @@ eventRouter.post('/', async(request, response) => {
         }
 
         const finduser = await User.findByPk(decodedToken.id)
-
         let user = null
     
         if (finduser) {
@@ -71,17 +62,14 @@ eventRouter.post('/', async(request, response) => {
 
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
-
         
 
         const checkEventErrors = validateEventInput(team, opponent, newdate, location, description)
 
-
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
         }
-
-        const findteam = await Team.findOne({where: {name: team}})
+        const findteam = await Team.findByPk(team)
         if (!findteam) {
             return response.status(401).json({error: 'team missing or incorrect team'})
         }
@@ -92,7 +80,7 @@ eventRouter.post('/', async(request, response) => {
             location:location,
             dateTime : newdate,
             description: description,
-            teamId: findteam.id
+            teamId: team
         })
         
         const savedEvent = await Event.create(event.dataValues)
