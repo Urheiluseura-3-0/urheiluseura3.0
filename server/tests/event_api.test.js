@@ -10,10 +10,20 @@ const api = supertest(app)
 
 const handleToken = (token) => {
 
-    const tokenBearer = token.split(';')[0].split('=')[1]
-    return `Bearer ${tokenBearer}`
+    const finalToken = token.split(';')[0]
+    return finalToken
     
 }
+
+let user
+let loggedUser 
+let cookies
+let cryptedToken
+
+let finalToken
+
+let team
+
 
 beforeEach(async () => {
 
@@ -38,7 +48,7 @@ beforeEach(async () => {
         truncate: true,
         cascade: true
     })
-    const user = await User.create(initialUser[0])
+    user = await User.create(initialUser[0])
 
     const initialTeams = [
         {
@@ -59,7 +69,7 @@ beforeEach(async () => {
         truncate:true,
         cascade: true
     })
-    const team = await Team.create(initialTeams[0])
+    team = await Team.create(initialTeams[0])
     await Team.create(initialTeams[1])
     await Team.create(initialTeams[2])
 
@@ -87,22 +97,23 @@ beforeEach(async () => {
     })
     await Event.create(initialEvent[0])
 
+    user = {username: 'Pekka35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = handleToken(cryptedToken)
+
+    team = await Team.findOne({where: {name: 'EBT SB'}})
+
+
 })
 
-test('event can be added with correct input', async () => {
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-    console.log('loggedUser', loggedUser)
-    const cookies = new Cookies(loggedUser.headers['set-cookie'])
-    console.log('Cookies',cookies)
-    const cryptedToken = cookies.cookies[0]
+test('event can be added with correct input', async () =>{
 
-    const finalToken = handleToken(cryptedToken)
-    console.log('cryptToken', cryptedToken)
-    console.log(finalToken)
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -117,17 +128,12 @@ test('event can be added with correct input', async () => {
         .expect(200)
 })
 
-/*
+
 test('event can be added without description', async () => {
-
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -137,18 +143,13 @@ test('event can be added without description', async () => {
 
     await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(200)
 })
 
 
 test('cannot add an event if team is missing', async () => {
-
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
@@ -162,51 +163,20 @@ test('cannot add an event if team is missing', async () => {
 
     const result = await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(401)
     
     expect(result.body.error).toContain('team missing')
 })
 
-test('cannot add an event if team is incorrect', async () => {
-
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
-
-    const newEvent = {
-
-        team: 'Helsingin lentopalloilijat',
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
-        .send(newEvent)
-        .expect(401)
-    
-    expect(result.body.error).toContain('incorrect team')
-})
-
-
-
 test('cannot add an event if opponent is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
 
-    const cryptedToken = loggedUser.body.token
 
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: '',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -216,7 +186,7 @@ test('cannot add an event if opponent is missing', async () => {
 
     const result = await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(401)
     
@@ -225,14 +195,9 @@ test('cannot add an event if opponent is missing', async () => {
 
 test('cannot add an event if location is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
-
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: 'Honka I B',
         location: '',
         date:'2023-06-19',
@@ -242,7 +207,7 @@ test('cannot add an event if location is missing', async () => {
 
     const result = await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(401)
 
@@ -251,14 +216,9 @@ test('cannot add an event if location is missing', async () => {
 
 test('cannot add an event if date is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
-
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'',
@@ -268,7 +228,7 @@ test('cannot add an event if date is missing', async () => {
 
     const result = await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(401)
 
@@ -277,14 +237,9 @@ test('cannot add an event if date is missing', async () => {
 
 test('cannot add an event if time is missing', async () => {
 
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
-
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -294,7 +249,7 @@ test('cannot add an event if time is missing', async () => {
 
     const result = await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(newEvent)
         .expect(401)
 
@@ -307,7 +262,7 @@ test('cannot add an event if token is invalid', async () => {
 
     const newEvent = {
 
-        team: 'EBT SB',
+        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -317,23 +272,19 @@ test('cannot add an event if token is invalid', async () => {
 
     const result = await api
         .post('/api/event')
-        .set('Authorization', 'Bearer invalid')
+        .set('Cookie', 'InvalidToken')
         .send(newEvent)
         .expect(401)
 
     expect(result.body.error).toContain('token invalid')
 })
 
+
 test('correct number of events in database', async () => {
-
-    const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
-
-    const cryptedToken = loggedUser.body.token
     
     const NewEvent = {
 
-        team: 'EBT',
+        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date: '2023-06-19',
@@ -343,7 +294,7 @@ test('correct number of events in database', async () => {
 
     await api
         .post('/api/event')
-        .set('Authorization', `Bearer ${cryptedToken}`)
+        .set('Cookie', finalToken)
         .send(NewEvent)
         .expect(200)
     
@@ -351,4 +302,4 @@ test('correct number of events in database', async () => {
     expect(events.length).toBe(2)
 
 })
-*/
+
