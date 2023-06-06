@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import eventService from '../services/event'
+import teamService from '../services/team'
 import { useNavigate } from 'react-router-dom'
 
 const EventForm = () => {
     const navigate = useNavigate()
     const [team, setTeam] = useState('0')
+    const [teams, setTeams] = useState ([])
     const [opponent, setOpponent] = useState('')
     const [location, setLocation] = useState('')
     const [date, setDate] = useState('')
@@ -59,7 +61,7 @@ const EventForm = () => {
 
     const validateFields = () => {
         setIsInputValid(isTeamValid && isOpponentValid && isLocationValid && isDateValid &&
-                        isTimeValid && isDescriptionValid)
+            isTimeValid && isDescriptionValid)
     }
 
     const validateDate = (date) => {
@@ -75,15 +77,18 @@ const EventForm = () => {
         return pattern.test(time)
     }
 
-    const teams = [
-        { name: 'Joukkue 1', id: '1' },
-        { name: 'Joukkue 2', id: '2' },
-        { name: 'Joukkue 3', id: '3' }
-    ]
+    const getTeams = async () => {
+        const teams = await teamService.getTeams()
+        setTeams(teams)
+    }
 
     useEffect(() => {
         validateFields()
     }, [team, opponent, location, date, time, description])
+
+    useEffect(() => {
+        getTeams()
+    }, [])
 
     return (
         <div className='flex justify-center items-center h-screen bg-stone-100'>
@@ -94,16 +99,17 @@ const EventForm = () => {
                         <div className='pt-3'>
                             <label className='block'>Joukkue</label>
                             <select id='team' onChange={({ target }) => {
+                                console.log(target.value)
                                 setTeam(target.value)
-                                setIsTeamValid(target.value !== 0)
+                                setIsTeamValid(target.value > 0)
                             }}
-                            className={`peer border rounded p-2 w-full ${team.valueOf() === '0' || isTeamValid ? 'border-gray-300' : 'border-red-500'
+                            className={`peer border rounded p-2 w-full ${ !isOpponentValid || isTeamValid ? 'border-gray-300' : 'border-red-500'
                             }`}
                             >
                                 <option value='0'>Valitse joukkue</option>
                                 {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
                             </select>
-                            {team.valueOf() === '0' || isTeamValid ? null : (
+                            {!isOpponentValid || isTeamValid ? null : (
                                 <p id='team-error' className='peer-focus:hidden text-red-500 text-sm'>
                                     Valitse jokin joukkue
                                 </p>
@@ -140,7 +146,7 @@ const EventForm = () => {
                             )}
                         </div>
                         <div>
-                            <label className ='block'>Päivämäärä</label>
+                            <label className='block'>Päivämäärä</label>
                             <input id='date' type='date' value={date}
                                 onChange={({ target }) => {
                                     setDate(target.value)
