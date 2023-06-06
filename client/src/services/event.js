@@ -1,9 +1,8 @@
 import axios from 'axios'
 const baseUrl = '/api/event'
 
-const addEvent = async credentials => {
-
-    const response = await axios.post(baseUrl, credentials)
+const addEvent = async eventData => {
+    const response = await axios.post(baseUrl, eventData)
     return response.data
 
 }
