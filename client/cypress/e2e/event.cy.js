@@ -15,6 +15,11 @@ describe('Event', function() {
 
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
+        const team = {
+            name: 'Joukkue 1',
+            category: 'm20'
+        }
+        cy.request('POST', 'http://localhost:3001/api/team', team)
         cy.visit('http://localhost:3000')
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')
