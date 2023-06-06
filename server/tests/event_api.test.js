@@ -92,15 +92,16 @@ test('event can be added with correct input', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken
+        description: 'Lipunmyynti'
     }
 
     await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(200)
 })
+
 
 test('event can be added without description', async () => {
 
@@ -116,12 +117,12 @@ test('event can be added without description', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
-        description: '',
-        token: cryptedToken
+        description: ''
     }
 
     await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(200)
 })
@@ -141,12 +142,12 @@ test('cannot add an event if team is missing', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken 
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(401)
     
@@ -167,12 +168,12 @@ test('cannot add an event if team is incorrect', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken 
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(401)
     
@@ -195,12 +196,12 @@ test('cannot add an event if opponent is missing', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken 
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(401)
     
@@ -221,12 +222,12 @@ test('cannot add an event if location is missing', async () => {
         location: '',
         date:'2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(401)
 
@@ -247,12 +248,12 @@ test('cannot add an event if date is missing', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: cryptedToken
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(401)
 
@@ -273,38 +274,19 @@ test('cannot add an event if time is missing', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'',
-        description: 'Lipunmyynti',
-        token: cryptedToken
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(newEvent)
         .expect(401)
 
     expect(result.body.error).toBe('time missing')
 })
 
-test('cannot add an event if token is missing', async () => {
 
-    const newEvent = {
-
-        team: 'EBT SB',
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti',
-        token: ''
-    }
-
-    const result = await api
-        .post('/api/event')
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('token missing')
-})
 
 test('cannot add an event if token is invalid', async () => {
 
@@ -315,18 +297,17 @@ test('cannot add an event if token is invalid', async () => {
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
         time:'12:30',
-        description: 'Lipunmyynti',
-        token: 'invalid'
+        description: 'Lipunmyynti'
     }
 
     const result = await api
         .post('/api/event')
+        .set('Authorization', 'Bearer invalid')
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toContain('invalid token')
+    expect(result.body.error).toContain('token invalid')
 })
-
 
 test('correct number of events in database', async () => {
 
@@ -342,12 +323,12 @@ test('correct number of events in database', async () => {
         location: 'Espoonlahden urheiluhalli',
         date: '2023-06-19',
         time:'12:30',
-        description: 'Siivous',
-        token: cryptedToken
+        description: 'Siivous'
     }
 
     await api
         .post('/api/event')
+        .set('Authorization', `Bearer ${cryptedToken}`)
         .send(NewEvent)
         .expect(200)
     
