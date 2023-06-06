@@ -6,12 +6,21 @@ const {Team} = require('../models')
 const {validateEventInput} = require('./validate_input.js')
 const jwt = require('jsonwebtoken')
 
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '')
+    }
+    return null
+}
+
+
 eventRouter.post('/', async(request, response) => {
 
     try{
         
-        const { team, opponent, location, date, time, description, token } = request.body
-
+        const { team, opponent, location, date, time, description} = request.body
+    
         if (!team) {
             return response.status(401).json({error: 'team missing'})           
         }
@@ -32,16 +41,18 @@ eventRouter.post('/', async(request, response) => {
             return response.status(401).json({error: 'time missing'})           
         }
 
-        if (!token) {
-            return response.status(401).json({error: 'token missing'})           
-        }
-
-        try {jwt.verify(token, config.SECRET)
+        try{
+            jwt.verify(getTokenFrom(request), config.SECRET)
         }catch(error){
-            return response.status(401).json({error: 'invalid token'})
+            return response.status(401).json({ error: 'token invalid' })
+        }
+        
+        const decodedToken = jwt.verify(getTokenFrom(request), config.SECRET)
+
+        if (!decodedToken.id) {
+            return response.status(401).json({ error: 'token invalid' })
         }
 
-        const decodedToken = jwt.verify(token, config.SECRET)
         const finduser = await User.findByPk(decodedToken.id)
 
         let user = null
