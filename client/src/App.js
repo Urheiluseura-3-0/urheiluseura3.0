@@ -15,21 +15,20 @@ const App = () => {
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
 
-
     const handleLogout = () => {
         cookies.remove('Token')
         setToken('')
     }
 
-    const handleLogin = () => {
+    const handleSetToken = () => {
         const value= (cookies.get('Token'))
         setToken(value)
     }
 
     useEffect(() => {
-        if(!token){
+        if (!token) {
             navigate('/')
-        }else{
+        } else {
             navigate('/home')
         }
 
@@ -39,9 +38,9 @@ const App = () => {
     return (
         <div>
             <Routes>
-                <Route path="/" element={<LoginForm login = {handleLogin}/>}/>
-                <Route path="/register" element = {<RegisterForm/>}/>
-                <Route path="/home" element = {<UserView logout= {handleLogout} />}/>
+                <Route path="/" element={<LoginForm tokenHandler={handleSetToken} />} />
+                <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
+                <Route path="/home" element={<UserView logout={handleLogout} />} />
             </Routes>
         </div>
     )
