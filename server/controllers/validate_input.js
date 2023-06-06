@@ -111,18 +111,18 @@ const validateLoginInput = (username, password) => {
 const validateEventInput = (team, opponent, location, newdate, description)=> {
     let errors =[]
 
-
-
     errors = errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
     errors = errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
     errors = errors.concat(validateMandatoryField(newdate, 'Päivämäärä', 0, 100) )
-    
+
+ 
     if(validateLength(description, 0, 200) == false){
-        errors = errors.concat('Lisätietoja-kenttä on liian pitkä')
+        errors = errors.push('Lisätietoja-kenttä on liian pitkä')
     }
-    if(validateLength(team, 2, 40) == false){
-        errors = errors.concat('Vastustajan nimen pituus on virheellinen')
+    if(validateOnlyNumbers(String(team)) == false){
+        errors = errors.push('Joukkueen id on virheellinen')
     }
+
 
     return errors
 }
