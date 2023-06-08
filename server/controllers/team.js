@@ -1,5 +1,6 @@
 const teamRouter = require('express').Router()
 const {Team} = require('../models')
+const {validateTeamInput} = require('./validate_input.js')
 
 
 teamRouter.get('/', async (request,response) => {
@@ -27,13 +28,19 @@ teamRouter.get('/:id', async (request,response) => {
     }
 })
 teamRouter.post('/', async (request, response) => {
+
     try {
         const {name, category } = request.body
+        const checkInputErrors = validateTeamInput(name, category)
+        if (checkInputErrors.length > 0) {
+            return response.status(401).json({error: `${checkInputErrors}`})
+        }
 
         const finduser = await Team.findOne({where: {name: name}})
         if (finduser) {
             return response.status(401).json({error: 'Joukkue on jo olemassa'})
         }
+
         const team = new Team({
             name: name,
             category: category

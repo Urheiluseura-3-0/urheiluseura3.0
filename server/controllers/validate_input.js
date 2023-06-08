@@ -49,6 +49,14 @@ const validateDate = (value) => {
     return false
 }
 
+const validateOptionalField = (value, field, max) => {
+    const errors = []
+    if(!validateLength(value, 0, max)){
+        errors.push(` Sallittu pituus kentälle ${field} on ${max} merkkiä`)
+    }
+    return errors
+}
+
 
 const validateMandatoryField = (value, field, min, max) => {
     const errors = []
@@ -127,6 +135,15 @@ const validateEventInput = (team, opponent, location, newdate, description)=> {
     return errors
 }
 
+const validateTeamInput = (name, category)=>{
+    let errors = []
+
+    errors = errors.concat(validateMandatoryField(name, 'Nimi', 2, 40))
+    errors = errors.concat(validateOptionalField(category, 'Kategoria', 40))
+
+    return errors
+}   
+
 module.exports = {validateRegisterInput,
     validateLoginInput,
     validateLength,
@@ -134,5 +151,6 @@ module.exports = {validateRegisterInput,
     validateOnlyNumbers,
     validatePhoneNumber,
     validateEmail,
-    validateEventInput
+    validateEventInput,
+    validateTeamInput
 }
