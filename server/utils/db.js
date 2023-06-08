@@ -35,7 +35,7 @@ const connectToDatabase = async () => {
     return null
 }
 
-const closeConnectionToDatabase = async () => {
+const closeConnectionToDatabase = () => {
     sequelize.close()
 }
 
