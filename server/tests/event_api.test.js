@@ -167,7 +167,7 @@ test('cannot add an event if team is missing', async () => {
         .send(newEvent)
         .expect(401)
     
-    expect(result.body.error).toContain('team missing')
+    expect(result.body.error).toContain('Virheellinen tiimi')
 })
 
 test('cannot add an event if opponent is missing', async () => {
@@ -190,7 +190,7 @@ test('cannot add an event if opponent is missing', async () => {
         .send(newEvent)
         .expect(401)
     
-    expect(result.body.error).toBe('opponent missing')
+    expect(result.body.error).toBe('Virheellinen vastustaja')
 })
 
 test('cannot add an event if location is missing', async () => {
@@ -211,7 +211,7 @@ test('cannot add an event if location is missing', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toBe('location missing')
+    expect(result.body.error).toBe('Virheellinen sijainti')
 })
 
 test('cannot add an event if date is missing', async () => {
@@ -232,7 +232,7 @@ test('cannot add an event if date is missing', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toBe('date missing')
+    expect(result.body.error).toBe('Virheellinen päivämäärä')
 })
 
 test('cannot add an event if time is missing', async () => {
@@ -253,7 +253,7 @@ test('cannot add an event if time is missing', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toBe('time missing')
+    expect(result.body.error).toBe('Virheellinen aika')
 })
 
 
@@ -276,7 +276,7 @@ test('cannot add an event if token is invalid', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toContain('token invalid')
+    expect(result.body.error).toContain('Token puuttuu')
 })
 
 

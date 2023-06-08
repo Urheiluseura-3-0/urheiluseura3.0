@@ -15,55 +15,51 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
         
         const { team, opponent, location, date, time, description} = request.body
         if (!team) {
-            return response.status(401).json({error: 'team missing'})           
+            return response.status(401).json({error: 'Virheellinen tiimi'})           
         }
         if (!opponent) {
-            return response.status(401).json({error: 'opponent missing'})           
+            return response.status(401).json({error: 'Virheellinen vastustaja'})           
         }
 
         if (!location) {
-            return response.status(401).json({error: 'location missing'})           
+            return response.status(401).json({error: 'Virheellinen sijainti'})           
         }
 
         if (!date) {
-            return response.status(401).json({error: 'date missing'})           
+            return response.status(401).json({error: 'Virheellinen päivämäärä'})           
         }
 
         if (!time) {
-            return response.status(401).json({error: 'time missing'})           
+            return response.status(401).json({error: 'Virheellinen aika'})           
         }
 
         const finduser = await User.findByPk(request.decodedToken.id)
 
-        let user = null
-    
-        if (finduser) {
-            user = finduser.dataValues
+        if (!finduser) {
+            return response.status(401).json({error: 'Käyttäjän hakeminen epäonnistui'})
         }
-        
+
         const newdate = new Date(date)
         const [hours, minutes] = time.split(':')
 
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
 
-        const checkEventErrors = validateEventInput(team, opponent, newdate, location, description)
-
+        const checkEventErrors = validateEventInput(team, opponent, newdate, date, time, location, description)
 
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
         
         }
 
-    
         const findteam = await Team.findByPk(team)
 
         if (!findteam) {
-            return response.status(401).json({error: 'team missing or incorrect team'})
+            return response.status(401).json({error: 'Tiimin hakeminen epäonnistui'})
         }
 
         const event = new Event({
-            createdById: user.id,
+            createdById: finduser.dataValues.id,
             opponent:opponent,
             location:location,
             dateTime : newdate,

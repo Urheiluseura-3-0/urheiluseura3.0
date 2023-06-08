@@ -42,8 +42,22 @@ const validateEmail = (value) => {
     }
     return false
 }
-const validateDate = (value) => {
+const validateNewdate = (value) => {
     if(value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/) != false){
+        return true
+    }
+    return false
+}
+
+const validateDate = (value) => {
+    if (value.match(/^\d{4}-\d{2}-\d{2}$/) != false) {
+        return true
+    }
+    return false
+}
+
+const validateTime = (value) => {
+    if (value.match(/^\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/) != false) {
         return true
     }
     return false
@@ -81,12 +95,19 @@ const validateMandatoryField = (value, field, min, max) => {
         if (!validateEmail(value)) {
             errors.push(` ${field} ei ole oikean muotoinen`)
         }
-    }else if(field == 'Päivämäärä'){
+    } else if(field === 'Päivä'){
         if (!validateDate(value)){
             errors.push(`${field} on virheellinen`)
         }
+    } else if (field === 'Aika') {
+        if (!validateTime(value)) {
+            errors.push(`${field} on virheellinen`)
+        }
+    } else if (field === 'Aikaleima') {
+        if (!validateNewdate(value)) {
+            errors.push(`${field} on virheellinen`)
+        }
     }
-    
 
     return errors
 }
@@ -116,13 +137,14 @@ const validateLoginInput = (username, password) => {
 }
 
 
-const validateEventInput = (team, opponent, location, newdate, description)=> {
+const validateEventInput = (team, opponent, location, date, time, newdate, description)=> {
     let errors =[]
 
     errors = errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
     errors = errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
-    errors = errors.concat(validateMandatoryField(newdate, 'Päivämäärä', 0, 100) )
-
+    errors = errors.concat(validateMandatoryField(date, 'Päivä', 0, 12) )
+    errors = errors.concat(validateMandatoryField(time, 'Aika', 0, 15) )
+    errors = errors.concat(validateMandatoryField(newdate, 'Aikaleima', 0, 40) )
  
     if(validateLength(description, 0, 200) == false){
         errors = errors.push('Lisätietoja-kenttä on liian pitkä')
