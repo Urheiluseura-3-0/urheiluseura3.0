@@ -133,25 +133,4 @@ describe('Event', function() {
             cy.get('input[id="description"]').invoke('val').should('have.length', 200)
         })
     })
-
-    describe('Reset check', function() {
-        beforeEach(function() {
-            cy.get('select[id="team"]').select('Joukkue 1')
-            cy.get('input[id="opponent"]').type('honka')
-            cy.get('input[id="location"]').type('espoon halli')
-            cy.get('input[id="date"]').type('2023-06-01')
-            cy.get('input[id="time"]').type('11:00')
-            cy.get('input[id="description"]').type('tuomarointi')
-        })
-
-        it('user can reset fields with the reset button', function() {
-            cy.get('#reset').click()
-            cy.get('select[id="team"]').should('have.value', '0')
-            cy.get('input[id="opponent"]').should('be.empty')
-            cy.get('input[id="location"]').should('be.empty')
-            cy.get('input[id="date"]').should('be.empty')
-            cy.get('input[id="time"]').should('be.empty')
-            cy.get('input[id="description"]').should('be.empty')
-        })
-    })
 })

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import eventService from '../services/event'
 import teamService from '../services/team'
-import { useNavigate } from 'react-router-dom'
+import Notification from './Notification'
 
 const EventForm = () => {
-    const navigate = useNavigate()
     const [team, setTeam] = useState('0')
     const [teams, setTeams] = useState ([])
     const [opponent, setOpponent] = useState('')
@@ -12,6 +11,8 @@ const EventForm = () => {
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
     const [description, setDescription] = useState('')
+    const [alertMessage, setAlertMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
 
     const [isInputValid, setIsInputValid] = useState(false)
     const [isTeamValid, setIsTeamValid] = useState(false)
@@ -22,24 +23,18 @@ const EventForm = () => {
     const [isDescriptionValid, setIsDescriptionValid] = useState(true)
 
     const handleEvent = async (event) => {
-        console.log('input', team, opponent, location, date, time, description)
         event.preventDefault()
-        if (isInputValid) {
-            try {
-                await eventService.addEvent({
-                    team, opponent, location, date, time, description
-                })
-                navigate('/home')
-                resetFields()
-                window.location.reload()
-            } catch (exception) {
-                const syote = `Joukkue: ${team} Vastustaja: ${opponent} Paikka ${location} Päivä: ${date} Aika: ${time} Kuvaus: ${description}`
-                console.log(syote)
-                resetFields()
-                window.location.reload()
-            }
-        } else {
-            console.log('Virheellinen syöte')
+        try {
+            await eventService.addEvent({
+                team, opponent, location, date, time, description
+            })
+            resetFields()
+        } catch (exception) {
+            setAlertMessage(exception.response.data.error)
+            setShowAlert(true)
+            setTimeout(() => {
+                setShowAlert(false)
+            }, 3000)
         }
     }
 
@@ -94,12 +89,12 @@ const EventForm = () => {
         <div className='flex justify-center items-center h-screen bg-stone-100'>
             <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
                 <h1 className='font-bold text-2xl text-center text-teal-500'>Lisää tapahtuma</h1>
+                {showAlert && <Notification message={alertMessage} />}
                 <form>
                     <div className='space-y-3'>
                         <div className='pt-3'>
                             <label className='block'>Joukkue</label>
-                            <select id='team' onChange={({ target }) => {
-                                console.log(target.value)
+                            <select id='team' value={team} onChange={({ target }) => {
                                 setTeam(target.value)
                                 setIsTeamValid(target.value > 0)
                             }}
@@ -185,17 +180,14 @@ const EventForm = () => {
                                 className={'peer border rounded p-2 w-full border-gray-300'}
                             />
                         </div>
-                        <div className='flex justify-between items-center space-x-5'>
+                        <div className='flex'>
                             <button
                                 id='add-event'
                                 className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                                 disabled={!isInputValid}
                                 title={isInputValid ? null : 'Täytä puuttuvat kentät'}
                                 onClick={handleEvent}>Lisää tapahtuma</button>
-                            <button
-                                id='reset'
-                                className='bg-gray-200 hover:bg-gray-400 px-5 py-1 leading-5 rounded-full font-semibold text-black'
-                                onClick={resetFields}>Tyhjennä tiedot</button>
+
                         </div>
                     </div>
                 </form>
