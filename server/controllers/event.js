@@ -1,20 +1,15 @@
 const eventRouter = require('express').Router()
-const config = require('../utils/config')
+
 const {Event} = require('../models')
 const {User} = require('../models')
 const {Team} = require('../models')
 const {validateEventInput} = require('./validate_input.js')
-const jwt = require('jsonwebtoken')
-const Cookies = require('universal-cookie')
-
-const getTokenFrom = request => {
-    const cookies = new Cookies(request.headers.cookie)
-    const authorization = cookies.get('Token')
-    return authorization
-}
+const { tokenExtractor } = require('../utils/middleware')
 
 
-eventRouter.post('/', async(request, response) => {
+
+
+eventRouter.post('/', tokenExtractor, async(request, response) => {
 
     try{
         
@@ -38,19 +33,8 @@ eventRouter.post('/', async(request, response) => {
             return response.status(401).json({error: 'time missing'})           
         }
 
-        try{
-            jwt.verify(getTokenFrom(request), config.SECRET)
-        }catch(error){
-            return response.status(401).json({ error: 'token invalid' })
-        }
-        
-        const decodedToken = jwt.verify(getTokenFrom(request), config.SECRET)
+        const finduser = await User.findByPk(request.decodedToken.id)
 
-        if (!decodedToken.id) {
-            return response.status(401).json({ error: 'token invalid' })
-        }
-
-        const finduser = await User.findByPk(decodedToken.id)
         let user = null
     
         if (finduser) {
@@ -62,14 +46,18 @@ eventRouter.post('/', async(request, response) => {
 
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
-        
 
         const checkEventErrors = validateEventInput(team, opponent, newdate, location, description)
 
+
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
+        
         }
+
+    
         const findteam = await Team.findByPk(team)
+
         if (!findteam) {
             return response.status(401).json({error: 'team missing or incorrect team'})
         }
@@ -82,10 +70,10 @@ eventRouter.post('/', async(request, response) => {
             description: description,
             teamId: team
         })
-        
+
         const savedEvent = await Event.create(event.dataValues)
 
-        
+      
     
         return response.status(200).json(savedEvent)
     }catch(error){
