@@ -33,6 +33,15 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
             return response.status(401).json({error: 'Virheellinen aika'})           
         }
 
+        const checkEventErrors = validateEventInput(team, opponent, date, time, location, description)
+        console.log('TYPES', typeof time, typeof date)
+        console.log('ERRORS', checkEventErrors)
+
+        if (checkEventErrors.length > 0) {
+            return response.status(401).json({error: `${checkEventErrors}`})
+        
+        }
+
         const finduser = await User.findByPk(request.decodedToken.id)
 
         if (!finduser) {
@@ -45,12 +54,7 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
 
-        const checkEventErrors = validateEventInput(team, opponent, newdate, date, time, location, description)
-
-        if (checkEventErrors.length > 0) {
-            return response.status(401).json({error: `${checkEventErrors}`})
         
-        }
 
         const findteam = await Team.findByPk(team)
 
