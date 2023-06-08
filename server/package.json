@@ -50,11 +50,11 @@
       "utils"
     ],
     "coverageReporters": [
-      "clover",
       "json",
-      "lcov",
-      "text",
-      "html"
-    ]
+      "html",
+      "text"
+    ],
+    "coverageDirectory":
+      "./coverage"
   }
 }
