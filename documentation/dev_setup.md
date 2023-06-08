@@ -21,7 +21,21 @@
 
 ```TEST_DATABASE_URL=postgres://postgres:testsecretpassword@localhost:5433/postgres```
 
+### Tietokannan täyttö kehitysympäristödatalla
 
+0. Jos olet käyttänyt tietokantaa jo aiemmin, tuhoa se ensin ja [käynnistä kehitystietokanta kokonaan uudelleen](#tietokannan-ensimmäinen-käyttöönotto-kehitysympäristöä-varten)
+```docker stop postgres-dev```
+```docker rm postgres-dev```
+
+1. Asenna riippuvuudet server-kansiossa
+
+```npm install``` 
+
+2. Aja seeding-tiedostot tietokantaan
+
+```npx sequelize-cli db:seed:all```
+
+[Dokumentaatio](https://sequelize.org/docs/v6/other-topics/migrations/#running-seeds)
 
 ### Tietokantojen käyttö ensimmäisen kerran jälkeen
 1. Tarkista pyöriikö tietokanta jo koneellasi
