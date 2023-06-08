@@ -24,12 +24,16 @@
 ### Tietokannan täyttö kehitysympäristödatalla
 
 0. Jos olet käyttänyt tietokantaa jo aiemmin, tuhoa se ensin ja [käynnistä kehitystietokanta kokonaan uudelleen](#tietokannan-ensimmäinen-käyttöönotto-kehitysympäristöä-varten)
+
 ```docker stop postgres-dev```
+
 ```docker rm postgres-dev```
 
 1. Asenna riippuvuudet server-kansiossa
 
-```npm install``` 
+```npm install```
+
+```npm start```
 
 2. Aja seeding-tiedostot tietokantaan
 
