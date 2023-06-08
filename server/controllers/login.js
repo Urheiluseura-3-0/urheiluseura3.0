@@ -59,6 +59,7 @@ loginRouter.post('/', async (request, response) => {
 
 })
 
+//Log Out
 loginRouter.get('/', async (request, response) => {
     try {
         return response
