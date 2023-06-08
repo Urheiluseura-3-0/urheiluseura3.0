@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
-    up: (queryInterface, Sequelize) => {
+    up: (queryInterface ) => {
 
         return queryInterface.bulkInsert('events', [
             {
@@ -81,7 +81,7 @@ module.exports = {
         ])
     },
 
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface ) => {
         return queryInterface.bulkDelete('events', null, {})
     },
 }

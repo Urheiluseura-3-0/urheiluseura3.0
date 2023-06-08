@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
-    up: ( queryInterface, Sequelize ) => {
+    up: ( queryInterface ) => {
 
         return queryInterface.bulkInsert('teams', [
             {
@@ -32,7 +32,7 @@ module.exports = {
         ])
     },
 
-    down: ( queryInterface, Sequelize ) => {
+    down: ( queryInterface ) => {
         return queryInterface.bulkDelete('teams', null, {})
     },
 }

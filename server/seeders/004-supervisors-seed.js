@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
-    up: ( queryInterface, Sequelize ) => {
+    up: ( queryInterface ) => {
 
         return queryInterface.bulkInsert('supervisors', [
             {
@@ -38,7 +38,7 @@ module.exports = {
         ])
     },
 
-    down: ( queryInterface, Sequelize ) => {
+    down: ( queryInterface ) => {
         return queryInterface.bulkDelete('supervisors', null, {})
     },
 }
