@@ -19,9 +19,6 @@ const userView = (props) => {
             <div>
                 <EventList />
             </div>
-            <div>
-
-            </div>
         </div>
     )
 }
