@@ -3,29 +3,29 @@ const jwt = require('jsonwebtoken')
 const loginRouter = require('express').Router()
 const config = require('../utils/config')
 const { User } = require('../models')
-const {validateLoginInput} = require('./validate_input.js')
+const { validateLoginInput } = require('./validate_input.js')
 
 loginRouter.post('/', async (request, response) => {
 
-    try{
+    try {
 
-        const { username, password} = request.body
+        const { username, password } = request.body
 
         const checkInputErrors = validateLoginInput(username, password)
 
         if (checkInputErrors.length > 0) {
-            return response.status(401).json({error: `${checkInputErrors}`})
+            return response.status(401).json({ error: `${checkInputErrors}` })
         }
 
-        const finduser = await User.findOne({where: {username: username}})
-    
-        let user=null
+        const finduser = await User.findOne({ where: { username: username } })
+
+        let user = null
 
         if (finduser) {
             user = finduser.dataValues
         }
-        else{
-            return response.status(401).json({error: 'virheellinen käyttäjänimi tai salasana'})  
+        else {
+            return response.status(401).json({ error: 'virheellinen käyttäjänimi tai salasana' })
         }
 
         const checkPassword = user === null
@@ -34,7 +34,7 @@ loginRouter.post('/', async (request, response) => {
 
 
         if (!(user && checkPassword)) {
-            return response.status(401).json({error: 'virheellinen käyttäjänimi tai salasana'})
+            return response.status(401).json({ error: 'virheellinen käyttäjänimi tai salasana' })
         }
 
         const userForToken = {
@@ -43,20 +43,31 @@ loginRouter.post('/', async (request, response) => {
         }
 
         const token = jwt.sign(
-            userForToken, 
+            userForToken,
             config.SECRET,
-            { expiresIn:60*60}
+            { expiresIn: 60 * 60 }
         )
 
         return response
-            .cookie('Token', token, {maxAge: 900000})
+            .cookie('Token', token, { maxAge: 900000 })
             .status(200)
-            .send({username:user.username, name:user.name})
-    
-    }catch(error){
+            .send({ username: user.username, name: user.name })
+
+    } catch (error) {
         return response.status(400)
     }
 
+})
+
+loginRouter.get('/', async (request, response) => {
+    try {
+        return response
+            .clearCookie('Token')
+            .status(200)
+            .json({ message: 'Succesfully logged out' })
+    } catch (error) {
+        return response.status(400)
+    }
 })
 
 

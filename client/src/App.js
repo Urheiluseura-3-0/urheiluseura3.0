@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
+import UserService from './services/user'
 
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
@@ -16,6 +17,7 @@ const App = () => {
     const [token, setToken] = useState(cookies.get('Token'))
 
     const handleLogout = () => {
+        UserService.logout()
         cookies.remove('Token')
         setToken('')
     }

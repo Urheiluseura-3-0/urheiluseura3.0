@@ -15,6 +15,7 @@ describe('Login ', function() {
 
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
+        cy.request('GET', 'http://localhost:3001/api/login')
         cy.visit('http://localhost:3000')
     })
     it('front page contains right form', function() {

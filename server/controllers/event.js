@@ -39,7 +39,7 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
             return response.status(401).json({error: `${checkEventErrors}`})
         
         }
-
+        console.log(request.decodedToken)
         const finduser = await User.findByPk(request.decodedToken.id)
 
         if (!finduser) {
