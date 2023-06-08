@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "test-coverage" : "cross-env NODE_ENV=test jest --verbose --runInBand --coverage",
     "eslint": "eslint .",
     "start:test": "cross-env NODE_ENV=test node index.js",
     "migration:down": "node utils/rollback.js"
@@ -40,6 +41,13 @@
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "<rootDir>/tests/setupTests.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "node_modules",
+      "config",
+      "tests",
+      "migrations",
+      "utils"
     ]
   }
 }
