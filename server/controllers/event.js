@@ -34,8 +34,6 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
         }
 
         const checkEventErrors = validateEventInput(team, opponent, date, time, location, description)
-        console.log('TYPES', typeof time, typeof date)
-        console.log('ERRORS', checkEventErrors)
 
         if (checkEventErrors.length > 0) {
             return response.status(401).json({error: `${checkEventErrors}`})
@@ -50,7 +48,7 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
 
         const newdate = new Date(date)
         const [hours, minutes] = time.split(':')
-
+        
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
 
