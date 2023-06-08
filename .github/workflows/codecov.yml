@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches-ignore: [main]
     branches: [codecov-test]
   pull_request:
     branches: [codecov-test]
