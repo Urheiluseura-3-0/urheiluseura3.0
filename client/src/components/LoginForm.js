@@ -3,7 +3,7 @@ import loginService from '../services/login'
 import { useNavigate, Link } from 'react-router-dom'
 import Notification from './Notification'
 
-const LoginForm = ({ login }) => {
+const LoginForm = ({ tokenHandler }) => {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -22,7 +22,7 @@ const LoginForm = ({ login }) => {
             await loginService.login({
                 username, password
             })
-            login()
+            tokenHandler()
             navigate('/home')
             resetFields()
 

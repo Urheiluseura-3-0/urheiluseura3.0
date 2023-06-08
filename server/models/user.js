@@ -1,7 +1,5 @@
-const config = require('../utils/config') 
-const { Sequelize, Model, DataTypes } = require('sequelize')
-
-const sequelize = new Sequelize(config.DATABASE_URL)
+const { Model, DataTypes } = require('sequelize')
+const { sequelize } = require('../utils/db')
 
 class User extends Model {}
 
@@ -134,12 +132,7 @@ User.init({
 }, {
     sequelize,
     underscored: true,
-    timestamps: false,
     modelName: 'user'
 })
 
-User.sync()
-
-module.exports = {
-    User
-}
+module.exports = User

@@ -6,7 +6,7 @@ import Step0 from './steps/Step0'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
-const registerForm = () => {
+const registerForm = ({ tokenHandler }) => {
 
     const navigate = useNavigate()
     const [showAlert, setShowAlert] = useState(false)
@@ -53,6 +53,7 @@ const registerForm = () => {
             await registerService.register({
                 username, password, passwordConfirm, firstName, lastName, address, postalCode, city, phoneNumber, email
             })
+            tokenHandler()
             navigate('/home')
             resetFields()
 

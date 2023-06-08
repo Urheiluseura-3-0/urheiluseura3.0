@@ -1,6 +1,6 @@
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
-const {User} = require('../models/user')
+const {User} = require('../models')
 const app = require('../app')
 
 const api = supertest(app)
@@ -24,7 +24,8 @@ beforeEach(async () => {
     ]
     await User.destroy({
         where: {},
-        truncate: true
+        truncate: true,
+        cascade: true
     })
     await User.create(initialUser[0])
 })
