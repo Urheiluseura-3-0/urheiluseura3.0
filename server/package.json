@@ -48,6 +48,13 @@
       "tests",
       "migrations",
       "utils"
+    ],
+    "coverageReporters": [
+      "clover",
+      "json",
+      "lcov",
+      "text",
+      "html"
     ]
   }
 }
