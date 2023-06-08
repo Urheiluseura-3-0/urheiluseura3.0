@@ -205,50 +205,60 @@ const EventList = () => {
     }, [selectedStatus, selectedDateFrom, selectedDateTo])
 
     return (
-        <div>
-            <h2>Lisätyt tapahtumat</h2>
-            <label>Tapahtumat alkaen</label>
-            <input type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
-                setDateFrom(target.value)
-                setClicked('')
-            }}></input>
-            <label>Tapahtumat asti</label>
-            <input type='date' id='dateto' value={selectedDateTo} onChange={({ target }) => {
-                setDateTo(target.value)
-                setClicked('')
-            }}></input>
-            <label>Status</label>
-            <select onChange={({ target }) => {
-                setStatus(target.value)
-                setClicked('')
-            }}>
-                <option value=''>Kaikki</option>
-                <option value='1'>Hyväksytty</option>
-                <option value='0'>Odottaa hyväksyntää</option>
-            </select>
-            <table id='events'>
-                <tbody>
-                    <tr>
-                        <th id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                        <th id='opponent' onClick={(event) => sortByOpponent(event)}>Vastustaja</th>
-                        <th id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                        <th id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                        <th id='status' onClick={(event) => sortByStatus(event)}>Status</th>
-                    </tr>
-                    {showEvents.map((one_event) =>
-                        <tr key = {one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                            <td>{one_event.team}</td>
-                            <td>{one_event.opponent}</td>
-                            <td>{one_event.location}</td>
-                            <td>{getDate(one_event.dateTime)}</td>
-                            <td>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
-                        </tr>)
-                    }
-                </tbody>
-            </table>
-
-            {clickedEvent !== '' && <EventDetails one_event={clickedEvent}/>}
-
+        <div className='flex justify-center bg-stone-100 p-4'>
+            <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
+                <h2 className='font-bold text-2xl text-center text-teal-500'>Lisätyt tapahtumat</h2>
+                <div className="space-y-3 text-xs">
+                    <div>
+                        <label className="block">Tapahtumat alkaen</label>
+                        <input className='border rounded p-2 border-gray-300' type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
+                            setDateFrom(target.value)
+                            setClicked('')
+                        }}></input>
+                    </div>
+                    <div>
+                        <label className="block">Tapahtumat asti</label>
+                        <input className='border rounded p-2 border-gray-300' type='date' id='dateto' value={selectedDateTo} onChange={({ target }) => {
+                            setDateTo(target.value)
+                            setClicked('')
+                        }}></input>
+                    </div>
+                    <div>
+                        <label className="block">Status</label>
+                        <select className='border rounded p-2 border-gray-300' onChange={({ target }) => {
+                            setStatus(target.value)
+                            setClicked('')
+                        }}>
+                            <option value=''>Kaikki</option>
+                            <option value='1'>Hyväksytty</option>
+                            <option value='0'>Odottaa hyväksyntää</option>
+                        </select>
+                    </div>
+                </div>
+                <table id='events' className='border-separate border-spacing-y-2'>
+                    <thead>
+                        <tr>
+                            <th className='text-left p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                            <th className='text-left p-4' id='opponent' onClick={(event) => sortByOpponent(event)}>Vastustaja</th>
+                            <th className='text-left p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                            <th className='text-left p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                            <th className='text-left p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {showEvents.map((one_event) =>
+                            <tr className="bg-white-300 rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring hover:ring-teal-200 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center" key = {one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                <td className='py-4'>{one_event.team}</td>
+                                <td className='py-4'>{one_event.opponent}</td>
+                                <td className='py-4'>{one_event.location}</td>
+                                <td className='py-4'>{getDate(one_event.dateTime)}</td>
+                                <td className='p-2'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                            </tr>)
+                        }
+                    </tbody>
+                </table>
+                {clickedEvent !== '' && <EventDetails one_event={clickedEvent}/>}
+            </div>
         </div>
     )
 }
