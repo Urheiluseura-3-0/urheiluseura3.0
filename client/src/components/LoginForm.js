@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import loginService from '../services/login'
+import userService from '../services/user'
 import { useNavigate, Link } from 'react-router-dom'
 import Notification from './Notification'
 
@@ -19,7 +19,7 @@ const LoginForm = ({ tokenHandler }) => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
-            await loginService.login({
+            await userService.login({
                 username, password
             })
             tokenHandler()

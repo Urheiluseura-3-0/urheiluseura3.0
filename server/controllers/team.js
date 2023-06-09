@@ -1,9 +1,9 @@
 const teamRouter = require('express').Router()
 const {Team} = require('../models')
 const {validateTeamInput} = require('./validate_input.js')
+const { tokenExtractor } = require('../utils/middleware')
 
-
-teamRouter.get('/', async (request,response) => {
+teamRouter.get('/', tokenExtractor, async (request,response) => {
 
     try{
         const teams = await Team.findAll()
@@ -13,7 +13,7 @@ teamRouter.get('/', async (request,response) => {
         return response.status(400)
     }
 })
-teamRouter.get('/:id', async (request,response) => {
+teamRouter.get('/:id', tokenExtractor, async (request,response) => {
 
     try{
         const team = await Team.findByPk(request.params.id)
@@ -27,7 +27,7 @@ teamRouter.get('/:id', async (request,response) => {
         return response.status(400).end()
     }
 })
-teamRouter.post('/', async (request, response) => {
+teamRouter.post('/', tokenExtractor, async (request, response) => {
 
     try {
         const {name, category } = request.body
