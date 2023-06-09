@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const registerRouter = require('express').Router()
+const config = require('../utils/config')
 const {User} = require('../models')
 const {validateRegisterInput} = require('./validate_input.js')
 
@@ -50,7 +52,19 @@ registerRouter.post('/', async (request, response) => {
 
         const savedUser = await User.create(user.dataValues)
 
-        return response.status(200).json(savedUser)
+        const userForToken = {
+            username: savedUser.username,
+            id: savedUser.id
+        }
+        const token = jwt.sign(
+            userForToken,
+            config.SECRET,
+            { expiresIn: 60 * 60 }
+        )
+        return response
+            .cookie('Token', token, { maxAge: 900000 })
+            .status(200)
+            .json(savedUser)
     } catch (error) {
         return response.status(400)
     }

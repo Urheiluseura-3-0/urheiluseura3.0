@@ -8,4 +8,11 @@ const login = async credentials => {
 
 }
 
-export default { login }
+const logout = async() => {
+
+    const response = await axios.get(baseUrl)
+    return response.data
+
+}
+
+export default { login, logout }
