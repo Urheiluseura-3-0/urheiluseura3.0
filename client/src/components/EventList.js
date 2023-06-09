@@ -29,6 +29,7 @@ const EventList = () => {
     ]
 
     const [showEvents, setAllEvents] = useState(getEvents)
+    const [showFilters, setShowFilters] = useState('+')
 
     const [selectedStatus, setStatus] = useState('')
     const [selectedDateFrom, setDateFrom] = useState('')
@@ -199,16 +200,19 @@ const EventList = () => {
         return filteredEvents
     }
 
-    useEffect(() => {
-        const filtered = filterByDateFrom(filterByDateTo(filterByStatus(getEvents)))
-        setAllEvents(filtered)
-    }, [selectedStatus, selectedDateFrom, selectedDateTo])
+    const handleshowFilters = (event) => {
+        event.preventDefault()
+        if (showFilters === '-') {
+            setShowFilters('+')
+        }else{
+            setShowFilters('-')
+        }
+    }
 
-    return (
-        <div className='flex justify-center bg-stone-100 p-4'>
-            <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
-                <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
-                <div className="space-y-3 text-xs">
+    const ShowFilters = () => {
+        if (showFilters === '-') {
+            return(
+                <div>
                     <div>
                         <label className="block">Tapahtumat alkaen</label>
                         <input className='border rounded p-2 border-gray-300' type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
@@ -233,6 +237,24 @@ const EventList = () => {
                             <option value='1'>Hyväksytty</option>
                             <option value='0'>Odottaa hyväksyntää</option>
                         </select>
+                    </div>
+                </div>
+            )
+        }
+    }
+    useEffect(() => {
+        const filtered = filterByDateFrom(filterByDateTo(filterByStatus(getEvents)))
+        setAllEvents(filtered)
+    }, [selectedStatus, selectedDateFrom, selectedDateTo])
+
+    return (
+        <div className='flex justify-center bg-stone-100 p-4'>
+            <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
+                <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
+                <div className="space-y-3 text-xs">
+                    <div>
+                        <button className="hover:bg-teal-200 text-gray-600 font-semibold hover:text-gary py-1 px-4 border border-gray-500 hover:border-transparent rounded" onClick={handleshowFilters}>{showFilters}</button>
+                        < ShowFilters />
                     </div>
                 </div>
                 <table id='events' className='border-separate border-spacing-y-2'>
