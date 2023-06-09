@@ -89,7 +89,6 @@ eventRouter.get('/', tokenExtractor, async(request,response)=> {
     }catch(error){
         return response.status(400)
     }
-    
 
 })
 
