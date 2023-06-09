@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import EventList from './EventList'
-//import EventList2 from './EventList2'
 
 const userView = (props) => {
     const navigate = useNavigate()
