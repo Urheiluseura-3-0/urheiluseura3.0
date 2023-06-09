@@ -46,8 +46,7 @@
       "node_modules",
       "config",
       "tests",
-      "migrations",
-      "utils"
+      "migrations"
     ],
     "coverageReporters": [
       "json",
