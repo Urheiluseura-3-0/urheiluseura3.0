@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 require('express-async-errors')
-const app = express() 
+const app = express()
 const cors = require('cors')
 const userRouter = require('./controllers/user.js')
 const registerRouter = require('./controllers/register.js')
@@ -28,5 +28,11 @@ app.use('/api/team', teamRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '/build/index.html'), function (err) {
+        res.status(500).send(err)
+    })
+})
 
 module.exports = app
