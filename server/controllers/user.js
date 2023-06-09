@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const loginRouter = require('express').Router()
+const userRouter = require('express').Router()
 const config = require('../utils/config')
 const { User } = require('../models')
 const { validateLoginInput } = require('./validate_input.js')
 
-loginRouter.post('/', async (request, response) => {
+userRouter.post('/', async (request, response) => {
 
     try {
 
@@ -59,8 +59,8 @@ loginRouter.post('/', async (request, response) => {
 
 })
 
-//Log Out
-loginRouter.get('/', async (request, response) => {
+//Log out
+userRouter.get('/', async (request, response) => {
     try {
         return response
             .clearCookie('Token')
@@ -72,4 +72,4 @@ loginRouter.get('/', async (request, response) => {
 })
 
 
-module.exports = loginRouter
+module.exports = userRouter
