@@ -32,8 +32,8 @@ const EventList = () => {
         event.preventDefault()
 
         const sorted = showEvents.sort((a, b) => {
-            const teamA = a.team
-            const teamB = b.team
+            const teamA = a.EventTeam.name
+            const teamB = b.EventTeam.name
 
             if (teamA > teamB) {
                 return 1
@@ -235,7 +235,7 @@ const EventList = () => {
                     <tbody>
                         {showEvents.map((one_event) =>
                             <tr className="bg-white-300 rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring hover:ring-teal-200 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center" key = {one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                <td className='py-4'>{one_event.team}</td>
+                                <td className='py-4'>{one_event.EventTeam.name}</td>
                                 <td className='py-4'>{one_event.opponent}</td>
                                 <td className='py-4'>{one_event.location}</td>
                                 <td className='py-4'>{getDate(one_event.dateTime)}</td>
