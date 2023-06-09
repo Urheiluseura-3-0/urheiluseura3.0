@@ -23,6 +23,7 @@ let cryptedToken
 let finalToken
 let team
 let teams
+let event
 
 
 beforeEach(async () => {
@@ -134,6 +135,8 @@ beforeEach(async () => {
 
     await Event.bulkCreate(initialEvents)
 
+    event = await Event.findOne({where: {opponent: 'Honka I B'}})
+
     user = {username: 'Pekka35', password: 'salainen1234'}
     loggedUser = await api.post('/api/login').send(user)
     cookies = new Cookies(loggedUser.headers['set-cookie'])
@@ -142,7 +145,6 @@ beforeEach(async () => {
     finalToken = handleToken(cryptedToken)
 
     team = await Team.findOne({where: {name: 'EBT SB'}})
-
 
 })
 
@@ -350,3 +352,34 @@ test('events can be fetched for user', async () => {
     expect(contents).toContain('Honka II B')
 })
 
+test('events for user return teamnames', async () => {
+    const response = await api
+        .get('/api/event')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.EventTeam.name)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('Naiset 3')
+    expect(contents).toContain('EBT SB')
+})
+
+test('Get by event id returns correct event', async () => {
+    const response = await api
+        .get(`/api/event/${event.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.opponent).toContain('Honka I B')
+})
+
+test('Get by event returns error code if id is invalid', async () => {
+    const invalidId = 'ThisIdIsNotRight'
+    await api
+        .get(`/api/event/${invalidId}`)
+        .set('Cookie', finalToken)
+        .expect(400)
+})
+
+test('Get by event id returns teamname', async() => {
+    const response = await api
+        .get(`/api/event/${event.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.EventTeam.name).toContain('Naiset 3')
+})
