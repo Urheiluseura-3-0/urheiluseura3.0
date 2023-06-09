@@ -59,7 +59,7 @@ describe('Eventlist', function(){
                 description: 'Toimitsija'
             },
             {
-                team: 'EBT Naistet',
+                team: 'EBT Naiset',
                 opponent: 'Honka naiset',
                 date: '2023-05-27',
                 time: '18:00',
@@ -67,7 +67,7 @@ describe('Eventlist', function(){
                 description: 'Lipunmyynti'
             },
             {
-                team: 'EBT Naistet',
+                team: 'EBT Naiset',
                 opponent: 'Honka naiset',
                 date: '2023-05-29',
                 time: '20:00',
@@ -103,7 +103,32 @@ describe('Eventlist', function(){
 
     it('User can see all events', function() {
         cy.contains('Tapahtumat')
+
     })
 
-    it('User can sort events by ')
+    /* Nämä testit odottavat tyylittelyn valmistumisea
+
+    it('Default user view only shows unccepted events', function() {
+        cy.get('#unaccepted')
+            .focus()
+            .should('be.focused')
+    })
+
+    it('All visible events are accepted when accepted button is pressed', function() {
+        cy.get('#accepted').click()
+        cy.get('#accepted')
+            .focus()
+            .should('be.focused')
+    })
+
+    it('User can sort events by team', function() {
+        cy.get('#team').click()
+        cy.get('#events')
+            .find('tr')
+            .find('td')
+            .eq(3)
+            .should('contain', 'EBT Naiset')
+    })
+
+    */
 })
