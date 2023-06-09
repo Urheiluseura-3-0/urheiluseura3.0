@@ -93,4 +93,18 @@ eventRouter.get('/', tokenExtractor, async(request,response)=> {
 
 })
 
+eventRouter.get('/:id', tokenExtractor, async (request,response) => {
+    try{
+        const event = await Event.findByPk(request.params.id)
+        if(event){
+            return response.json(event)
+        }else{
+            return response.status(404).end()
+        }
+
+    }catch(error){
+        return response.status(400).end()
+    }
+})
+
 module.exports =  eventRouter
