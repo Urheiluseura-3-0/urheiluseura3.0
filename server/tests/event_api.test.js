@@ -276,7 +276,7 @@ test('cannot add an event if token is invalid', async () => {
         .send(newEvent)
         .expect(401)
 
-    expect(result.body.error).toContain('Token puuttuu')
+    expect(result.body.error).toContain('Kirjaudu ensin sisään')
 })
 
 
