@@ -352,6 +352,16 @@ test('events can be fetched for user', async () => {
     expect(contents).toContain('Honka II B')
 })
 
+test('events for user return teamnames', async () => {
+    const response = await api
+        .get('/api/event')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.EventTeam.name)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('Naiset 3')
+    expect(contents).toContain('EBT SB')
+})
+
 test('Get by event id returns correct event', async () => {
     const response = await api
         .get(`/api/event/${event.id}`)
@@ -365,4 +375,11 @@ test('Get by event returns error code if id is invalid', async () => {
         .get(`/api/event/${invalidId}`)
         .set('Cookie', finalToken)
         .expect(400)
+})
+
+test('Get by event id returns teamname', async() => {
+    const response = await api
+        .get(`/api/event/${event.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.EventTeam.name).toContain('Naiset 3')
 })
