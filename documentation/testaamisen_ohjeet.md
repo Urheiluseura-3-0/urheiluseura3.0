@@ -13,7 +13,13 @@
 ~/server$ npm run test
 ```
 
-## E2E-tests
+2. Testikattavuusraportin voi muodostaa ajamalla testit komennolla:
+```shell
+~/server$ npm run test-coverage
+```
+Konsoliin muodostuu yksinkertainen yhteenveto. Tarkempi testikattavuusraportti generoituu coverage-kansioon html-muodossa.
+
+## E2E-testit
 
 1. Käynnistä testitietokanta (ks. tarvittaessa tietokantojen asennusohjeet: https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md)
 
