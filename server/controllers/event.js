@@ -80,4 +80,17 @@ eventRouter.post('/', tokenExtractor, async(request, response) => {
 
 })
 
+eventRouter.get('/', tokenExtractor, async(request,response)=> {
+    try{
+        const finduser = await User.findByPk(request.decodedToken.id)
+        const events = await finduser.getCreatedEvents()
+        return response.json(events)
+
+    }catch(error){
+        return response.status(400)
+    }
+    
+
+})
+
 module.exports =  eventRouter
