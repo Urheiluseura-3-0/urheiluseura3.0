@@ -1,0 +1,7 @@
+{
+    "development": {
+      "url": "postgres://postgres:devsecretpassword@localhost:5432/postgres",
+      "dialect": "postgres"
+    }
+  }
+  

@@ -43,6 +43,31 @@ const validateEmail = (value) => {
     return false
 }
 
+const validateDate = (value) => {
+    if (value.match(/^\d{4}-\d{2}-\d{2}$/) != null) {
+        return true
+    }
+    return false
+}
+
+const validateTime = (value) => {
+    const regex =/^\d{2}:\d{2}$/
+    const timeString = value
+    if (regex.test(timeString)) {
+        return true
+    }
+    return false
+}
+
+const validateOptionalField = (value, field, max) => {
+    const errors = []
+    if(!validateLength(value, 0, max)){
+        errors.push(` Sallittu pituus kentälle ${field} on ${max} merkkiä`)
+    }
+    return errors
+}
+
+
 const validateMandatoryField = (value, field, min, max) => {
     const errors = []
 
@@ -65,6 +90,14 @@ const validateMandatoryField = (value, field, min, max) => {
     } else if (field === 'E-mail') {
         if (!validateEmail(value)) {
             errors.push(` ${field} ei ole oikean muotoinen`)
+        }
+    } else if(field === 'Päivä'){
+        if (!validateDate(value)){
+            errors.push(`${field} on virheellinen`)
+        }
+    } else if (field === 'Aika') {
+        if (!validateTime(value)) {
+            errors.push(`${field} on virheellinen`)
         }
     }
 
@@ -95,10 +128,43 @@ const validateLoginInput = (username, password) => {
     return errors
 }
 
+
+const validateEventInput = (team, opponent, date, time, location, description)=> {
+    let errors =[]
+
+    errors = errors.concat(validateMandatoryField(opponent, 'Vastustaja', 2, 40))
+    errors = errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
+    errors = errors.concat(validateMandatoryField(date, 'Päivä', 0, 30) )
+    errors = errors.concat(validateMandatoryField(time, 'Aika', 0, 30) )
+
+ 
+    if(validateLength(description, 0, 200) == false){
+        errors = errors.push('Lisätietoja-kenttä on liian pitkä')
+    }
+    if(validateOnlyNumbers(String(team)) == false){
+        errors = errors.push('Joukkueen id on virheellinen')
+    }
+
+
+    return errors
+}
+
+const validateTeamInput = (name, category)=>{
+    let errors = []
+
+    errors = errors.concat(validateMandatoryField(name, 'Nimi', 2, 40))
+    errors = errors.concat(validateOptionalField(category, 'Kategoria', 40))
+
+    return errors
+}   
+
 module.exports = {validateRegisterInput,
     validateLoginInput,
     validateLength,
     validateNotEmpty,
     validateOnlyNumbers,
     validatePhoneNumber,
-    validateEmail}
+    validateEmail,
+    validateEventInput,
+    validateTeamInput
+}
