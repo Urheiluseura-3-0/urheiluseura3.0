@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 require('express-async-errors')
-const app = express() 
+const app = express()
 const cors = require('cors')
 const userRouter = require('./controllers/user.js')
 const registerRouter = require('./controllers/register.js')
@@ -24,5 +24,11 @@ if (process.env.NODE_ENV === 'test') {
     const testingRouter = require('./controllers/testing')
     app.use('/api/testing', testingRouter)
 }
+
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '/build/index.html'), function (err) {
+        res.status(500).send(err)
+    })
+})
 
 module.exports = app
