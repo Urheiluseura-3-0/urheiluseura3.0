@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import EventForm from './EventForm'
+import EventList from './EventList'
 
 const userView = (props) => {
     const navigate = useNavigate()
@@ -15,7 +16,9 @@ const userView = (props) => {
                 <p>Kirjautuneena</p>
                 <button id='logout-button' onClick= {logOut}>Kirjaudu ulos</button>
             </div>
-
+            <div>
+                <EventList />
+            </div>
             <div>
                 <EventForm/>
             </div>
