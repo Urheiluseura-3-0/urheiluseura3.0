@@ -273,7 +273,7 @@ const EventList = () => {
     const ShowFilters = () => {
         if (showFilters === '-') {
             return (
-                <div>
+                <div className='flex justify px-5 py-2'>
                     <div>
                         <label className="block mt-2">Tapahtumat alkaen</label>
                         <input className='border rounded m-2 border-gray-300' type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
@@ -297,7 +297,7 @@ const EventList = () => {
         if (unconfirmedClicked) {
             return (
                 <div>
-                    <div>
+                    <div className='flex justify-center items-center'>
                         <button className="bg-rose-400 ring-2 ring-rose-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleShowUnconfirmed} disabled={unconfirmedClicked}>Odottaa hyväksyntää</button>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytty</button>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-gray-200" onClick={handleAllClicked}>Kaikki tapahtumat</button>
@@ -306,23 +306,23 @@ const EventList = () => {
                     <div>
                         < ShowFilters />
                     </div>
-                    <div>
-                        <table id='events' className='border-separate border-spacing-y-2'>
+                    <div  className='flex justify-center items-center'>
+                        <table id='events' className='border-separate border-spacing-y-2 text-left text-xs'>
                             <thead>
                                 <tr>
-                                    <th className='text-left p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                    <th className='text-left p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                    <th className='text-left p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                    <th className='text-left p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                                    <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                                    <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                                    <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                                    <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {showEvents.map((one_event, index) =>
-                                    <tr className={`${ index % 2 === 0 ? 'bg-rose-100' : 'bg-rose-200'} rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring hover:ring-rose-500 hover:bg-rose-400 text-sm text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                        <td className='py-4'>{getDate(one_event.dateTime)}</td>
-                                        <td className='py-4'>{one_event.location}</td>
-                                        <td className='py-4'>{one_event.team}</td>
-                                        <td className='p-2'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                    <tr className={`${ index % 2 === 0 ? 'bg-rose-100' : 'bg-rose-200'} rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring hover:ring-rose-500 hover:bg-rose-400 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                        <td className='p-4'>{getDate(one_event.dateTime)}</td>
+                                        <td className='p-4'>{one_event.location}</td>
+                                        <td className='p-4'>{one_event.team}</td>
+                                        <td className='p-4'>Odottaa hyväksyntää</td>
                                     </tr>)
                                 }
                             </tbody>
@@ -336,7 +336,7 @@ const EventList = () => {
         if (confirmedClicked) {
             return (
                 <div>
-                    <div>
+                    <div className='flex justify-center items-center'>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200"  onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
                         <button className="bg-emerald-400 ring-2 ring-emerald-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleShowConfirmed} disabled={confirmedClicked}>Hyväksytty</button>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-gray-200" onClick={handleAllClicked}>Kaikki tapahtumat</button>
@@ -345,23 +345,23 @@ const EventList = () => {
                     <div>
                         < ShowFilters/>
                     </div>
-                    <div>
-                        <table id='events' className='border-separate border-spacing-y-2'>
+                    <div className='flex justify-center items-center'>
+                        <table id='events' className='border-separate border-spacing-y-2 text-left text-xs'>
                             <thead>
                                 <tr>
-                                    <th className='text-left p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                    <th className='text-left p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                    <th className='text-left p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                    <th className='text-left p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                                    <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                                    <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                                    <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                                    <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {showEvents.map((one_event, index) =>
-                                    <tr className={`${ index % 2 === 0 ? 'bg-emerald-100' : 'bg-emerald-200'} rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring hover:ring-emerald-500 hover:bg-emerald-400 text-sm text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                        <td className='py-4'>{getDate(one_event.dateTime)}</td>
-                                        <td className='py-4'>{one_event.location}</td>
-                                        <td className='py-4'>{one_event.team}</td>
-                                        <td className='p-2'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                    <tr className={`${ index % 2 === 0 ? 'bg-emerald-100' : 'bg-emerald-200'} rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring hover:ring-emerald-500 hover:bg-emerald-400 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                        <td className='p-4'>{getDate(one_event.dateTime)}</td>
+                                        <td className='p-4'>{one_event.location}</td>
+                                        <td className='p-4'>{one_event.team}</td>
+                                        <td className='p-4'>Hyväksytty</td>
                                     </tr>)
                                 }
                             </tbody>
@@ -376,30 +376,30 @@ const EventList = () => {
         if (allClicked) {
             return (
                 <div>
-                    <div>
+                    <div className='flex justify-center items-center'>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200"  onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytty</button>
                         <button className="bg-gray-900 ring-2 ring-gray-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleAllClicked} disabled={allClicked}>Kaikki tapahtumat</button>
                         <button className="text-gray-600 font-semibold hover:text-gray py-1 px-4 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
                     </div>
                     < ShowFilters />
-                    <div>
-                        <table id='events' className='border-separate border-spacing-y-2'>
+                    <div className='flex justify-center items-center'>
+                        <table id='events' className='border-separate border-spacing-y-2 text-left text-xs'>
                             <thead>
                                 <tr>
-                                    <th className='text-left p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                    <th className='text-left p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                    <th className='text-left p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                    <th className='text-left p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                                    <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                                    <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                                    <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                                    <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {showEvents.map((one_event) =>
-                                    <tr className={`rounded ring-1 ring-gray-700 ring-opacity-50 text-sm text-gray-600 text-center ${one_event.status === '0' ? 'bg-rose-100 hover:ring hover:ring-rose-500 hover:bg-rose-400' : 'bg-emerald-100 hover:ring hover:ring-emerald-500 hover:bg-emerald-400'}`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                        <td className='py-4'>{getDate(one_event.dateTime)}</td>
-                                        <td className='py-4'>{one_event.location}</td>
-                                        <td className='py-4'>{one_event.team}</td>
-                                        <td className='p-2'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                    <tr className={`rounded ring-1 ring-gray-700 ring-opacity-50 text-gray-600 text-center ${one_event.status === '0' ? 'bg-rose-100 hover:ring hover:ring-rose-500 hover:bg-rose-400' : 'bg-emerald-100 hover:ring hover:ring-emerald-500 hover:bg-emerald-400'}`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                        <td className='p-4'>{getDate(one_event.dateTime)}</td>
+                                        <td className='p-4'>{one_event.location}</td>
+                                        <td className='p-4'>{one_event.team}</td>
+                                        <td className='p-4'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                     </tr>)
                                 }
                             </tbody>
