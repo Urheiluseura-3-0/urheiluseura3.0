@@ -28,9 +28,8 @@ const EventList = () => {
     useEffect(() => {
 
         eventService.getEvents().then(initialEvents =>
-
-        {setGetEvents(initialEvents), setAllEvents(initialEvents)})
-
+        {
+            setGetEvents(initialEvents), setAllEvents(initialEvents)})
 
     }, [])
 
@@ -289,7 +288,7 @@ const EventList = () => {
                                         <tr className={`${ index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
                                             <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                             <td className='p-4'>{one_event.location}</td>
-                                            <td className='p-4'>{one_event.team}</td>
+                                            <td className='p-4'>{one_event.EventTeam.name}</td>
                                             <td className='p-4 text-rose-400'>Odottaa hyväksyntää</td>
                                         </tr>)
                                     }
@@ -330,7 +329,7 @@ const EventList = () => {
                                         <tr className={`${ index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}  border hover:bg-gray-300 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
                                             <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                             <td className='p-4'>{one_event.location}</td>
-                                            <td className='p-4'>{one_event.team}</td>
+                                            <td className='p-4'>{one_event.EventTeam.name}</td>
                                             <td className='p-4 text-emerald-400'>Hyväksytty</td>
                                         </tr>)
                                     }
@@ -369,7 +368,7 @@ const EventList = () => {
                                     <tr className={`rounded ring-1 ring-gray-700 ring-opacity-50 text-sm text-gray-600 text-center ${one_event.status === '0' ? 'bg-rose-100 hover:ring hover:ring-rose-500 hover:bg-rose-400' : 'bg-emerald-100 hover:ring hover:ring-emerald-500 hover:bg-emerald-400'}`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
                                         <td className='py-4'>{getDate(one_event.dateTime)}</td>
                                         <td className='py-4'>{one_event.location}</td>
-                                        <td className='py-4'>{one_event.team}</td>
+                                        <td className='py-4'>{one_event.EventTeam.name}</td>
                                         <td className='p-2'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                     </tr>)
                                 }
