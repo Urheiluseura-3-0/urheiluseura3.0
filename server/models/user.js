@@ -66,6 +66,7 @@ User.init({
     email: {
         type: DataTypes.TEXT,
         allowNull: false,
+        unique: true,
         validate: {
             len: [5, 40]
         }

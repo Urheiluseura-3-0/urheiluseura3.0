@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
-    "test-coverage" : "cross-env NODE_ENV=test jest --verbose --runInBand --coverage",
+    "test-coverage": "cross-env NODE_ENV=test jest --verbose --runInBand --coverage",
     "eslint": "eslint .",
     "start:test": "cross-env NODE_ENV=test node index.js",
     "migration:down": "node utils/rollback.js"
@@ -23,6 +23,8 @@
     "express-async-errors": "^3.1.1",
     "express-static": "^1.2.6",
     "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "nodemailer": "^6.9.3",
     "pg": "^8.11.0",
     "react-cookie": "^4.1.1",
     "sequelize": "^6.31.1",

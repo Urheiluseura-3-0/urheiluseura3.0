@@ -28,6 +28,11 @@ registerRouter.post('/', async (request, response) => {
             return response.status(401).json({error: 'Käyttäjätunnus on jo olemassa.'}) 
         }
 
+        const findemail = await User.findOne({where: {email: email}})
+        if (findemail) {
+            return response.status(401).json({error: 'Sähköpostiosoite on jo käytössä'})
+        }
+
         const checkInputErrors = validateRegisterInput(firstName, lastName, username, password, address, city, 
             postalCode, phoneNumber, email)
 
