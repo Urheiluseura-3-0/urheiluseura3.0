@@ -28,14 +28,13 @@ const EventList = () => {
     useEffect(() => {
 
         eventService.getEvents().then(initialEvents => {
-            setGetEvents(initialEvents), setAllEvents(initialEvents)
+            setGetEvents(initialEvents),setAllEvents(filterByStatus(initialEvents))
         })
 
     }, [])
+
     useEffect(() => {
-        console.log('useeffect selectedStatus', selectedStatus)
         const filtered = filterByDateFrom(filterByDateTo(filterByStatus(getEvents)))
-        console.log('filtered', filtered)
         setAllEvents(filtered)
     }, [selectedStatus, selectedDateFrom, selectedDateTo])
 
@@ -170,14 +169,10 @@ const EventList = () => {
         if (selectedStatus === '') {
             return filtered
         }
-
         const filteredEvents = filtered.filter((one_event) => {
-            console.log('one_event',one_event)
-            console.log('one_event.status',one_event.status)
-            console.log('selectedStatus',selectedStatus)
-            return one_event.status === selectedStatus
+            return one_event.status === Number(selectedStatus)
         })
-        console.log('filterByStatus filteredevents', filteredEvents)
+
         return filteredEvents
     }
 
@@ -301,7 +296,7 @@ const EventList = () => {
                                             <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                             <td className='p-4'>{one_event.location}</td>
                                             <td className='p-4'>{one_event.EventTeam.name}</td>
-                                            <td className='p-4 text-rose-400'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                            <td className='p-4 text-rose-400'>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                         </tr>)
                                     }
                                 </tbody>
@@ -342,7 +337,7 @@ const EventList = () => {
                                             <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                             <td className='p-4'>{one_event.location}</td>
                                             <td className='p-4'>{one_event.EventTeam.name}</td>
-                                            <td className='p-4 text-emerald-400'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                            <td className='p-4 text-emerald-400'>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                         </tr>)
                                     }
                                 </tbody>
@@ -360,7 +355,7 @@ const EventList = () => {
                 <div>
                     <div className='flex justify-center items-center'>
                         <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200" onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytty</button>
+                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytyt tapahtumat</button>
                         <button className="bg-gray-900 ring-2 ring-gray-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleAllClicked} disabled={allClicked}>Kaikki tapahtumat</button>
                         <button className="text-gray-600 font-semibold hover:text-gray py-1 px-4 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
                     </div>
@@ -380,8 +375,8 @@ const EventList = () => {
                                     <tr className={`rounded ring-1 ring-gray-700 ring-opacity-50 text-gray-600 text-center ${one_event.status === '0' ? 'bg-rose-100 hover:ring hover:ring-rose-500 hover:bg-rose-400' : 'bg-emerald-100 hover:ring hover:ring-emerald-500 hover:bg-emerald-400'}`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
                                         <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                         <td className='p-4'>{one_event.location}</td>
-                                        <td className='p-4'>{one_event.team}</td>
-                                        <td className='p-4'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                        <td className='p-4'>{one_event.EventTeam.name}</td>
+                                        <td className='p-4'>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                     </tr>)
                                 }
                             </tbody>
