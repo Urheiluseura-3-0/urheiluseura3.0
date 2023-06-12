@@ -22,24 +22,38 @@ describe('Eventlist', function(){
                 name: 'Miehet IB',
                 category: 'edustus'
             },
-            { name: 'EBT Naiset',
+            {
+                name: 'EBT Naiset',
                 category: 'edustus' },
-            { name: 'Pojat UI19 ',
+
+            {
+                name: 'Pojat UI19 ',
                 category: 'u19' }
         ]
 
+
         cy.request('POST', 'http://localhost:3001/api/team', teams[0])
+
         cy.request('POST', 'http://localhost:3001/api/team', teams[1])
+
         cy.request('POST', 'http://localhost:3001/api/team', teams[2])
 
-        const loggedUser =
+
+
+        const loggedUserInfo =
         {
             username:'Tiina14',
             password: 'salainen1234'
         }
 
-        cy.request('POST', 'http://localhost:3001/api/login', loggedUser)
-        cy.request('GET', 'http://localhost:3001/api/login')
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
+
+        let idList = null
+
+        cy.request('GET', 'http://localhost:3001/api/team').then((response) => {
+            idList === response
+        })
+
 
         const events = [
             {
@@ -75,28 +89,46 @@ describe('Eventlist', function(){
                 description: 'Lipunmyynti'
             },
             {
-                team: 'Pojat U19',
+                team: 'Pojat UI19 ',
                 opponent: 'Honka U19',
-                date: '2023-06-5',
+                date: '2023-06-05',
                 time: '20:30',
                 location: 'Hyvinkää',
                 description: 'Tuomarointi'
             },
             {
-                team: ' Pojat U19',
+                team: 'Pojat UI19 ',
                 opponent: 'Pojat U20',
                 date: '2023-05-20',
                 time: '19:00',
                 location: 'Espoo',
                 description: 'Toimitsija'
             }
+
         ]
-        cy.request('POST', 'http://localhost:3001/api/event', events[0])
-        cy.request('POST', 'http://localhost:3001/api/event', events[1])
-        cy.request('POST', 'http://localhost:3001/api/event', events[2])
-        cy.request('POST', 'http://localhost:3001/api/event', events[3])
-        cy.request('POST', 'http://localhost:3001/api/event', events[4])
-        cy.request('POST', 'http://localhost:3001/api/event', events[5])
+        cy.request('GET', 'http://localhost:3001/api/team').then(response => {
+            const teamList = response.body
+            events.forEach(event => {
+                console.log('EVENT', event.team)
+                const team = teamList.find(team => team.name === event.team)
+                if (team) {
+                    event.team = team.id
+                }
+            })
+        })
+
+        cy.request({ method:'POST', url: 'http://localhost:3001/api/event',
+            headers: { Cookie: loggedUser.cookie }, body: events[0] })
+        cy.request({ method:'POST', url: 'http://localhost:3001/api/event',
+            headers: { Cookie: loggedUser.cookie }, body: events[1] })
+        cy.request({ method:'POST', url: 'http://localhost:3001/api/event',
+            headers: { Cookie: loggedUser.cookie }, body: events[2] })
+        cy.request({ method:'POST', url: 'http://localhost:3001/api/event',
+            headers: { Cookie: loggedUser.cookie }, body: events[3] })
+        cy.request({ method:'POST', url: 'http://localhost:3001/api/event',
+            headers: { Cookie: loggedUser.cookie }, body: events[4] })
+        cy.request({ method:'POST', url: 'http://localhost:3001/api/event',
+            headers: { Cookie: loggedUser.cookie }, body: events[5] })
 
         cy.visit('http://localhost:3000')
     })
@@ -106,29 +138,4 @@ describe('Eventlist', function(){
 
     })
 
-    /* Nämä testit odottavat tyylittelyn valmistumisea
-
-    it('Default user view only shows unccepted events', function() {
-        cy.get('#unaccepted')
-            .focus()
-            .should('be.focused')
-    })
-
-    it('All visible events are accepted when accepted button is pressed', function() {
-        cy.get('#accepted').click()
-        cy.get('#accepted')
-            .focus()
-            .should('be.focused')
-    })
-
-    it('User can sort events by team', function() {
-        cy.get('#team').click()
-        cy.get('#events')
-            .find('tr')
-            .find('td')
-            .eq(3)
-            .should('contain', 'EBT Naiset')
-    })
-
-    */
 })
