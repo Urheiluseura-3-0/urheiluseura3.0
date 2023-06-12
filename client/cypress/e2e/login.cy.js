@@ -26,14 +26,13 @@ describe('Login ', function() {
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')
         cy.get('#login-button').click()
-        cy.contains('Kirjautuneena')
+        cy.contains('Lisää tapahtuma')
     })
 
     it('user can logout', function() {
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')
         cy.get('#login-button').click()
-        cy.contains('Kirjautuneena')
         cy.get('#logout-button').click()
         cy.contains('Kirjaudu sisään')
     })

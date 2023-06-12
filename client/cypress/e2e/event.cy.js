@@ -25,12 +25,13 @@ describe('Event', function() {
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')
         cy.get('#login-button').click()
+        cy.get('#addevent-link').click()
     })
 
     describe('Page view', function() {
 
         it('user can see event form', function() {
-            cy.url().should('include','/home')
+            cy.url().should('include','/event')
             cy.contains('Lisää tapahtuma')
         })
 
