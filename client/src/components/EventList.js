@@ -1,62 +1,17 @@
 import { useState, useEffect } from 'react'
 import EventDetails from './EventDetails'
+import eventService from '../services/event'
+
 
 const EventList = () => {
 
-    const getEvents = [
-        {
-            id: '1', team: 'Joukkue 1', opponent: 'Vierasjoukkue', location: 'Espoo',
-            dateTime: '2023-06-23T18:00', description: 'Kuvaus', status: '0'
-        },
-        {
-            id: '2', team: 'Joukkue 3', opponent: 'Vierasjoukkue', location: 'Vantaa',
-            dateTime: '2023-05-10T16:30', description: '', status: '1'
-        },
-        {
-            id: '3', team: 'Joukkue 1', opponent: 'Vierasjoukkue 2', location: 'Kerava',
-            dateTime: '2023-06-02T10:15', description: 'Lipunmyynti', status: '0'
-        },
-        {
-            id: '4', team: 'Joukkue 3', opponent: 'Vierasjoukkue 2', location: 'Helsinki',
-            dateTime: '2023-05-02T12:00', description: 'Lipunmyynti', status: '1'
-        },
-        {
-            id: '5', team: 'Joukkue 3', opponent: 'Vierasjoukkue 3', location: 'Kerava',
-            dateTime: '2023-06-13T10:15', description: 'Tuomarointi', status: '0'
-        },
-        {
-            id: '6', team: 'Joukkue 3', opponent: 'Vierasjoukkue 2', location: 'Helsinki',
-            dateTime: '2023-06-12T12:00', description: '', status: '1'
-        },
-        {
-            id: '7', team: 'Joukkue 2', opponent: 'Vierasjoukkue', location: 'Vantaa',
-            dateTime: '2023-05-10T16:30', description: '', status: '1'
-        },
-        {
-            id: '8', team: 'Joukkue 1', opponent: 'Vierasjoukkue 2', location: 'Kerava',
-            dateTime: '2023-06-02T10:15', description: 'Lipunmyynti', status: '0'
-        },
-        {
-            id: '9', team: 'Joukkue 3', opponent: 'Vierasjoukkue 3', location: 'Helsinki',
-            dateTime: '2023-06-02T12:00', description: 'Lipunmyynti', status: '1'
-        },
-        {
-            id: '10', team: 'Joukkue 3', opponent: 'Vierasjoukkue 4', location: 'Kerava',
-            dateTime: '2023-05-13T10:15', description: 'Tuomarointi', status: '0'
-        },
-        {
-            id: '11', team: 'Joukkue 3', opponent: 'Vierasjoukkue 2', location: 'Helsinki',
-            dateTime: '2023-06-12T12:00', description: '', status: '1'
-        },
-    ]
-
-    const [showEvents, setAllEvents] = useState(getEvents)
     const [showFilters, setShowFilters] = useState('+')
     const [unconfirmedClicked, setUnconfirmedClicked] = useState(true)
     const [confirmedClicked, setConfirmedClicked] = useState(false)
     const [allClicked, setAllClicked] = useState(false)
 
     const [selectedStatus, setStatus] = useState('0')
+
     const [selectedDateFrom, setDateFrom] = useState('')
     const [selectedDateTo, setDateTo] = useState('')
     const [clickedEvent, setClicked] = useState('')
@@ -66,13 +21,25 @@ const EventList = () => {
     const [sortedByLocation, setSortedByLocation] = useState('1')
     const [sortedByDate, setSortedByDate] = useState('1')
     const [sortedByStatus, setSortedByStatus] = useState('1')
+    const [getEvents, setGetEvents] = useState([])
+    const [showEvents, setAllEvents] = useState(getEvents)
+
+
+    useEffect(() => {
+
+        eventService.getEvents().then(initialEvents =>
+
+        {setGetEvents(initialEvents), setAllEvents(initialEvents)})
+
+
+    }, [])
 
     const sortByTeam = (event) => {
         event.preventDefault()
 
         const sorted = showEvents.sort((a, b) => {
-            const teamA = a.team
-            const teamB = b.team
+            const teamA = a.EventTeam.name
+            const teamB = b.EventTeam.name
 
             if (teamA > teamB) {
                 return 1
