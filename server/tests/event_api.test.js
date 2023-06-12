@@ -21,8 +21,9 @@ let cookies
 let cryptedToken
 
 let finalToken
-
 let team
+let teams
+let event
 
 
 beforeEach(async () => {
@@ -30,7 +31,7 @@ beforeEach(async () => {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
 
-    const initialUser = [
+    const initialUsers = [
         {
             firstName: 'Pekka',
             lastName: 'Testinen',
@@ -41,14 +42,27 @@ beforeEach(async () => {
             city: 'Helsinki',
             phoneNumber: '0509876543',
             email: 'osoite@email.com'
+        },
+        {
+            firstName: 'Mikko',
+            lastName: 'Testinen',
+            username: 'Mikko35',
+            password: passwordHash,
+            address: 'Osoite',
+            postalCode: '00300',
+            city: 'Helsinki',
+            phoneNumber: '0509876543',
+            email: 'osoite@email.com'
         }
     ]
+
     await User.destroy({
         where: {},
         truncate: true,
         cascade: true
     })
-    user = await User.create(initialUser[0])
+
+    await User.bulkCreate(initialUsers)
 
     const initialTeams = [
         {
@@ -69,23 +83,46 @@ beforeEach(async () => {
         truncate:true,
         cascade: true
     })
-    team = await Team.create(initialTeams[0])
-    await Team.create(initialTeams[1])
-    await Team.create(initialTeams[2])
+
+    teams = await Team.bulkCreate(initialTeams)
 
     const dateString = '2023-06-19T12:30:00.000Z'
     const timestamp = Date.parse(dateString)
     const dateTime = new Date(timestamp)
+    user = await User.findOne({where: {username: 'Pekka35'}})
+    const mikko = await User.findOne({where: {username: 'Mikko35'}})
 
-    const initialEvent = [
+    const initialEvents = [
         {   
 
             opponent: 'Honka I B',
             location: 'Espoonlahden urheiluhalli',
             dateTime: dateTime,
             description: 'Tuomarointi',
-            teamId: team.id,
+            teamId: teams[0].id,
             createdById: user.id,
+            
+        },
+        {   
+
+            opponent: 'Honka II B',
+            location: 'Espoonlahden urheiluhalli',
+            dateTime: dateTime,
+            description: 'Kirjuri',
+            teamId: teams[1].id,
+            status: 1,
+            createdById: user.id,
+            
+        },
+        {   
+
+            opponent: 'Honka III B',
+            location: 'Espoonlahden urheiluhalli',
+            dateTime: dateTime,
+            description: 'Kirjuri',
+            teamId: teams[1].id,
+            status: 1,
+            createdById: mikko.id,
             
         }
     ]
@@ -95,7 +132,10 @@ beforeEach(async () => {
         truncate: true,
         cascade: true
     })
-    await Event.create(initialEvent[0])
+
+    await Event.bulkCreate(initialEvents)
+
+    event = await Event.findOne({where: {opponent: 'Honka I B'}})
 
     user = {username: 'Pekka35', password: 'salainen1234'}
     loggedUser = await api.post('/api/login').send(user)
@@ -105,7 +145,6 @@ beforeEach(async () => {
     finalToken = handleToken(cryptedToken)
 
     team = await Team.findOne({where: {name: 'EBT SB'}})
-
 
 })
 
@@ -299,7 +338,48 @@ test('correct number of events in database', async () => {
         .expect(200)
     
     const events = await Event.findAll()
-    expect(events.length).toBe(2)
+    expect(events.length).toBe(4)
 
 })
 
+test('events can be fetched for user', async () => {
+    const response = await api
+        .get('/api/event')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.opponent)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('Honka I B')
+    expect(contents).toContain('Honka II B')
+})
+
+test('events for user return teamnames', async () => {
+    const response = await api
+        .get('/api/event')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.EventTeam.name)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('Naiset 3')
+    expect(contents).toContain('EBT SB')
+})
+
+test('Get by event id returns correct event', async () => {
+    const response = await api
+        .get(`/api/event/${event.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.opponent).toContain('Honka I B')
+})
+
+test('Get by event returns error code if id is invalid', async () => {
+    const invalidId = 'ThisIdIsNotRight'
+    await api
+        .get(`/api/event/${invalidId}`)
+        .set('Cookie', finalToken)
+        .expect(400)
+})
+
+test('Get by event id returns teamname', async() => {
+    const response = await api
+        .get(`/api/event/${event.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.EventTeam.name).toContain('Naiset 3')
+})
