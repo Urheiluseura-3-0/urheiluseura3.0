@@ -48,11 +48,6 @@ describe('Eventlist', function(){
 
         const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
 
-        let idList = null
-
-        cy.request('GET', 'http://localhost:3001/api/team').then((response) => {
-            idList === response
-        })
 
 
         const events = [
@@ -109,7 +104,6 @@ describe('Eventlist', function(){
         cy.request('GET', 'http://localhost:3001/api/team').then(response => {
             const teamList = response.body
             events.forEach(event => {
-                console.log('EVENT', event.team)
                 const team = teamList.find(team => team.name === event.team)
                 if (team) {
                     event.team = team.id
