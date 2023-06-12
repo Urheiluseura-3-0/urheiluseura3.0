@@ -12,6 +12,7 @@ const EventForm = () => {
     const [time, setTime] = useState('')
     const [description, setDescription] = useState('')
     const [alertMessage, setAlertMessage] = useState('')
+    const [alertType, setAlertType] = useState('')
     const [showAlert, setShowAlert] = useState(false)
 
     const [isInputValid, setIsInputValid] = useState(false)
@@ -29,8 +30,15 @@ const EventForm = () => {
                 team, opponent, location, date, time, description
             })
             resetFields()
+            setAlertMessage('Tapahtuma lisätty')
+            setAlertType('success')
+            setShowAlert(true)
+            setTimeout(() => {
+                setShowAlert(false)
+            }, 3000)
         } catch (exception) {
             setAlertMessage(exception.response.data.error)
+            setAlertType('error')
             setShowAlert(true)
             setTimeout(() => {
                 setShowAlert(false)
@@ -89,7 +97,7 @@ const EventForm = () => {
         <div className='flex justify-center items-center h-screen bg-stone-100'>
             <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
                 <h1 className='font-bold text-2xl text-center text-teal-500'>Lisää tapahtuma</h1>
-                {showAlert && <Notification message={alertMessage} />}
+                {showAlert && <Notification type={alertType} message={alertMessage} />}
                 <form>
                     <div className='space-y-3'>
                         <div className='pt-3'>
