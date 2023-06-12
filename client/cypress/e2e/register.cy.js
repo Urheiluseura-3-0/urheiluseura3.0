@@ -219,7 +219,7 @@ describe('Register', () => {
             cy.get('input[name="passwordConfirm"]').type('salainen123')
 
             cy.get('#register-button').click()
-            cy.contains('Kirjautuneena')
+            cy.contains('Lisää tapahtuma')
 
         })
 
