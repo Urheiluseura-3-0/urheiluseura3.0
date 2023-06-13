@@ -225,6 +225,7 @@ const EventList = () => {
             setConfirmedClicked(false)
             setAllClicked(false)
             setClickedEvent('')
+            resetSorters()
         }
 
     }
@@ -239,6 +240,7 @@ const EventList = () => {
             setUnconfirmedClicked(false)
             setAllClicked(false)
             setClickedEvent('')
+            resetSorters()
         }
     }
 
@@ -252,7 +254,15 @@ const EventList = () => {
             setConfirmedClicked(false)
             setUnconfirmedClicked(false)
             setClickedEvent('')
+            resetSorters()
         }
+    }
+
+    const resetSorters = () => {
+        setSortedByDate('')
+        setSortedByLocation('')
+        setSortedByStatus('')
+        setSortedByTeam('')
     }
 
 
@@ -266,6 +276,7 @@ const EventList = () => {
                         <input className='border rounded m-2 border-gray-300' type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
                             setDateFrom(target.value)
                             setClickedEvent('')
+                            resetSorters()
                         }}></input>
                     </div>
                     <div>
@@ -273,6 +284,7 @@ const EventList = () => {
                         <input className='border rounded m-2 border-gray-300' type='date' id='dateto' value={selectedDateTo} onChange={({ target }) => {
                             setDateTo(target.value)
                             setClickedEvent('')
+                            resetSorters()
                         }}></input>
                     </div>
                 </div>
