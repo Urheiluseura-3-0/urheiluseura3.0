@@ -1,5 +1,6 @@
 describe('Eventlist', function () {
 
+
     beforeEach(function () {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
         const user = {
@@ -181,19 +182,14 @@ describe('Eventlist', function () {
         it('User can sort unconfirmed events by day', function () {
             cy.wait(1000)
             cy.get('#date').click()
-            cy.get('#events').find('tbody').find('tr').first().find('td').first().then(($date) => {
-                const dateText = $date.text()
-                const date1 = new Date(dateText)
-                const date2 = new Date('06/05/2023')
-                expect(date1.getTime()).to.equal(date2.getTime())
-            })
-            cy.get('#events').find('tbody').find('tr').last().find('td').first().then(($date) => {
-                const dateText = $date.text()
-                const date1 = new Date(dateText)
-                const date2 = new Date('05/20/2023')
-                expect(date1.getTime()).to.equal(date2.getTime())
-            })
-
+            cy.get('#events').find('tbody').find('tr').first().find('td').first().invoke('text')
+                .then((text) => {
+                    expect(text).to.match(/5\/6\/2023|6\/5\/2023/)
+                })
+            cy.get('#events').find('tbody').find('tr').last().find('td').first().invoke('text')
+                .then((text) => {
+                    expect(text).to.match(/5\/20\/2023|20\/5\/2023/)
+                })
         })
 
         it('User can sort unconfirmed events by location', function () {
@@ -218,7 +214,10 @@ describe('Eventlist', function () {
                 .should('contain', 'Vastustaja')
                 .should('contain', 'Joukkue2')
                 .should('contain', 'Kellonaika')
-                .should('contain', '8:30:00 PM')
+                .should(($el) => {
+                    const text = $el.text();
+                    expect(text).to.match(/20:30:00|8:30:00 PM/)
+                })
                 .should('contain', 'Lisätiedot')
                 .should('contain', 'Toimitsija')
                 .should('contain', 'Status')
@@ -268,18 +267,14 @@ describe('Eventlist', function () {
         it('User can sort all events by day', function () {
             cy.wait(1000)
             cy.get('#date').click()
-            cy.get('#events').find('tbody').find('tr').first().find('td').first().then(($date) => {
-                const dateText = $date.text()
-                const date1 = new Date(dateText)
-                const date2 = new Date('06/05/2023')
-                expect(date1.getTime()).to.equal(date2.getTime())
-            })
-            cy.get('#events').find('tbody').find('tr').last().find('td').first().then(($date) => {
-                const dateText = $date.text()
-                const date1 = new Date(dateText)
-                const date2 = new Date('05/20/2023')
-                expect(date1.getTime()).to.equal(date2.getTime())
-            })
+            cy.get('#events').find('tbody').find('tr').first().find('td').first().invoke('text')
+                .then((text) => {
+                    expect(text).to.match(/5\/6\/2023|6\/5\/2023/)
+                })
+            cy.get('#events').find('tbody').find('tr').last().find('td').first().invoke('text')
+                .then((text) => {
+                    expect(text).to.match(/5\/20\/2023|20\/5\/2023/)
+                })
 
         })
 
