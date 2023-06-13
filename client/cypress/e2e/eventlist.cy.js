@@ -215,7 +215,7 @@ describe('Eventlist', function () {
                 .should('contain', 'Joukkue2')
                 .should('contain', 'Kellonaika')
                 .should(($el) => {
-                    const text = $el.text();
+                    const text = $el.text()
                     expect(text).to.match(/20:30:00|8:30:00 PM/)
                 })
                 .should('contain', 'Lisätiedot')
