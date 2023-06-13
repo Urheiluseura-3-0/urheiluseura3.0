@@ -41,7 +41,7 @@ test('can register with non-existing username and otherwise correct input', asyn
         postalCode: '00300',
         city: 'Helsinki',
         phoneNumber: '0509876543',
-        email: 'osoite@email.com'
+        email: 'uusiosoite@email.com'
     }
 
     await api
@@ -64,7 +64,7 @@ test('correct number of users in database', async () => {
         postalCode: '00300',
         city: 'Helsinki',
         phoneNumber: '0509876543',
-        email: 'osoite@email.com'
+        email: 'uusiosoite@email.com'
     }
 
     const existingUser = {
@@ -77,7 +77,7 @@ test('correct number of users in database', async () => {
         postalCode: '00300',
         city: 'Helsinki',
         phoneNumber: '0509876543',
-        email: 'osoite@email.com'
+        email: 'uusiosoite2@email.com'
     }
 
     let users = await User.findAll()

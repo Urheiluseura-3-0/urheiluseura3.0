@@ -106,4 +106,35 @@ describe('When a reset request has been made', () => {
         expect(result.body.message).toBe('Salasanan vaihto onnistui')
 
     })
+
+    test('Password is not changed with mismatching passwords', async () => {
+
+        const passwords = {
+            password: 'kissakoira223',
+            passwordConfirm: 'kissakoira123'
+        }
+        const result = await api
+            .post(`/api/reset/${reset.token}`)
+            .send(passwords)
+            .expect(400)
+        expect(result.body.error).toBe('Salasanat eivät täsmää')
+
+    })
+
+    test('Password is not changed with an invalid token', async () => {
+
+        const passwords = {
+            password: 'kissakoira223',
+            passwordConfirm: 'kissakoira223'
+        }
+        const erroneousToken = 'asd123asdlkjasdoij123jnahsdokjajsd'
+
+        const result = await api
+            .post(`/api/reset/${erroneousToken}`)
+            .send(passwords)
+            .expect(404)
+
+        expect(result.body.error).toBe('Salasanan nollauspyyntöä ei löytynyt')
+
+    })
 })
