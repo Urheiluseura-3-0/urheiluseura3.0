@@ -134,4 +134,19 @@ describe('Event', function() {
             cy.get('input[id="description"]').invoke('val').should('have.length', 200)
         })
     })
+
+    describe('Add event', function() {
+        it('user can add event with correct information', function() {
+            cy.get('select[id="team"]').select('Joukkue 1')
+            cy.get('input[id="opponent"]').type('Honka')
+            cy.get('input[id="location"]').type('espoon halli')
+            cy.get('input[id="date"]').type('2023-06-01')
+            cy.get('input[id="time"]').type('11:00')
+            cy.get('input[id="description"]').type('tuomarointi')
+
+            cy.get('#add-event').click()
+
+            cy.contains('Tapahtuma lisätty')
+        })
+    })
 })
