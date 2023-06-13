@@ -2,12 +2,13 @@
 const EventDetail = ({ one_event }) => {
     const eventDetails = one_event
     const dateTime = new Date(eventDetails.dateTime)
+    const createdAtDate = new Date(eventDetails.createdAt)
 
     return (
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3'>
             <h2 className='font-bold text-2xl text-center text-teal-500'>Tarkemmat tiedot</h2>
             <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                <table className=''>
+                <table className='w-full'>
                     <tbody>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Joukkue</td>
@@ -39,7 +40,7 @@ const EventDetail = ({ one_event }) => {
                         </tr>
                         <tr>
                             <td className='p-2 font-semibold'>Luotu</td>
-                            <td className='p-2'>{eventDetails.createdAt}</td>
+                            <td className='p-2'>{createdAtDate.toLocaleDateString() + ' ' +  createdAtDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                         </tr>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Hyväksyjän nimi</td>

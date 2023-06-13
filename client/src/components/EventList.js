@@ -309,7 +309,7 @@ const EventList = () => {
                             </thead>
                             <tbody>
                                 {showEvents.map((one_event, index) =>
-                                    <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                    <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} ${clickedEvent.id === one_event.id ? 'bg-gray-300' : 'inherit'} border hover:bg-gray-300 text-center cursor-pointer`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
                                         <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                         <td className='p-4'>{one_event.location}</td>
                                         <td className='p-4'>{one_event.EventTeam.name}</td>
