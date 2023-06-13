@@ -8,7 +8,7 @@ const EventDetail = ({ one_event }) => {
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3'>
             <h2 className='font-bold text-2xl text-center text-teal-500'>Tarkemmat tiedot</h2>
             <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                <table className='w-full'>
+                <table id = 'eventdetail' className='w-full'>
                     <tbody>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Joukkue</td>
