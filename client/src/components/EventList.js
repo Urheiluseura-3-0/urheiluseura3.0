@@ -62,8 +62,8 @@ const EventList = () => {
         setSortedByStatus('')
         const sorted = [...shownEvents]
         sorted.sort((a, b) => {
-            const teamA = a.EventTeam.name
-            const teamB = b.EventTeam.name
+            const teamA = a.EventTeam.name.toLowerCase()
+            const teamB = b.EventTeam.name.toLowerCase()
 
             if (teamA > teamB) {
                 return 1
@@ -113,8 +113,8 @@ const EventList = () => {
         setSortedByStatus('')
         const sorted = [...shownEvents]
         sorted.sort((a, b) => {
-            const locationA = a.location
-            const locationB = b.location
+            const locationA = a.location.toLowerCase()
+            const locationB = b.location.toLowerCase()
 
             if (locationA > locationB) {
                 return 1
