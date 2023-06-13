@@ -36,7 +36,7 @@ const EventDetail = ({ one_event }) => {
                         </tr>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Status</td>
-                            <td className='p-2'>{eventDetails.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                            <td className='p-2'>{eventDetails.status === 0 ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                         </tr>
                         <tr>
                             <td className='p-2 font-semibold'>Luotu</td>
