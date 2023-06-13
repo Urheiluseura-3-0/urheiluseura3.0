@@ -5,7 +5,7 @@ import eventService from '../services/event'
 
 const EventList = () => {
 
-    const [showFilters, setShowFilters] = useState('+')
+    const [showFilters, setShowFilters] = useState('Valitse aikaväli')
     const [unconfirmedClicked, setUnconfirmedClicked] = useState(true)
     const [confirmedClicked, setConfirmedClicked] = useState(false)
     const [allClicked, setAllClicked] = useState(false)
@@ -25,13 +25,32 @@ const EventList = () => {
     const [showEvents, setAllEvents] = useState(getEvents)
 
 
+    // const formatDate = (date) => {
+    //     const day = date.getDate().toString().padStart(2, '0')
+    //     const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    //     const year = date.getFullYear()
+
+    //     return `${day}-${month}-${year}`
+    // }
+
     useEffect(() => {
 
-        eventService.getEvents().then(initialEvents =>
-        {
-            setGetEvents(initialEvents), setAllEvents(initialEvents)})
+        eventService.getEvents().then(initialEvents => {
+            setGetEvents(initialEvents), setAllEvents(filterByStatus(initialEvents))
+        })
+        const currentDate = new Date()
+        const threeMonthsAgo = new Date()
+        threeMonthsAgo.setMonth(currentDate.getMonth() - 3)
+
+        setDateFrom(threeMonthsAgo.toISOString().split('T')[0])
+        setDateTo(currentDate.toISOString().split('T')[0])
 
     }, [])
+
+    useEffect(() => {
+        const filtered = filterByDateFrom(filterByDateTo(filterByStatus(getEvents)))
+        setAllEvents(filtered)
+    }, [selectedStatus, selectedDateFrom, selectedDateTo])
 
     const sortByTeam = (event) => {
         event.preventDefault()
@@ -164,8 +183,10 @@ const EventList = () => {
         if (selectedStatus === '') {
             return filtered
         }
+        const filteredEvents = filtered.filter((one_event) => {
+            return one_event.status === Number(selectedStatus)
+        })
 
-        const filteredEvents = filtered.filter((one_event) => one_event.status === selectedStatus)
         return filteredEvents
     }
 
@@ -193,15 +214,15 @@ const EventList = () => {
 
     const handleshowFilters = (event) => {
         event.preventDefault()
-        if (showFilters === '-') {
-            setShowFilters('+')
+        if (showFilters === 'Pienennä') {
+            setShowFilters('Valitse aikaväli')
         } else {
-            setShowFilters('-')
+            setShowFilters('Pienennä')
         }
     }
     const handleShowUnconfirmed = (event) => {
         event.preventDefault()
-        if (unconfirmedClicked){
+        if (unconfirmedClicked) {
             setUnconfirmedClicked(false)
         } else {
             setUnconfirmedClicked(true)
@@ -214,7 +235,7 @@ const EventList = () => {
 
     const handleShowConfirmed = (event) => {
         event.preventDefault()
-        if (confirmedClicked){
+        if (confirmedClicked) {
             setConfirmedClicked(false)
         } else {
             setConfirmedClicked(true)
@@ -226,9 +247,9 @@ const EventList = () => {
 
     const handleAllClicked = (event) => {
         event.preventDefault()
-        if (allClicked){
+        if (allClicked) {
             setAllClicked(false)
-        }else{
+        } else {
             setAllClicked(true)
             setStatus('')
             setConfirmedClicked(false)
@@ -237,7 +258,7 @@ const EventList = () => {
     }
 
     const ShowFilters = () => {
-        if (showFilters === '-') {
+        if (showFilters === 'Pienennä') {
             return (
                 <div className='flex justify px-5 py-2'>
                     <div>
@@ -259,131 +280,49 @@ const EventList = () => {
         }
     }
 
-    const ShowUnconfirmed = () => {
-        if (unconfirmedClicked) {
-            return (
-                <div>
-                    <div className='flex justify-center items-center'>
-                        <button className="bg-rose-400 ring-2 ring-rose-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleShowUnconfirmed} disabled={unconfirmedClicked}>Odottaa hyväksyntää</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytyt tapahtumat</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-gray-200" onClick={handleAllClicked}>Kaikki tapahtumat</button>
-                        <button className="text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    </div>
-                    <div>
-                        < ShowFilters />
-                    </div>
-                    <div className='flex justify-center items-center mt-4'>
-                        <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                            <table id='events' className='text-left text-xs bg-stone-100'>
-                                <thead>
-                                    <tr>
-                                        <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                        <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                        <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                        <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {showEvents.map((one_event, index) =>
-                                        <tr className={`${ index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                            <td className='p-4'>{getDate(one_event.dateTime)}</td>
-                                            <td className='p-4'>{one_event.location}</td>
-                                            <td className='p-4'>{one_event.EventTeam.name}</td>
-                                            <td className='p-4 text-rose-400'>Odottaa hyväksyntää</td>
-                                        </tr>)
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    const ListView = () => {
+        return (
+            <div>
+                <div className='flex justify-center items-center'>
+                    <button className={`${unconfirmedClicked ? 'bg-rose-400 ring-2 ring-rose-600 text-white font-semibold text-sm' :
+                        'ring-1 ring-gray-200  text-gray-600 hover:bg-rose-200'} px-5 py-2 m-2 rounded-full`} onClick={handleShowUnconfirmed} disabled={unconfirmedClicked}>Odottaa hyväksyntää</button>
+                    <button className={`${confirmedClicked ? 'bg-emerald-400 ring-2 ring-emerald-600 text-white font-semibold text-sm' :
+                        'ring-1 ring-gray-200  text-gray-600 hover:bg-emerald-200'} px-5 py-2 m-2 rounded-full`} onClick={handleShowConfirmed} disabled={confirmedClicked}>Hyväksytyt tapahtumat</button>
+                    <button className={`${allClicked ? 'bg-blue-400 ring-2 ring-blue-600 text-white font-semibold text-sm' :
+                        'ring-1 ring-gray-200  text-gray-600 hover:bg-blue-200'} px-5 py-2 m-2 rounded-full`} onClick={handleAllClicked} disabled={allClicked}>Kaikki tapahtumat</button>
                 </div>
-            )
-        }
-    }
-    const ShowConfirmed = () => {
-        if (confirmedClicked) {
-            return (
                 <div>
-                    <div className='flex justify-center items-center'>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200"  onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
-                        <button className="bg-emerald-400 ring-2 ring-emerald-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleShowConfirmed} disabled={confirmedClicked}>Hyväksytyt tapahtumat</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-gray-200" onClick={handleAllClicked}>Kaikki tapahtumat</button>
-                        <button className="text-gray-600 font-semibold hover:text-gray py-1 px-4 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    </div>
-                    <div>
-                        < ShowFilters/>
-                    </div>
-                    <div className='flex justify-center items-center mt-4'>
-                        <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                            <table id='events' className='text-left text-xs bg-stone-100'>
-                                <thead>
-                                    <tr>
-                                        <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                        <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                        <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                        <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {showEvents.map((one_event, index) =>
-                                        <tr className={`${ index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}  border hover:bg-gray-300 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                            <td className='p-4'>{getDate(one_event.dateTime)}</td>
-                                            <td className='p-4'>{one_event.location}</td>
-                                            <td className='p-4'>{one_event.EventTeam.name}</td>
-                                            <td className='p-4 text-emerald-400'>Hyväksytty</td>
-                                        </tr>)
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-    }
-
-    const ShowAll = () => {
-        if (allClicked) {
-            return (
-                <div>
-                    <div>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200"  onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytty</button>
-                        <button className="bg-gray-900 ring-2 ring-gray-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleAllClicked} disabled={allClicked}>Kaikki tapahtumat</button>
-                        <button className="text-gray-600 font-semibold hover:text-gray py-1 px-4 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    </div>
+                    <span>Ottelut aikaväliltä {selectedDateFrom} - {selectedDateTo}</span>
+                    <button className="text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
                     < ShowFilters />
-                    <div>
-                        <table id='events' className='border-separate border-spacing-y-2 rounded-lg'>
+                </div>
+                <div className='flex justify-center items-center mt-4'>
+                    <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
+                        <table id='events' className='text-left text-xs bg-stone-100'>
                             <thead>
                                 <tr>
-                                    <th className='text-left p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                    <th className='text-left p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                    <th className='text-left p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                    <th className='text-left p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {showEvents.map((one_event) =>
-                                    <tr className={`rounded ring-1 ring-gray-700 ring-opacity-50 text-sm text-gray-600 text-center ${one_event.status === '0' ? 'bg-rose-100 hover:ring hover:ring-rose-500 hover:bg-rose-400' : 'bg-emerald-100 hover:ring hover:ring-emerald-500 hover:bg-emerald-400'}`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                        <td className='py-4'>{getDate(one_event.dateTime)}</td>
-                                        <td className='py-4'>{one_event.location}</td>
-                                        <td className='py-4'>{one_event.EventTeam.name}</td>
-                                        <td className='p-2'>{one_event.status === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                {showEvents.map((one_event, index) =>
+                                    <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                        <td className='p-4'>{getDate(one_event.dateTime)}</td>
+                                        <td className='p-4'>{one_event.location}</td>
+                                        <td className='p-4'>{one_event.EventTeam.name}</td>
+                                        <td className={`${String(one_event.status) === '0' ? 'text-rose-400' : 'text-emerald-400'} p-4`}>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                     </tr>)
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-            )
-        }
+            </div>
+        )
     }
-
-    useEffect(() => {
-        const filtered = filterByDateFrom(filterByDateTo(filterByStatus(getEvents)))
-        setAllEvents(filtered)
-    }, [selectedStatus, selectedDateFrom, selectedDateTo])
 
     return (
         <div className='flex justify-center bg-stone-100 p-4'>
@@ -391,13 +330,10 @@ const EventList = () => {
                 <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
                 <div className="text-xs p-4">
                     <div>
-                        < ShowUnconfirmed />
-                        < ShowConfirmed />
-                        < ShowAll />
+                        < ListView />
                     </div>
                 </div>
                 {clickedEvent !== '' && <EventDetails one_event={clickedEvent} />}
-
             </div>
         </div>
     )
