@@ -24,8 +24,12 @@ COPY server/package*.json .
 # Install dependencies
 RUN npm install
 
+# Install Tailwind CSS dependencies
+RUN npm install tailwindcss postcss autoprefixer
+
 # Copy server code
 COPY server .
+
 # Copy static frontend
 COPY --from=client /usr/src/app/build build
 
