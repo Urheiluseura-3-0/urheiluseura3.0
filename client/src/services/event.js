@@ -7,4 +7,9 @@ const addEvent = async eventData => {
 
 }
 
-export default { addEvent }
+const getEvents = async eventData => {
+    const response = await axios.get(baseUrl, eventData)
+    return response.data
+}
+
+export default { addEvent, getEvents }
