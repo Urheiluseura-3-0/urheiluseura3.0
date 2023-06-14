@@ -49,7 +49,7 @@ resetRouter.post('/', async (request, response) => {
         await reset.save()
 
 
-        //Email is sent here using Nodemailer
+        // await sendResetEmail(email, token)
 
         return response.status(200).json({ message: 'Linkki salasanan vaihtoon lähetetty' })
     } catch {
