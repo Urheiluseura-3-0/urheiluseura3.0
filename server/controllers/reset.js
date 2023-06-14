@@ -75,7 +75,7 @@ resetRouter.post('/:token', async (request, response) => {
         const { password, passwordConfirm } = request.body
 
         if (password != passwordConfirm) {
-            return response.status(400).json({ error: 'Salasanat eivät täsmää.' })
+            return response.status(400).json({ error: 'Salasanat eivät täsmää' })
         }
 
         const finduser = await User.findOne({ where: { id: reset.userId } })

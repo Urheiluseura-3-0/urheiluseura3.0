@@ -87,10 +87,12 @@ describe('When a reset request has been made', () => {
             truncate: true,
             cascade: true
         })
+        console.log('EMAIL', user)
         await api
             .post('/api/reset')
             .send({ email: user.email })
-        reset = await Reset.findOne({ where: { email: user.email } })
+            .expect(200)
+        reset = await Reset.findOne({ where: { userId: user.id } })
     })
 
     test('Password is changed with a valid token and passwords', async () => {
