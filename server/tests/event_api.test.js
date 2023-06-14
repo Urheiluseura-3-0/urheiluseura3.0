@@ -52,7 +52,7 @@ beforeEach(async () => {
             postalCode: '00300',
             city: 'Helsinki',
             phoneNumber: '0509876543',
-            email: 'osoite@email.com'
+            email: 'osoite2@email.com'
         }
     ]
 
