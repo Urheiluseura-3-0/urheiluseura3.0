@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'test') {
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static('build'))
 app.use(cookieParser())
 
 
@@ -26,13 +26,13 @@ app.use('/api/register', registerRouter)
 app.use('/api/event', eventRouter)
 app.use('/api/team', teamRouter)
 
-app.use(middleware.unknownEndpoint)
-app.use(middleware.errorHandler)
-
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'), function (err) {
         res.status(500).send(err)
     })
 })
+
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
