@@ -38,7 +38,12 @@ const EventList = () => {
 
     useEffect(() => {
         eventService.getEvents().then(initialEvents => {
-            setAllEvents(initialEvents)
+            const sortedEvents = initialEvents.sort((a, b) => {
+                const dateA = new Date(a.dateTime).getTime()
+                const dateB = new Date(b.dateTime).getTime()
+                return dateB - dateA
+            })
+            setAllEvents(sortedEvents)
 
             const currentDate = new Date()
             const oneMonthsAgo = new Date()
