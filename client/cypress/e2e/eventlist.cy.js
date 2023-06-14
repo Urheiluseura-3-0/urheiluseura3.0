@@ -184,11 +184,11 @@ describe('Eventlist', function () {
             cy.get('#date').click()
             cy.get('#events').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/5\/6\/2023|6\/5\/2023/)
+                    expect(text).to.match(/0?5\/0?6\/2023|0?6\/0?5\/2023/)
                 })
             cy.get('#events').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/5\/20\/2023|20\/5\/2023/)
+                    expect(text).to.match(/0?5\/20\/2023|20\/0?5\/2023/)
                 })
         })
 
@@ -269,11 +269,11 @@ describe('Eventlist', function () {
             cy.get('#date').click()
             cy.get('#events').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/5\/6\/2023|6\/5\/2023/)
+                    expect(text).to.match(/0?5\/0?6\/2023|0?6\/0?5\/2023/)
                 })
             cy.get('#events').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/5\/20\/2023|20\/5\/2023/)
+                    expect(text).to.match(/0?5\/20\/2023|20\/0?5\/2023/)
                 })
 
         })

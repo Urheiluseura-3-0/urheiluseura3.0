@@ -41,10 +41,10 @@ const EventList = () => {
             setAllEvents(initialEvents)
 
             const currentDate = new Date()
-            const threeMonthsAgo = new Date()
-            threeMonthsAgo.setMonth(currentDate.getMonth() - 3)
+            const oneMonthsAgo = new Date()
+            oneMonthsAgo.setMonth(currentDate.getMonth() - 1)
 
-            setDateFrom(threeMonthsAgo.toISOString().split('T')[0])
+            setDateFrom(oneMonthsAgo.toISOString().split('T')[0])
             setDateTo(currentDate.toISOString().split('T')[0])
         })
 
