@@ -25,7 +25,7 @@ userRouter.post('/', async (request, response) => {
             user = finduser.dataValues
         }
         else {
-            return response.status(401).json({ error: 'virheellinen käyttäjänimi tai salasana' })
+            return response.status(401).json({ error: 'Virheellinen käyttäjänimi tai salasana' })
         }
 
         const checkPassword = user === null
@@ -34,7 +34,7 @@ userRouter.post('/', async (request, response) => {
 
 
         if (!(user && checkPassword)) {
-            return response.status(401).json({ error: 'virheellinen käyttäjänimi tai salasana' })
+            return response.status(401).json({ error: 'Virheellinen käyttäjänimi tai salasana' })
         }
 
         const userForToken = {

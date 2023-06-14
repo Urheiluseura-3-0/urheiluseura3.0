@@ -41,7 +41,7 @@ describe('Login ', function() {
         cy.get('#username').type('Tarja')
         cy.get('#password').type('tarjansalainen')
         cy.get('#login-button').click()
-        cy.contains('virheellinen käyttäjänimi tai salasana')
+        cy.contains('Virheellinen käyttäjänimi tai salasana')
 
 
     })

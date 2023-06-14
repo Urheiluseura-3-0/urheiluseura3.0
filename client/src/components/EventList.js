@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import EventDetails from './EventDetails'
 import eventService from '../services/event'
+import Notification from './Notification'
 
 
 const EventList = () => {
 
-    const [showFilters, setShowFilters] = useState('+')
+    const [showFilters, setShowFilters] = useState('Valitse aikaväli')
     const [unconfirmedClicked, setUnconfirmedClicked] = useState(true)
     const [confirmedClicked, setConfirmedClicked] = useState(false)
     const [allClicked, setAllClicked] = useState(false)
@@ -14,36 +15,55 @@ const EventList = () => {
 
     const [selectedDateFrom, setDateFrom] = useState('')
     const [selectedDateTo, setDateTo] = useState('')
-    const [clickedEvent, setClicked] = useState('')
+    const [clickedEvent, setClickedEvent] = useState('')
 
-    const [sortedByTeam, setSortedByTeam] = useState('1')
-    //const [sortedByOpponent, setSortedByOpponent] = useState('1')
-    const [sortedByLocation, setSortedByLocation] = useState('1')
-    const [sortedByDate, setSortedByDate] = useState('1')
-    const [sortedByStatus, setSortedByStatus] = useState('1')
-    const [getEvents, setGetEvents] = useState([])
-    const [showEvents, setAllEvents] = useState(getEvents)
+    const [sortedByTeam, setSortedByTeam] = useState('')
+    const [sortedByLocation, setSortedByLocation] = useState('')
+    const [sortedByDate, setSortedByDate] = useState('')
+    const [sortedByStatus, setSortedByStatus] = useState('')
+    const [allEvents, setAllEvents] = useState([])
+    const [shownEvents, setShownEvents] = useState(allEvents)
 
+    const [alertMessage, setAlertMessage] = useState('')
+    const [showAlert, setShowAlert] = useState(false)
+
+    const formatDate = (date) => {
+        const formattedDate = new Date(date)
+        const day = formattedDate.getDate().toString().padStart(2, '0')
+        const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0')
+        const year = formattedDate.getFullYear()
+
+        return `${day}.${month}.${year}`
+    }
 
     useEffect(() => {
-
         eventService.getEvents().then(initialEvents => {
-            setGetEvents(initialEvents),setAllEvents(filterByStatus(initialEvents))
+            setAllEvents(initialEvents)
+
+            const currentDate = new Date()
+            const threeMonthsAgo = new Date()
+            threeMonthsAgo.setMonth(currentDate.getMonth() - 3)
+
+            setDateFrom(threeMonthsAgo.toISOString().split('T')[0])
+            setDateTo(currentDate.toISOString().split('T')[0])
         })
 
     }, [])
 
     useEffect(() => {
-        const filtered = filterByDateFrom(filterByDateTo(filterByStatus(getEvents)))
-        setAllEvents(filtered)
+        const filtered = filterByDateFrom(filterByDateTo(filterByStatus(allEvents)))
+        setShownEvents(filtered)
     }, [selectedStatus, selectedDateFrom, selectedDateTo])
 
     const sortByTeam = (event) => {
         event.preventDefault()
-
-        const sorted = showEvents.sort((a, b) => {
-            const teamA = a.EventTeam.name
-            const teamB = b.EventTeam.name
+        setSortedByDate('')
+        setSortedByLocation('')
+        setSortedByStatus('')
+        const sorted = [...shownEvents]
+        sorted.sort((a, b) => {
+            const teamA = a.EventTeam.name.toLowerCase()
+            const teamB = b.EventTeam.name.toLowerCase()
 
             if (teamA > teamB) {
                 return 1
@@ -54,69 +74,47 @@ const EventList = () => {
             }
         })
 
-        setClicked('')
 
-        if (sortedByTeam === '1') {
-            setSortedByTeam('0')
-            return sorted
+        if (sortedByTeam === 'asc') {
+            setSortedByTeam('desc')
+            setShownEvents([...sorted].reverse())
         } else {
-            setSortedByTeam('1')
-            return sorted.reverse()
+            setSortedByTeam('asc')
+            setShownEvents(sorted)
         }
 
     }
-    /*
-    const sortByOpponent = (event) => {
-        event.preventDefault()
 
-        const sorted = showEvents.sort((a, b) => {
-            const opponentA = a.opponent
-            const opponentB = b.opponent
-
-            if (opponentA > opponentB) {
-                return 1
-            } else if (opponentA < opponentB) {
-                return -1
-            } else {
-                return 0
-            }
-        })
-
-        if (sortedByOpponent === '1') {
-            setAllEvents(sorted)
-            setSortedByOpponent('0')
-        } else {
-            setAllEvents(sorted.reverse())
-            setSortedByOpponent('1')
-        }
-        setClicked('')
-    }
- */
     const sortByDate = (event) => {
         event.preventDefault()
+        setSortedByLocation('')
+        setSortedByTeam('')
+        setSortedByStatus('')
 
-        const sorted = showEvents.sort((a, b) => {
+        const sorted = [...shownEvents]
+        sorted.sort((a, b) => {
             const dateA = new Date(a.dateTime).getTime()
             const dateB = new Date(b.dateTime).getTime()
             return dateA - dateB
         })
-
-        if (sortedByDate === '1') {
-            setAllEvents(sorted)
-            setSortedByDate('0')
+        if (sortedByDate === 'asc') {
+            setSortedByDate('desc')
+            setShownEvents(sorted)
         } else {
-            setAllEvents(sorted.reverse())
-            setSortedByDate('1')
+            setSortedByDate('asc')
+            setShownEvents([...sorted].reverse())
         }
-        setClicked('')
     }
 
     const sortByLocation = (event) => {
         event.preventDefault()
-
-        const sorted = showEvents.sort((a, b) => {
-            const locationA = a.location
-            const locationB = b.location
+        setSortedByDate('')
+        setSortedByTeam('')
+        setSortedByStatus('')
+        const sorted = [...shownEvents]
+        sorted.sort((a, b) => {
+            const locationA = a.location.toLowerCase()
+            const locationB = b.location.toLowerCase()
 
             if (locationA > locationB) {
                 return 1
@@ -127,32 +125,34 @@ const EventList = () => {
             }
         })
 
-        if (sortedByLocation === '1') {
-            setAllEvents(sorted)
-            setSortedByLocation('0')
+        if (sortedByLocation === 'asc') {
+            setShownEvents([...sorted].reverse())
+            setSortedByLocation('desc')
         } else {
-            setAllEvents(sorted.reverse())
-            setSortedByLocation('1')
+            setShownEvents(sorted)
+            setSortedByLocation('asc')
         }
-        setClicked('')
     }
 
     const sortByStatus = (event) => {
         event.preventDefault()
-        const sorted = showEvents.sort((a, b) => {
+        setSortedByDate('')
+        setSortedByTeam('')
+        setSortedByLocation('')
+        const sorted = [...shownEvents]
+        sorted.sort((a, b) => {
             const statusA = a.status
             const statusB = b.status
             return statusA - statusB
         })
 
-        if (sortedByStatus === '1') {
-            setAllEvents(sorted)
-            setSortedByStatus('0')
+        if (sortedByStatus === 'confirmedFirst') {
+            setShownEvents([...sorted].reverse())
+            setSortedByStatus('unconfirmedFirst')
         } else {
-            setAllEvents(sorted.reverse())
-            setSortedByStatus('1')
+            setShownEvents(sorted)
+            setSortedByStatus('confirmedFirst')
         }
-        setClicked('')
     }
 
     const getDate = (datetime) => {
@@ -162,7 +162,7 @@ const EventList = () => {
 
     const handleClick = (event, one_event) => {
         event.preventDefault()
-        clickedEvent.id === one_event.id ? setClicked('') : setClicked(one_event)
+        clickedEvent.id === one_event.id ? setClickedEvent('') : setClickedEvent(one_event)
     }
 
     const filterByStatus = (filtered) => {
@@ -180,7 +180,16 @@ const EventList = () => {
         if (selectedDateFrom === '') {
             return filtered
         }
+        const formattedSelectedDateFrom = new Date(selectedDateFrom)
+        const formattedSelectedDateTo = new Date(selectedDateTo)
 
+        if (formattedSelectedDateFrom > formattedSelectedDateTo) {
+            setShowAlert(true)
+            setAlertMessage('Viallinen aikaväli.')
+        } else {
+            setShowAlert(false)
+            setAlertMessage('')
+        }
         const filteredEvents = filtered.filter((one_event) => {
             return one_event.dateTime.substring(0, 10) >= selectedDateFrom
         })
@@ -200,10 +209,10 @@ const EventList = () => {
 
     const handleshowFilters = (event) => {
         event.preventDefault()
-        if (showFilters === '-') {
-            setShowFilters('+')
+        if (showFilters === 'Pienennä') {
+            setShowFilters('Valitse aikaväli')
         } else {
-            setShowFilters('-')
+            setShowFilters('Pienennä')
         }
     }
     const handleShowUnconfirmed = (event) => {
@@ -215,6 +224,8 @@ const EventList = () => {
             setStatus('0')
             setConfirmedClicked(false)
             setAllClicked(false)
+            setClickedEvent('')
+            resetSorters()
         }
 
     }
@@ -228,6 +239,8 @@ const EventList = () => {
             setStatus('1')
             setUnconfirmedClicked(false)
             setAllClicked(false)
+            setClickedEvent('')
+            resetSorters()
         }
     }
 
@@ -240,25 +253,38 @@ const EventList = () => {
             setStatus('')
             setConfirmedClicked(false)
             setUnconfirmedClicked(false)
+            setClickedEvent('')
+            resetSorters()
         }
     }
 
+    const resetSorters = () => {
+        setSortedByDate('')
+        setSortedByLocation('')
+        setSortedByStatus('')
+        setSortedByTeam('')
+    }
+
+
+
     const ShowFilters = () => {
-        if (showFilters === '-') {
+        if (showFilters === 'Pienennä') {
             return (
                 <div className='flex justify px-5 py-2'>
                     <div>
                         <label className="block mt-2">Tapahtumat alkaen</label>
                         <input className='border rounded m-2 border-gray-300' type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
                             setDateFrom(target.value)
-                            setClicked('')
+                            setClickedEvent('')
+                            resetSorters()
                         }}></input>
                     </div>
                     <div>
                         <label className="block mt-2">Tapahtumat asti</label>
                         <input className='border rounded m-2 border-gray-300' type='date' id='dateto' value={selectedDateTo} onChange={({ target }) => {
                             setDateTo(target.value)
-                            setClicked('')
+                            setClickedEvent('')
+                            resetSorters()
                         }}></input>
                     </div>
                 </div>
@@ -266,136 +292,58 @@ const EventList = () => {
         }
     }
 
-    const ShowUnconfirmed = () => {
-        if (unconfirmedClicked) {
-            return (
-                <div>
-                    <div className='flex justify-center items-center'>
-                        <button className="bg-rose-400 ring-2 ring-rose-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleShowUnconfirmed} disabled={unconfirmedClicked}>Odottaa hyväksyntää</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytyt tapahtumat</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-gray-200" onClick={handleAllClicked}>Kaikki tapahtumat</button>
-                        <button className="text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    </div>
-                    <div>
-                        < ShowFilters />
-                    </div>
-                    <div className='flex justify-center items-center mt-4'>
-                        <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                            <table id='events' className='text-left text-xs bg-stone-100'>
-                                <thead>
-                                    <tr>
-                                        <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                        <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                        <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                        <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {showEvents.map((one_event, index) =>
-                                        <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                            <td className='p-4'>{getDate(one_event.dateTime)}</td>
-                                            <td className='p-4'>{one_event.location}</td>
-                                            <td className='p-4'>{one_event.EventTeam.name}</td>
-                                            <td className='p-4 text-rose-400'>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
-                                        </tr>)
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    const ListView = () => {
+        return (
+            <div>
+                <div className='flex justify-center items-center'>
+                    <button id= 'unconfirmedEvents-button' className={`${unconfirmedClicked ? 'bg-rose-400 ring-2 ring-rose-600 text-white font-semibold text-sm' :
+                        'ring-1 ring-gray-200  text-gray-600 hover:bg-rose-200'} px-5 py-2 m-2 rounded-full`} onClick={handleShowUnconfirmed} disabled={unconfirmedClicked}>Odottaa hyväksyntää</button>
+                    <button id = 'confirmedEvents-button' className={`${confirmedClicked ? 'bg-emerald-400 ring-2 ring-emerald-600 text-white font-semibold text-sm' :
+                        'ring-1 ring-gray-200  text-gray-600 hover:bg-emerald-200'} px-5 py-2 m-2 rounded-full`} onClick={handleShowConfirmed} disabled={confirmedClicked}>Hyväksytyt tapahtumat</button>
+                    <button id = 'allEvents-button' className={`${allClicked ? 'bg-blue-400 ring-2 ring-blue-600 text-white font-semibold text-sm' :
+                        'ring-1 ring-gray-200  text-gray-600 hover:bg-blue-200'} px-5 py-2 m-2 rounded-full`} onClick={handleAllClicked} disabled={allClicked}>Kaikki tapahtumat</button>
                 </div>
-            )
-        }
-    }
-    const ShowConfirmed = () => {
-        if (confirmedClicked) {
-            return (
                 <div>
-                    <div className='flex justify-center items-center'>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200" onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
-                        <button className="bg-emerald-400 ring-2 ring-emerald-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleShowConfirmed} disabled={confirmedClicked}>Hyväksytyt tapahtumat</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-gray-200" onClick={handleAllClicked}>Kaikki tapahtumat</button>
-                        <button className="text-gray-600 font-semibold hover:text-gray py-1 px-4 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    </div>
-                    <div>
-                        < ShowFilters />
-                    </div>
-                    <div className='flex justify-center items-center mt-4'>
-                        <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                            <table id='events' className='text-left text-xs bg-stone-100'>
-                                <thead>
-                                    <tr>
-                                        <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                        <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                        <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                        <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {showEvents.map((one_event, index) =>
-                                        <tr className={`${index % 2 === 0 ? 'bg-white' : 'bg-stone-100'}  border hover:bg-gray-300 text-gray-600 text-center`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
-                                            <td className='p-4'>{getDate(one_event.dateTime)}</td>
-                                            <td className='p-4'>{one_event.location}</td>
-                                            <td className='p-4'>{one_event.EventTeam.name}</td>
-                                            <td className='p-4 text-emerald-400'>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
-                                        </tr>)
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-    }
-
-    const ShowAll = () => {
-        if (allClicked) {
-            return (
-                <div>
-                    <div className='flex justify-center items-center'>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-rose-200" onClick={handleShowUnconfirmed}>Odottaa hyväksyntää</button>
-                        <button className="ring-1 ring-gray-200 px-5 py-2 m-2 rounded-full text-gray-600 hover:bg-emerald-200" onClick={handleShowConfirmed}>Hyväksytyt tapahtumat</button>
-                        <button className="bg-gray-900 ring-2 ring-gray-600 px-5 py-2 m-2 text-sm rounded-full font-semibold text-white" onClick={handleAllClicked} disabled={allClicked}>Kaikki tapahtumat</button>
-                        <button className="text-gray-600 font-semibold hover:text-gray py-1 px-4 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    </div>
+                    <span>Ottelut aikaväliltä {formatDate(selectedDateFrom)} - {formatDate(selectedDateTo)}</span>
+                    <button id ='timeline-button' className="text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
                     < ShowFilters />
-                    <div className='flex justify-center items-center'>
-                        <table id='events' className='border-separate border-spacing-y-2 text-left text-xs'>
+                </div>
+                <div className='flex justify-center items-center mt-4'>
+                    <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
+                        <table id='events' className='text-center text-xs bg-stone-100'>
                             <thead>
                                 <tr>
-                                    <th className='p-4' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
-                                    <th className='p-4' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
-                                    <th className='p-4' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
-                                    <th className='p-4' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='date' onClick={(event) => sortByDate(event)}>Päivä</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='location' onClick={(event) => sortByLocation(event)}>Paikka</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='team' onClick={(event) => sortByTeam(event)}>Joukkue</th>
+                                    <th className='p-4 cursor-pointer hover:bg-gray-300' id='status' onClick={(event) => sortByStatus(event)}>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {showEvents.map((one_event) =>
-                                    <tr className={`rounded ring-1 ring-gray-700 ring-opacity-50 text-gray-600 text-center ${one_event.status === '0' ? 'bg-rose-100 hover:ring hover:ring-rose-500 hover:bg-rose-400' : 'bg-emerald-100 hover:ring hover:ring-emerald-500 hover:bg-emerald-400'}`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                {shownEvents.map((one_event, index) =>
+                                    <tr id = 'eventrow' className={`${one_event.id === clickedEvent.id ? 'bg-gray-400' : index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
                                         <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                         <td className='p-4'>{one_event.location}</td>
                                         <td className='p-4'>{one_event.EventTeam.name}</td>
-                                        <td className='p-4'>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                                        <td className={`${String(one_event.status) === '0' ? 'text-rose-400' : 'text-emerald-400'} p-4`}>{String(one_event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                                     </tr>)
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-            )
-        }
+            </div>
+        )
     }
 
     return (
         <div className='flex justify-center bg-stone-100 p-4'>
             <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
                 <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
+                {showAlert && <Notification message={alertMessage} />}
                 <div className="text-xs p-4">
                     <div>
-                        < ShowUnconfirmed />
-                        < ShowConfirmed />
-                        < ShowAll />
+                        < ListView />
                     </div>
                 </div>
                 {clickedEvent !== '' && <EventDetails one_event={clickedEvent} />}
