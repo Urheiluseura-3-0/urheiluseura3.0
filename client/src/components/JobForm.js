@@ -8,8 +8,8 @@ const JobForm = () => {
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
     const [context, setContext] = useState('')
-    const [hours, setHours] = useState(0)
-    const [minutes, setMinutes] = useState(0)
+    const [hours, setHours] = useState('0')
+    const [minutes, setMinutes] = useState('0')
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('')
     const [showAlert, setShowAlert] = useState(false)
@@ -79,6 +79,16 @@ const JobForm = () => {
     const validateTime = (time) => {
         const pattern = /^\d{2}:\d{2}$/
         return pattern.test(time)
+    }
+
+    const validateHours = (hours) => {
+        const parsedHours = parseInt(hours, 10)
+        return parsedHours >= 0 && parsedHours <= 24 && (parsedHours > 0 || minutes > 0)
+    }
+
+    const validateMinutes = (minutes) => {
+        const parsedMinutes = parseInt(minutes, 10)
+        return parsedMinutes >= 0 && parsedMinutes <= 59 && (hours > 0 || parsedMinutes > 0)
     }
 
     useEffect(() => {
@@ -159,7 +169,7 @@ const JobForm = () => {
                                 <input id='hours' type='number' value={hours} min={0} max={24}
                                     onChange={({ target }) => {
                                         setHours(target.value)
-                                        setIsWorkedTimeValid(target.value > 0 || minutes > 0)
+                                        setIsWorkedTimeValid(validateHours(target.value))
                                     }}
                                 />
                             </div>
@@ -168,8 +178,7 @@ const JobForm = () => {
                                 <input id='minutes' type='number' value={minutes} min={0} max={59}
                                     onChange={({ target }) => {
                                         setMinutes(target.value)
-                                        setIsWorkedTimeValid((target.value > 0 && hours < 24) || hours > 0)
-                                        console.log(target.value, hours)
+                                        setIsWorkedTimeValid(validateMinutes(target.value))
                                     }}
                                 />
                             </div>
@@ -190,7 +199,7 @@ const JobForm = () => {
                                 className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                                 disabled={!isInputValid}
                                 title={isInputValid ? null : 'Täytä puuttuvat kentät'}
-                                onClick={handleEvent}>Lisää tapahtuma</button>
+                                onClick={handleEvent}>Lähetä</button>
 
                         </div>
                     </div>
