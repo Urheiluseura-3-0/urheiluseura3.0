@@ -52,8 +52,8 @@ const JobForm = () => {
         setDate('')
         setTime('')
         setContext('')
-        setHours(0)
-        setMinutes(0)
+        setHours('0')
+        setMinutes('0')
         setIsInputValid(false)
         setIsSquadValid(false)
         setIsLocationValid(false)
@@ -83,12 +83,18 @@ const JobForm = () => {
 
     const validateHours = (hours) => {
         const parsedHours = parseInt(hours, 10)
-        return parsedHours >= 0 && parsedHours <= 24 && (parsedHours > 0 || minutes > 0)
+        const parsedMinutes = parseInt(minutes, 10)
+        return parsedHours >= 0 && parsedHours <= 23
+        && (parsedMinutes <= 59 && parsedMinutes >= 0 && parsedHours > 0 || (parsedMinutes <= 59 && parsedMinutes > 0))
+        || (parsedHours === 24 && parsedMinutes === 0)
     }
 
     const validateMinutes = (minutes) => {
         const parsedMinutes = parseInt(minutes, 10)
-        return parsedMinutes >= 0 && parsedMinutes <= 59 && (hours > 0 || parsedMinutes > 0)
+        const parsedHours = parseInt(hours, 10)
+        return parsedMinutes >= 0 && parsedMinutes <= 59
+        && (23>= parsedHours && parsedHours> 0 || 23>= parsedHours && parsedHours >= 0 && parsedMinutes > 0)
+        || (parsedHours === 24 && parsedMinutes === 0)
     }
 
     useEffect(() => {
