@@ -23,7 +23,7 @@ const JobForm = () => {
     const [isWorkedTimeValid, setIsWorkedTimeValid] = useState(false)
 
 
-    const handleEvent = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         try {
             await jobService.addJob({
@@ -201,11 +201,11 @@ const JobForm = () => {
                         </div>
                         <div className='flex'>
                             <button
-                                id='add-event'
+                                id='add-job'
                                 className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
                                 disabled={!isInputValid}
                                 title={isInputValid ? null : 'Täytä puuttuvat kentät'}
-                                onClick={handleEvent}>Lähetä</button>
+                                onClick={handleSubmit}>Lähetä</button>
 
                         </div>
                     </div>
