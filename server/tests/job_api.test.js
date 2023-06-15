@@ -187,6 +187,27 @@ test('cannot add a job if date is missing', async () =>{
 
 })
 
+test('cannot add a job if date is invalid', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: 'Kolmastoista viidettä 2023',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain('Päivä on virheellinen')
+
+})
+
 test('cannot add a job if location is missing', async () =>{
 
     const newJob = {
@@ -229,6 +250,49 @@ test('cannot add a job if hours are missing', async () =>{
 
 })
 
+test('cannot add a job if hours are invalid', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: 'Viisi',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain('Tunnit on virheellinen')
+
+})
+
+test('cannot add a job if hours are too high', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '38',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain('Tunnit on virheellinen')
+
+})
+
+
 test('cannot add a job if minutes are missing', async () =>{
 
     const newJob = {
@@ -249,6 +313,50 @@ test('cannot add a job if minutes are missing', async () =>{
     expect(result.body.error).toContain('Virheelliset minuutit')
 
 })
+
+test('cannot add a job if minutes are invalid', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: 'viisitoista'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain('Minuutit on virheellinen')
+
+})
+
+test('cannot add a job if minutes are too high', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: '68'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain('Minuutit on virheellinen')
+
+})
+
+
 test('cannot add a job if token is invalid', async () =>{
 
     const newJob = {
@@ -290,4 +398,84 @@ test('correct number of events in database', async () =>{
 
     const jobs = await Job.findAll()
     expect(jobs.length).toBe(4)
+})
+
+test('validation does not accept too short squad name', async () =>{
+
+    const newJob = {
+
+        squad: 'O',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain(' Sallittu pituus kentälle Ryhmä on 2-40 merkkiä')
+})
+
+test('validation does not accept too long squad name', async () =>{
+
+    const newJob = {
+
+        squad: 'Tämänkentänpituusonylineljäkymmentämerkkiä',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain(' Sallittu pituus kentälle Ryhmä on 2-40 merkkiä')
+})
+
+test('validation does not accept too long context', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura.Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, niin harraste-, kilpa- kuin huipputasolla.',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain(' Sallittu pituus kentälle Konteksti on 200 merkkiä')
+})
+
+test('validation does not accept too long location', async () =>{
+
+    const newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Tämänkentänpituusonylineljäkymmentämerkkiä',
+        hours: '3',
+        minutes: '45'
+    }
+
+    const result = await api
+        .post('/api/job')
+        .set('Cookie', finalToken)
+        .send(newJob)
+        .expect(401)
+    expect(result.body.error).toContain(' Sallittu pituus kentälle Sijainti on 2-40 merkkiä')
 })
