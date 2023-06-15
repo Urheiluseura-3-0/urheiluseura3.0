@@ -70,7 +70,7 @@ Job.init({
 }, {
     sequelize,
     underscored: true,
-    modelName: 'event'
+    modelName: 'job'
 })
 
 module.exports = Job
