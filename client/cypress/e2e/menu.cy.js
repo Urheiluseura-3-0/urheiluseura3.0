@@ -53,6 +53,7 @@ describe('Menu', function() {
             cy.get('#navigationbar')
                 .should('contain', 'Etusivu')
                 .should('contain', 'Lisää tapahtuma')
+                .should('contain', 'Lisää työtunnit')
                 .should('contain', 'Kirjaudu ulos')
         })
 
@@ -63,6 +64,13 @@ describe('Menu', function() {
             cy.contains('Lisätietoja')
             cy.url().should('include', '/event')
         })
+
+        // it('Add job button routes to a page with job form', function() {
+        //     cy.get('#addjob-link').click()
+        //     cy.contains('Ryhmä')
+        //     cy.contains('Aloitusaika')
+        //     cy.contains('Lisätietoja')
+        // })
 
         it('Frontpage button routes back to frontpage', function() {
             cy.get('#addevent-link').click()
