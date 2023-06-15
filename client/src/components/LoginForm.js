@@ -113,6 +113,10 @@ const LoginForm = ({ tokenHandler }) => {
                         <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
                         <Link id='register-link' className='text-sm text-blue-700 underline' to="/register">Rekisteröidy</Link>
                     </div>
+                    <div>
+                        <span className='text-sm text-teal-500'>Unohditko salasanasi? </span>
+                        <Link id='reset-password-link' className='text-sm text-blue-700 underline' to="/requestpassword">Tilaa uusi</Link>
+                    </div>
                 </form>
             </div>
         </div>
