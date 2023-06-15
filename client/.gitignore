@@ -10,10 +10,6 @@
 cypress/videos
 cypress/screenshots
 
-# development config
-tailwind.config.js
-postcss.config.js
-
 # production
 /build
 
