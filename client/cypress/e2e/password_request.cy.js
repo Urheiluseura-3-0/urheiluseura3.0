@@ -1,4 +1,4 @@
-describe('Password reset', function() {
+describe('Password request', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
         const user = {
@@ -15,10 +15,10 @@ describe('Password reset', function() {
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
 
-        cy.request('GET', 'http://localhost:3001/api/login')
         cy.visit('http://localhost:3000')
 
         cy.get('#reset-password-link').click()
+        // testataanko myös tällä tyylillä: cy.visit('http://localhost:3000/requestpassword')
     })
 
     describe('Page view', function() {
@@ -39,11 +39,19 @@ describe('Password reset', function() {
     })
 
     describe('Password request with non-existing e-mail', function() {
-        it('user sees a notification if e-mail address is invalid', function() {
+        it('user sees a notification if e-mail address is not found', function() {
             cy.get('#email').type('seppo@keskitty.com')
             cy.get('#send-request-button').click()
 
             cy.contains('Sähköpostiosoitetta ei löytynyt')
         })
+
+        it('user sees a notification if e-mail address is invalid', function() {
+            cy.get('#email').type('seppokeskitty.com')
+            cy.get('#send-request-button').click()
+
+            cy.contains('Virheellinen sähköpostiosoite')
+        })
+
     })
 })

@@ -16,30 +16,30 @@ describe('Password reset', function() {
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
 
-        cy.visit('http://localhost:3000')
 
-        cy.get('#reset-password-link').click()
-
-        cy.wait(100)
-        //sähköpostin kautta tuleva linkki oikeasti
         cy.visit('http://localhost:3000/resetpassword')
     })
+
 
     describe('Page view', function() {
         it('user can see reset form', function() {
             cy.url().should('include', '/resetpassword')
             cy.contains('Vaihda salasana')
 
-        })
-    })
-    /*
-        /* if send-button is disabled then check
+
+            /* if send-button is disabled then check
             it('user cannot send form if fields are empty', function() {
-            cy.get('# MUUTA').should('be.disabled')
+            cy.get('#send').should('be.disabled')
         }) */
 
+        })
+    })
 
-    describe('Password reset with correct input', function() {
+
+    describe('Password reset with correct input and token', function() {
+        /* beforeEach(function() {
+            cy.visit('http://localhost:3000/resetpassword:token')
+        })*/
         it('user sees a notification/is directed to right place after succesful password reset', function() {
             cy.get('input[id="password"]').type('salainen12345')
             cy.get('input[id="passwordConfirmed"]').type('salainen12345')
@@ -58,9 +58,16 @@ describe('Password reset', function() {
     })
 
 
-    describe('Password reset with incorrect input', function() {
+    describe('Password reset with incorrect input or missing token', function() {
         it('user sees a notification if password is too short', function() {
             cy.get('input[id= "password"]').type('sala')
+            //cy.get('#send').should('be.disabled')
+            //notifikaatio tsekkaus
+        })
+
+        it('user sees a notification if password is too long', function() {
+            cy.get('input[id= "password"]').type('12345_12345_12345_12345_12345_12345_12345')
+            //cy.get('#send').should('be.disabled')
             //notifikaatio tsekkaus
         })
 
@@ -68,8 +75,19 @@ describe('Password reset', function() {
             cy.get('input[id="password"]').type('salainen12345')
             cy.get('input[id="passwordConfirmed"]').type('Salainen12345')
             cy.get('#send').click()
-            //notifikaatio tsekkaus
+
+            // cy.contains('Salasanat eivät täsmää')
         })
+
+        it('user sees a notification if resetting without a token', function() {
+            cy.get('input[id="password"]').type('salainen12345')
+            cy.get('input[id="passwordConfirmed"]').type('salainen12345')
+            cy.get('#send').click()
+
+            cy.contains('Salasanan nollauspyyntöä ei löytynyt')
+        })
+
+
     })
 
 })
