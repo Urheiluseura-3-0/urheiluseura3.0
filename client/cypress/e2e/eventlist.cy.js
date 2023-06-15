@@ -212,14 +212,14 @@ describe('Eventlist', function () {
             cy.get('#events').find('tbody').find('tr').first().click()
             cy.get('#eventdetail')
                 .should('contain', 'Vastustaja')
-                .should('contain', 'Joukkue2')
+                .should('contain', 'Honka U19')
                 .should('contain', 'Kellonaika')
                 .should(($el) => {
                     const text = $el.text()
                     expect(text).to.match(/20:30:00|8:30:00 PM/)
                 })
                 .should('contain', 'Lisätiedot')
-                .should('contain', 'Toimitsija')
+                .should('contain', 'Tuomarointi')
                 .should('contain', 'Status')
                 .should('contain', 'Odottaa hyväksyntää')
                 .should('contain', 'Luotu')
@@ -269,7 +269,7 @@ describe('Eventlist', function () {
             cy.get('#date').click()
             cy.get('#events').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/0?5\/0?6\/2023|0?\/0?5\/2023/)
+                    expect(text).to.match(/0?5\/0?6\/2023|0?6\/0?5\/2023/)
                 })
             cy.get('#events').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
