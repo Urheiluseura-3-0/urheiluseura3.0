@@ -6,7 +6,7 @@ const resetRouter = require('express').Router()
 const config = require('../utils/config')
 const { User } = require('../models')
 const { Reset } = require('../models')
-const { validateEmail } = require('./validate_input.js')
+const { validateEmail, validateResetPasswordInput } = require('./validate_input.js')
 
 
 resetRouter.post('/', async (request, response) => {
@@ -76,6 +76,11 @@ resetRouter.post('/:token', async (request, response) => {
 
         if (password != passwordConfirm) {
             return response.status(400).json({ error: 'Salasanat eivät täsmää' })
+        }
+
+        const checkInputErrors = validateResetPasswordInput(password, passwordConfirm)
+        if (checkInputErrors.length > 0) {
+            return response.status(401).json({error: `${checkInputErrors}`})
         }
 
         const finduser = await User.findOne({ where: { id: reset.userId } })

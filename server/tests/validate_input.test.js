@@ -1,5 +1,5 @@
-const {validateRegisterInput, validateLoginInput} = require('../controllers/validate_input')
-const {validateOnlyNumbers, validatePhoneNumber, validateEmail, validateNotEmpty, validateLength} = require('../controllers/validate_input')
+const {validateRegisterInput, validateLoginInput, validateResetPasswordInput} = require('../controllers/validate_input')
+const {validateOnlyNumbers, validatePhoneNumber, validateEmail, validateNotEmpty, validateLength, validateDate, validateTime} = require('../controllers/validate_input')
 
 test('not empty returns true if not empty', () => {
     const result = validateNotEmpty('Testisyöte')
@@ -56,6 +56,26 @@ test('validate phonenumber returns false if input has additional characters', ()
     expect (result).toBe(false)
 })
 
+test('validate date returns true if date is correct', () => {
+    const result = validateDate('2023-06-15')
+    expect (result).toBe(true)
+})
+
+test('validate date returns false if date is incorrect', () => {
+    const result = validateDate('15.6.2023')
+    expect (result).toBe(false)
+})
+
+test('validate time returns true if time is correct', () => {
+    const result = validateTime('15:30')
+    expect (result).toBe(true)
+})
+
+test('validate time returns false if time is incorrect', () => {
+    const result = validateTime('1530')
+    expect (result).toBe(false)
+})
+
 test('validate email returns true if email is correct', () => {
     const result = validateEmail('etunimi.sukunimi@gmail.com')
     expect (result).toBe(true)
@@ -93,5 +113,20 @@ test('validate login input returns an empty array if everything is ok', () => {
 
 test('validate login input returns errors if something is wrong', () => {
     const result = validateLoginInput('test', 'salasana123')
+    expect (result).toHaveLength(1)
+})
+
+test('validate reset password input returns an empty array if both passwords are ok', () => {
+    const result = validateResetPasswordInput('salasana123', 'salasana123')
+    expect (result).toHaveLength(0)
+})
+
+test('validate reset password input returns errors if one of the inputs is too short', () => {
+    const result = validateResetPasswordInput('sala', 'salasana123')
+    expect (result).toHaveLength(1)
+})
+
+test('validate reset password input returns errors if one of the inputs is too long', () => {
+    const result = validateResetPasswordInput('salaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'salasana123')
     expect (result).toHaveLength(1)
 })

@@ -31,10 +31,9 @@ const App = () => {
     }
 
     useEffect(() => {
-        if (!token && !location.pathname.match('/register')) {
+        if (!token && !(location.pathname.match('/register') || location.pathname.includes('/resetpassword/'))) {
             navigate('/')
         }
-
     }, [])
 
 
@@ -45,7 +44,7 @@ const App = () => {
                 <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
                 <Route path="/home" element={<UserView logout={handleLogout} />} />
                 <Route path="/requestpassword" element={<ResetPasswordRequest/>} />
-                <Route path="/resetpassword" element={<ResetPasswordForm/>} />
+                <Route path="/resetpassword/:token" element={<ResetPasswordForm/>} />
             </Routes>
         </div>
     )

@@ -8,9 +8,7 @@ const requestPasswordReset = async credentials => {
 }
 
 const resetPassword = async credentials => {
-    const token = '123'
-    console.log(`${baseUrl}/${token}`)
-    const response = await axios.post(`${baseUrl}/${token}`, credentials)
+    const response = await axios.post(`${baseUrl}/${credentials.token}`, credentials)
     return response.data
 }
 
