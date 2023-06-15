@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const moment = require('moment')
+const nodemailer = require('nodemailer')
 
 const resetRouter = require('express').Router()
 const config = require('../utils/config')
@@ -8,6 +9,47 @@ const { User } = require('../models')
 const { Reset } = require('../models')
 const { validateEmail, validateResetPasswordInput } = require('./validate_input.js')
 
+
+const sendResetEmail = async (email, token) => {
+    nodemailer.createTestAccount((err, account) => {
+        if (err) {
+            console.log('Testikäyttäjää ei luotu', err)
+            return
+        }
+
+        const transporter = nodemailer.createTransport({
+            host: account.smtp.host,
+            port: account.smtp.port,
+            secure: account.smtp.secure,
+            auth: {
+                user: account.user,
+                pass: account.pass
+            }
+        },
+        {
+            from: 'Lähettäjä <donotreply@gmail.com>'
+        })
+
+        const message = {
+            to: email,
+            subject: 'Salasanalinkki',
+            text: `http://localhost:3000/resetpassword/${token}`,
+            html: `<a href="http://localhost:3000/resetpassword/${token}">Vaihda salasana</a>`
+        }
+
+
+        transporter.sendMail(message, (error, info) => {
+            if (error) {
+                console.log('Viestiä ei lähetetty', error)
+                return
+            }
+
+            console.log('Viesti lähetetty', nodemailer.getTestMessageUrl(info))
+        })
+
+    })
+    return
+}
 
 resetRouter.post('/', async (request, response) => {
     try {
@@ -49,7 +91,7 @@ resetRouter.post('/', async (request, response) => {
         await reset.save()
 
 
-        // await sendResetEmail(email, token)
+        await sendResetEmail(email, token)
 
         return response.status(200).json({ message: 'Linkki salasanan vaihtoon lähetetty' })
     } catch {

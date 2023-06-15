@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Notification from './Notification'
 import resetPasswordService from '../services/resetpassword'
 
@@ -38,10 +38,6 @@ const ResetPasswordRequest = () => {
         }
     }
 
-    useEffect(() => {
-
-    }, [email])
-
     return (
         <div className='flex justify-center items-center h-screen bg-stone-100'>
             <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
@@ -55,7 +51,11 @@ const ResetPasswordRequest = () => {
                             <input id='email' type='text' className='peer border rounded p-2 w-full border-gray-300' maxLength={40} value={email} onChange={({ target }) => {
                                 setEmail(target.value)
                                 setIsEmailValid(target.value.length >= 5 && target.value.length <= 40)
-                            }}></input>
+                            }}/>{email.length === 0 || isEmailValid ? null : (
+                                <p id='email-error' className='peer-focus:hidden text-red-500 text-sm'>
+                                    Tarkista sähköpostiosoite
+                                </p>
+                            )}
                         </div>
                         <button id='send-request-button'
                             className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isEmailValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
