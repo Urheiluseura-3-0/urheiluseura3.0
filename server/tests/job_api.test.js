@@ -20,10 +20,8 @@ let cookies
 let cryptedToken
 
 let finalToken
-let job
 
 beforeEach(async () => {
-
     const saltRounds = 10
     const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
 
@@ -100,8 +98,6 @@ beforeEach(async () => {
     })
 
     await Job.bulkCreate(initialJobs)
-
-    job = await Job.findOne({where: {squad: 'EBT Naiset'}})
 
     user = {username: 'Pekka35', password: 'salainen1234'}
     loggedUser = await api.post('/api/login').send(user)
@@ -274,7 +270,7 @@ test('cannot add a job if token is invalid', async () =>{
 
 })
 
-test('correct numbet of events in database', async () =>{
+test('correct number of events in database', async () =>{
 
     const newJob = {
 
