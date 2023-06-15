@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import UserService from './services/user'
 
 import LoginForm from './components/LoginForm'
@@ -15,6 +15,7 @@ import ResetPasswordForm from './components/ResetPasswordForm'
 
 const App = () => {
     const navigate = useNavigate()
+    const location = useLocation()
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
 
@@ -30,10 +31,8 @@ const App = () => {
     }
 
     useEffect(() => {
-        if (!token) {
+        if (!token && !location.pathname.match('/register')) {
             navigate('/')
-        } else {
-            navigate('/home')
         }
 
     }, [])
