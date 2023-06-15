@@ -156,15 +156,27 @@ const validateTeamInput = (name, category)=>{
     errors = errors.concat(validateOptionalField(category, 'Kategoria', 40))
 
     return errors
-}   
+}
+
+const validateResetPasswordInput = (password, passwordConfirm) => {
+    let errors = []
+
+    errors = errors.concat(validateMandatoryField(password, 'Salasana', 10, 30))
+    errors = errors.concat(validateMandatoryField(passwordConfirm, 'Vahvista salasana', 10, 30))
+
+    return errors
+}
 
 module.exports = {validateRegisterInput,
     validateLoginInput,
     validateLength,
     validateNotEmpty,
+    validateDate,
+    validateTime,
     validateOnlyNumbers,
     validatePhoneNumber,
     validateEmail,
     validateEventInput,
-    validateTeamInput
+    validateTeamInput,
+    validateResetPasswordInput
 }
