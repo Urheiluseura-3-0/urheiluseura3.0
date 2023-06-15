@@ -8,6 +8,8 @@ import RegisterForm from './components/RegisterForm'
 import UserView from './components/UserView'
 import Cookies from 'universal-cookie'
 import './style.css'
+import ResetPasswordRequest from './components/ResetPasswordRequest'
+import ResetPasswordForm from './components/ResetPasswordForm'
 
 
 
@@ -43,6 +45,8 @@ const App = () => {
                 <Route path="/" element={<LoginForm tokenHandler={handleSetToken} />} />
                 <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
                 <Route path="/home" element={<UserView logout={handleLogout} />} />
+                <Route path="/requestpassword" element={<ResetPasswordRequest/>} />
+                <Route path="/resetpassword" element={<ResetPasswordForm/>} />
             </Routes>
         </div>
     )
