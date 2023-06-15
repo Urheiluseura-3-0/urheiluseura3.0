@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react'
-import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
 import UserService from './services/user'
 
 import LoginForm from './components/LoginForm'
@@ -33,11 +33,18 @@ const App = () => {
     }
 
     useEffect(() => {
-        if (!token && !location.pathname.match('/register')) {
-            navigate('/')
-        }
-        if(token && location.pathname.match('/')){
-            navigate('/home')
+        if (!token) {
+            if (location.pathname === '/register') {
+                navigate('/register')
+            } else {
+                navigate('/')
+            }
+        } else {
+            if (location.pathname === '/event') {
+                navigate('/event')
+            } else {
+                navigate('/home')
+            }
         }
 
     }, [])
@@ -58,7 +65,6 @@ const App = () => {
                 <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
                 <Route path="/home" element={<UserView logout={handleLogout} />} />
                 <Route path="/event" element={<EventForm/>} />
-                <Route path="*" element={<Navigate to="/"/>}/>
             </Routes>
         </div>
     )
