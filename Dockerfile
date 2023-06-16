@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json
 COPY client/package*.json .
 
-# Install production dependencies
-RUN npm ci --only=production
+# Install dependencies
+RUN npm ci
 
 # Build frontend
 COPY client .
