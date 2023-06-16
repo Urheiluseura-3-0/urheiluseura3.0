@@ -3,8 +3,6 @@ name: Automated tests
 on:
   push:
     branches-ignore: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   tests:
@@ -27,7 +25,7 @@ jobs:
       - name: Install dependencies backend
         run: |
           cd server
-          npm install
+          npm ci
       - name: Check style - Backend
         run: |
           cd server
@@ -44,7 +42,7 @@ jobs:
       - name: Install dependencies frontend
         run: |
           cd client
-          npm install
+          npm ci
       - name: Check style - Frontend
         run: |
           cd client
@@ -66,4 +64,3 @@ jobs:
           SECRET: testkey
       - name: E2E tests
         run: cd client && npm run test:e2e
-      
