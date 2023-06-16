@@ -97,6 +97,28 @@ const JobForm = () => {
         || (parsedHours === 24 && parsedMinutes === 0)
     }
 
+
+    const renderFormError= (parameter, parameterValid, errorid, errorMessage) => {
+
+        if (Number.isInteger(parameter)){
+            return (
+                parameter === 0 || parameterValid ? null: (
+                    <p id = {errorid} className = 'peer-focus:hidden text-red-500 text-sm'>
+                        {errorMessage}
+                    </p>
+                )
+            )
+        } else {
+            return(
+                parameter.valueOf() === '' || parameterValid ? null: (
+                    <p id = {errorid} className = 'peer-focus:hidden text-red-500 text-sm'>
+                        {errorMessage}
+                    </p>
+                )
+            )
+        }
+    }
+
     useEffect(() => {
         validateFields()
     }, [squad, location, date, time, context, hours, minutes])
@@ -108,6 +130,7 @@ const JobForm = () => {
                 {showAlert && <Notification type={alertType} message={alertMessage} />}
                 <form>
                     <div className='space-y-3'>
+
                         <div>
                             <label className='block'>Ryhmä</label>
                             <input id='squad' type='text' value={squad} maxLength={40}
@@ -117,11 +140,9 @@ const JobForm = () => {
                                 }}
                                 className={`peer border rounded p-2 w-full ${squad.length === 0 || isSquadValid ? 'border-gray-300' : 'border-red-500'
                                 }`}
-                            />{squad.length === 0 || isSquadValid ? null : (
-                                <p id='squad-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Ryhmän nimen on oltava vähintään 2 merkkiä
-                                </p>
-                            )}
+                            />{
+                                renderFormError(squad.length, isSquadValid, 'squad-error','Ryhmän nimen on oltava vähintään 2 merkkiä')
+                            }
                         </div>
                         <div>
                             <label className='block'>Paikka</label>
@@ -132,11 +153,7 @@ const JobForm = () => {
                                 }}
                                 className={`peer border rounded p-2 w-full ${location.length === 0 || isLocationValid ? 'border-gray-300' : 'border-red-500'
                                 }`}
-                            />{location.length === 0 || isLocationValid ? null : (
-                                <p id='location-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Paikan nimen on oltava vähintään 2 merkkiä
-                                </p>
-                            )}
+                            />{renderFormError(location.length, isLocationValid, 'location-error', 'Paikan nimen on oltava vähintään 2 merkkiä')}
                         </div>
                         <div>
                             <label className='block'>Päivämäärä</label>
@@ -147,11 +164,7 @@ const JobForm = () => {
                                 }}
                                 className={`peer border rounded p-2 w-full ${date.valueOf() === '' || isDateValid ? 'border-gray-300' : 'border-red-500'
                                 }`}
-                            />{date.valueOf() === '' || isDateValid ? null : (
-                                <p id='date-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Tarkista päivämäärä
-                                </p>
-                            )}
+                            />{renderFormError(date, isDateValid, 'date-error', 'Tarkista päivämäärä')}
                         </div>
                         <div>
                             <label className='block'>Aloitusaika</label>
@@ -162,26 +175,24 @@ const JobForm = () => {
                                 }}
                                 className={`peer border rounded p-2 w-full ${time.valueOf() === '' || isTimeValid ? 'border-gray-300' : 'border-red-500'
                                 }`}
-                            />{time.valueOf() === '' || isTimeValid ? null : (
-                                <p id='start-time-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Tarkista aloitusaika
-                                </p>
-                            )}
+                            />{renderFormError(time, isTimeValid, 'start-time-error', 'Tarkista aloitusaika')}
                         </div>
                         <h3 className='text-l'>Työaika</h3>
                         <div className='flex space-x-8'>
                             <div>
                                 <label className='block'>Tunnit</label>
-                                <input id='hours' type='number' value={hours} min={0} max={24}
-                                    onChange={({ target }) => {
-                                        setHours(target.value)
-                                        setIsWorkedTimeValid(validateHours(target.value))
-                                    }}
-                                />
+                                <div>
+                                    <input className='peer border rounded p-2 w-full border-gray-300' id='hours' type='number' value={hours} min={0} max={24}
+                                        onChange={({ target }) => {
+                                            setHours(target.value)
+                                            setIsWorkedTimeValid(validateHours(target.value))
+                                        }}
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className='block'>Minuutit</label>
-                                <input id='minutes' type='number' value={minutes} min={0} max={59}
+                                <input className='peer border rounded p-2 w-full border-gray-300' id='minutes' type='number' value={minutes} min={0} max={59}
                                     onChange={({ target }) => {
                                         setMinutes(target.value)
                                         setIsWorkedTimeValid(validateMinutes(target.value))
