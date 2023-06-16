@@ -49,10 +49,11 @@ resetRouter.post('/', async (request, response) => {
         })
         await reset.save()
 
-
-        await sendResetEmail(email, token)
-
-        return response.status(200).json({ message: 'Linkki salasanan vaihtoon lähetetty' })
+        if (await sendResetEmail(email, token)) {
+            return response.status(200).json({ message: 'Linkki salasanan vaihtoon lähetetty' })
+        } else {
+            return response.status(400).json({ error: 'Linkin lähetys epäonnistui'})
+        }
     } catch {
         return response.status(400)
     }
