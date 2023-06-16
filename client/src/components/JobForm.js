@@ -100,24 +100,27 @@ const JobForm = () => {
 
     const renderFormError= (parameter, parameterValid, errorid, errorMessage) => {
 
-        if (Number.isInteger(parameter)){
-            return (
-                parameter === 0 || parameterValid ? null: (
-                    <p id = {errorid} className = 'peer-focus:hidden text-red-500 text-sm'>
-                        {errorMessage}
-                    </p>
-                )
+        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
+
+        return (
+            changedParameter || parameterValid ? null: (
+                <p id = {errorid} className = 'peer-focus:hidden text-red-500 text-sm'>
+                    {errorMessage}
+                </p>
             )
-        } else {
-            return(
-                parameter.valueOf() === '' || parameterValid ? null: (
-                    <p id = {errorid} className = 'peer-focus:hidden text-red-500 text-sm'>
-                        {errorMessage}
-                    </p>
-                )
-            )
-        }
+        )
     }
+
+    const renderClassName = (parameter, parameterValid) => {
+
+        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
+
+        return(
+            `peer border rounded p-2 w-full ${changedParameter || parameterValid ? 'border-gray-300' : 'border-red-500'
+            }`
+        )
+    }
+
 
     useEffect(() => {
         validateFields()
@@ -138,8 +141,7 @@ const JobForm = () => {
                                     setSquad(target.value)
                                     setIsSquadValid(target.value.length >= 2 && target.value.length <= 40)
                                 }}
-                                className={`peer border rounded p-2 w-full ${squad.length === 0 || isSquadValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
+                                className={renderClassName(squad.length, isSquadValid)}
                             />{
                                 renderFormError(squad.length, isSquadValid, 'squad-error','Ryhmän nimen on oltava vähintään 2 merkkiä')
                             }
@@ -151,8 +153,7 @@ const JobForm = () => {
                                     setLocation(target.value)
                                     setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
                                 }}
-                                className={`peer border rounded p-2 w-full ${location.length === 0 || isLocationValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
+                                className={renderClassName(location.length, isLocationValid)}
                             />{renderFormError(location.length, isLocationValid, 'location-error', 'Paikan nimen on oltava vähintään 2 merkkiä')}
                         </div>
                         <div>
@@ -162,8 +163,7 @@ const JobForm = () => {
                                     setDate(target.value)
                                     setIsDateValid(validateDate(target.value))
                                 }}
-                                className={`peer border rounded p-2 w-full ${date.valueOf() === '' || isDateValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
+                                className={renderClassName(date, isDateValid)}
                             />{renderFormError(date, isDateValid, 'date-error', 'Tarkista päivämäärä')}
                         </div>
                         <div>
@@ -173,8 +173,7 @@ const JobForm = () => {
                                     setTime(target.value)
                                     setIsTimeValid(validateTime(target.value))
                                 }}
-                                className={`peer border rounded p-2 w-full ${time.valueOf() === '' || isTimeValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
+                                className={renderClassName(time, isTimeValid)}
                             />{renderFormError(time, isTimeValid, 'start-time-error', 'Tarkista aloitusaika')}
                         </div>
                         <h3 className='text-l'>Työaika</h3>
