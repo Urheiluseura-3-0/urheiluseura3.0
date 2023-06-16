@@ -23,19 +23,15 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with: 
-          node-version: '16'
-      - name: Check style - Backend
-        run: |
-          cd server
-          npm run eslint
-      - name: Check style - Frontend
-        run: |
-          cd client
-          npm run eslint      
+          node-version: '16'   
       - name: Install dependencies backend
         run: |
           cd server
           npm install
+      - name: Check style - Backend
+        run: |
+          cd server
+          npm run eslint
       - name: Test backend
         run: |
           cd server
@@ -49,6 +45,10 @@ jobs:
         run: |
           cd client
           npm install
+      - name: Check style - Frontend
+        run: |
+          cd client
+          npm run eslint   
       - name: Build frontend
         run: |
           cd client
