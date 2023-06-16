@@ -1,3 +1,5 @@
+const { recurse } = require('cypress-recurse')
+
 describe('Password reset', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -32,15 +34,75 @@ describe('Password reset', function() {
 
     })
 
+    let userEmail
+    let userPass
+
     describe('Password reset with correct input and token', function() {
-        /* beforeEach(function() {
+
+        beforeEach(() => {
+            cy.request('POST', 'http://localhost:3001/api/testing/reset')
+            recurse(
+                () => cy.task('createTestEmail'),
+                Cypress._.isObject, // keep retrying until the task returns an object
+                {
+                    log: true,
+                    timeout: 20000, // retry up to 20 seconds
+                    delay: 5000, // wait 5 seconds between attempts
+                    error: 'Could not create test email'
+                }
+            ).then((testAccount) => {
+                userEmail = testAccount.user
+                userPass = testAccount.pass
+                cy.log(`Email account created - (for debugging purposes): ${userEmail}`)
+                cy.log(`Email account password - (for debugging purposes): ${userPass}`)
+                const user = {
+                    firstName: 'Reiska',
+                    lastName: 'Testaaja',
+                    address: 'Testauskatu 10',
+                    postalCode: '00100',
+                    city: 'Helsinki',
+                    phoneNumber: '0401234567',
+                    email: userEmail,
+                    username: 'Reiska70',
+                    password: userPass,
+                    passwordConfirm: userPass
+                }
+                cy.request('POST', 'http://localhost:3001/api/register/', user)
+                cy.visit('http://localhost:3000/requestpassword')
+                cy.get('#email').type(userEmail)
+                cy.get('#send-request-button').click()
+            })
+
+        })
+
+        it('get message', function() {
+            cy.log('get message userEmail', userEmail)
+            cy.log('get message userPass', userPass)
+            recurse(
+                () => cy.task('getLastEmail', { user: userEmail, pass: userPass }), // Cypress commands to retry
+                Cypress._.isObject, // keep retrying until the task returns an object
+                {
+                    log: true,
+                    timeout: 90000, // retry up to 90 seconds
+                    delay: 10000, // wait 10 seconds between attempts
+                    error: 'Messages Not Found'
+                }
+            ).then((message) => {
+                cy.log('message', { message })
+            })
+        })
+        /* Onnistuneen salasanan lähetyksen jälkeiset tapahtumat
+            cy.contains('Salasanan vaihto onnistui)
+        })
+        /*
             cy.visit('http://localhost:3000/resetpassword:validToken')
-        })*/
+        })
 
         it('user sees a notification/is directed to right place after succesful password reset', function() {
             cy.get('input[id="password"]').type('salainen12345')
             cy.get('input[id="passwordConfirmed"]').type('salainen12345')
             cy.get('#send').click()
+
             /* Onnistuneen salasanan lähetyksen jälkeiset tapahtumat
             cy.contains('Salasanan vaihto onnistui)
         })
@@ -56,8 +118,8 @@ describe('Password reset', function() {
             cy.get('#password').type('salainen12345')
             cy.get('#login-button').click()
 
-            cy.contains('Tapahtumat') */
-        })
+            cy.contains('Tapahtumat')
+        })*/
     })
 
 
