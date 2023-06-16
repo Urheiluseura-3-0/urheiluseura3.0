@@ -16,7 +16,7 @@ describe('Login ', function() {
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
         cy.request('GET', 'http://localhost:3001/api/login')
-        cy.visit('http://localhost:3000')
+        cy.visit('http://localhost:3001')
     })
     it('front page contains right form', function() {
         cy.contains('Kirjaudu sisään')
