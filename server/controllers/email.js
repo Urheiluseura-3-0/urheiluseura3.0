@@ -21,18 +21,26 @@ const sendResetEmail = async (email, token) => {
         html: `<p>Hei,</p><p>Salasanasi on resetoitu. Aseta uusi salasana tästä linkistä:</p><p><a href="${config.BASEURL}/resetpassword/${token}">Vaihda salasana</a></p>
         <p>Linkki on voimassa 24 tuntia.</p><p>Tähän sähköpostiin ei voi vastata.</p>`
     }
-
-    let messageSent = false
     
-    transporter.sendMail(message, (error) => {
-        if (error) {
-            messageSent = false
-        }
+    let sentMail = false
 
-        messageSent = true
-    })
+    try {
+        await new Promise((resolve, reject) => {
+            transporter.sendMail(message, (error) => {
+                if (error) {
+                    sentMail = false
+                    reject(error)
+                } else {
+                    sentMail = true
+                    resolve()
+                }
+            })
+        })
+    } catch (exception) {
+        return sentMail
+    }
 
-    return messageSent
+    return sentMail
 }
 
 module.exports = { sendResetEmail }
