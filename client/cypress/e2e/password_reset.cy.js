@@ -53,8 +53,8 @@ describe('Password reset', function() {
             ).then((testAccount) => {
                 userEmail = testAccount.user
                 userPass = testAccount.pass
-                cy.log(`Email account created - (for debugging purposes): ${userEmail}`)
-                cy.log(`Email account password - (for debugging purposes): ${userPass}`)
+                cy.log(`Email account created - (for debugging purposes): ${userEmail}, ${typeof userEmail} `)
+                cy.log(`Email account password - (for debugging purposes): ${userPass}, ${typeof userPass} `)
                 const user = {
                     firstName: 'Reiska',
                     lastName: 'Testaaja',
@@ -89,6 +89,19 @@ describe('Password reset', function() {
                 }
             ).then((message) => {
                 cy.log('message', { message })
+                    .its('html')
+                    .then((html) => {
+                        cy.document().then(document => {
+                            document.body.innerHTML = html
+                        })
+                    })
+                //link button name needs to be checked!
+                cy.get('#a.link-button').click()
+                cy.wait(1000)
+                cy.get('#password').type('reiska12345')
+                cy.get('#passwordConfirmed').type('reiska12345')
+                cy.contains('Salasanan vaihto onnistui')
+                cy.get('#send').click()
             })
         })
         /* Onnistuneen salasanan lähetyksen jälkeiset tapahtumat
@@ -124,6 +137,9 @@ describe('Password reset', function() {
 
 
     describe('Password reset with incorrect input or invalid token', function() {
+        beforeEach (() => {
+            cy.visit('http://localhost:3000/resetpassword/invaliditoken')}
+        )
         it('user sees a notification if password is too short', function() {
             cy.get('input[id="password"]').type('sala')
             cy.contains('Salasanan minimipituus on 10 merkkiä')

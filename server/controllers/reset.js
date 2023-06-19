@@ -22,7 +22,7 @@ resetRouter.post('/', async (request, response) => {
         if (!finduser) {
             return response.status(404).json({ error: 'Sähköpostiosoitetta ei löytynyt' })
         }
-
+        console.log('resetRouter finduser', finduser)
         const userForToken = {
             username: finduser.username,
             id: finduser.id,
@@ -60,7 +60,9 @@ resetRouter.post('/', async (request, response) => {
 
 resetRouter.post('/:token', async (request, response) => {
     try {
+        console.log('request.params.token', request.params.token)
         const reset = await Reset.findOne({ where: { token: request.params.token } })
+        console.log('/:token', reset)
         if (!reset) {
             return response.status(404).json({ error: 'Salasanan nollauspyyntöä ei löytynyt' })
         }

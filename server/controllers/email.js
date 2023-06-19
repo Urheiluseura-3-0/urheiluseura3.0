@@ -30,7 +30,7 @@ const sendResetEmail = async (email, token) => {
             return false
         }
 
-        console.log('Viesti lähetetty', nodemailer.getTestMessageUrl(info))
+        console.log(`Viesti lähetetty tähän osoitteeseen ${email}`, nodemailer.getTestMessageUrl(info))
     })
 
     return true

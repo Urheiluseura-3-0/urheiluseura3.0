@@ -37,7 +37,7 @@ const validatePhoneNumber = (value) => {
 }
 
 const validateEmail = (value) => {
-    if (value.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g) != null) {
+    if (value.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,5}$/g) != null) {
         return true
     }
     return false

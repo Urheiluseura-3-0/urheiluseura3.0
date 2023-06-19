@@ -12,7 +12,7 @@ const getLastEmail = async (user, pass) => {
             pass: pass
         }
     })
-    console.log('client', client)
+    await console.log('client', client)
     try{
         const connection = await client.connect()
         console.log('Connection successful', connection)
@@ -22,9 +22,8 @@ const getLastEmail = async (user, pass) => {
     let message
     // Lukitsee mailboxin niin, että muut prosessit/asiakkaat eivär pääse muokkaamaan mailboxia yhtäaikaa
     let lock = await client.getMailboxLock('INBOX')
-    console.log('hei')
+
     try {
-        console.log('yritä')
         message = await client.fetchOne(client.mailbox.exists, { source: true })
         // client.mailbox.exists hakee ensimmäisen viestin, source:true tuo raakaversion viestistä
     } finally {
