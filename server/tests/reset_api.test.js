@@ -54,7 +54,7 @@ beforeEach(async () => {
 
 test('Password request can be requested with valid email', async () => {
     const validEmail = { email: user.email }
-
+    console.log('validEmail', validEmail)
     const result = await api
         .post('/api/reset')
         .send(validEmail)
