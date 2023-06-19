@@ -65,8 +65,10 @@ describe('Event', function() {
 
         it('user cannot send form if opponent name is too short', function() {
             cy.get('input[id="opponent"]').type('A')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Vastustaja').click()
             cy.get('#add-event').should('be.disabled')
+            cy.get('#opponent-error')
+                .should('be.visible')
         })
 
         it ('opponent name will not be too long', function() {
@@ -86,8 +88,10 @@ describe('Event', function() {
 
         it('user cannot send form if location name is too short', function() {
             cy.get('input[id="location"]').type('E')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Vastustaja').click()
             cy.get('#add-event').should('be.disabled')
+            cy.get('#location-error')
+                .should('be.visible')
         })
 
         it ('location name will not be too long', function() {
