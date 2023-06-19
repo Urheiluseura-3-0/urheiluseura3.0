@@ -318,6 +318,68 @@ test('cannot add an event if token is invalid', async () => {
     expect(result.body.error).toContain('Kirjaudu ensin sisään')
 })
 
+test('cannot add an event if some input is too short', async () => {
+
+    const newEvent = {
+
+        team: team.id,
+        opponent: 'H',
+        location: 'Espoonlahden urheiluhalli',
+        date:'2023-06-19',
+        time:'12:30',
+        description: 'Lipunmyynti'
+    }
+
+    const result = await api
+        .post('/api/event')
+        .set('Cookie', finalToken)
+        .send(newEvent)
+        .expect(401)
+
+    expect(result.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
+})
+
+test('cannot add an event if some input is too long', async () => {
+
+    const newEvent = {
+
+        team: team.id,
+        opponent: 'Honka 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+        location: 'Espoonlahden urheiluhalli',
+        date:'2023-06-19',
+        time:'12:30',
+        description: 'Lipunmyynti'
+    }
+
+    const result = await api
+        .post('/api/event')
+        .set('Cookie', finalToken)
+        .send(newEvent)
+        .expect(401)
+
+    expect(result.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
+})
+
+test('cannot add an event if team is not found', async () => {
+
+    const newEvent = {
+
+        team: 12345,
+        opponent: 'Honka I B',
+        location: 'Espoonlahden urheiluhalli',
+        date:'2023-06-19',
+        time:'12:30',
+        description: 'Lipunmyynti'
+    }
+
+    const result = await api
+        .post('/api/event')
+        .set('Cookie', finalToken)
+        .send(newEvent)
+        .expect(401)
+    
+    expect(result.body.error).toContain('Tiimin hakeminen epäonnistui')
+})
 
 test('correct number of events in database', async () => {
     
