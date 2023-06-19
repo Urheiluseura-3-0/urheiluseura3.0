@@ -21,16 +21,17 @@ describe('Event', function() {
         }
         cy.request('POST', 'http://localhost:3001/api/team', team)
         cy.request('GET', 'http://localhost:3001/api/login')
-        cy.visit('http://localhost:3000')
+        cy.visit('http://localhost:3001')
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')
         cy.get('#login-button').click()
+        cy.get('#addevent-link').click()
     })
 
     describe('Page view', function() {
 
         it('user can see event form', function() {
-            cy.url().should('include','/home')
+            cy.url().should('include','/event')
             cy.contains('Lisää tapahtuma')
         })
 
@@ -64,8 +65,10 @@ describe('Event', function() {
 
         it('user cannot send form if opponent name is too short', function() {
             cy.get('input[id="opponent"]').type('A')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Vastustaja').click()
             cy.get('#add-event').should('be.disabled')
+            cy.get('#opponent-error')
+                .should('be.visible')
         })
 
         it ('opponent name will not be too long', function() {
@@ -85,8 +88,10 @@ describe('Event', function() {
 
         it('user cannot send form if location name is too short', function() {
             cy.get('input[id="location"]').type('E')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Vastustaja').click()
             cy.get('#add-event').should('be.disabled')
+            cy.get('#location-error')
+                .should('be.visible')
         })
 
         it ('location name will not be too long', function() {

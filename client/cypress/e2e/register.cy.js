@@ -3,7 +3,7 @@
 describe('Register', () => {
     beforeEach(() => {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        cy.visit('http://localhost:3000')
+        cy.visit('http://localhost:3001')
         cy.get('#register-link').click()
     }
     )
@@ -32,7 +32,7 @@ describe('Register', () => {
 
         it ('user cannot click next if first name is too short', function() {
             cy.get('input[name="firstname"]').type('O')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Etunimi').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#firstname-error')
                 .should('be.visible')
@@ -57,7 +57,7 @@ describe('Register', () => {
         it ('user cannot click next if last name is too short', function() {
 
             cy.get('input[name="lastname"]').type('O')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Sukunimi').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#lastname-error')
                 .should('be.visible')
@@ -86,7 +86,7 @@ describe('Register', () => {
         it ('user cannot click next if address is too short', function() {
 
             cy.get('input[name="address"]').type('O')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Osoite').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#address-error').should('be.visible')
 
@@ -112,7 +112,7 @@ describe('Register', () => {
         it ('user cannot click next if postal code is too short', function(){
 
             cy.get('input[name="postalCode"]').type('12')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Postinumero').click()
             cy.get('#postalCode-error').should('be.visible')
             cy.get('#next-button').should('be.disabled')
         })
@@ -126,7 +126,7 @@ describe('Register', () => {
         it ('postal code only contains numbers', function(){
 
             cy.get('input[name="postalCode"]').type('ABCDE')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Postinumero').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#postalCode-error')
 
@@ -146,7 +146,7 @@ describe('Register', () => {
         it ('name of the city must contain at least two characters', function(){
 
             cy.get('input[name="city"]').type('A')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Postitoimipaikka').click()
             cy.get('#city-error').should('be.visible')
             cy.get('#next-button').should('be.disabled')
 
@@ -219,7 +219,7 @@ describe('Register', () => {
             cy.get('input[name="passwordConfirm"]').type('salainen123')
 
             cy.get('#register-button').click()
-            cy.contains('Kirjautuneena')
+            cy.contains('Lisää tapahtuma')
 
         })
 
@@ -242,7 +242,7 @@ describe('Register', () => {
         it('Phone number must contain at least 5 characters', function() {
             cy.get('input[name="email"]').type('esimerkki@jippii.fi')
             cy.get('input[name="phoneNumber"]').type('24')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Puhelinnumero').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#phoneNumber-error')
                 .should('be.visible')
@@ -251,7 +251,7 @@ describe('Register', () => {
         it('Phone number must only contain numbers', function() {
             cy.get('input[name="email"]').type('esimerkki@jippii.fi')
             cy.get('input[name="phoneNumber"]').type('abcdefghijklmnopqr')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Puhelinnumero').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#phoneNumber-error')
                 .should('be.visible')
@@ -265,7 +265,7 @@ describe('Register', () => {
         it ('email length must be over 4', function() {
             cy.get('input[name="phoneNumber"]').type('0450985677')
             cy.get('input[name="email"]').type('i@fi')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Sähköposti').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#email-error')
                 .should('be.visible')
@@ -280,7 +280,7 @@ describe('Register', () => {
         it('email must contain at sign', function () {
             cy.get('input[name="phoneNumber"]').type('0450985677')
             cy.get('input[name="email"]').type('thisemailisfalsy.fi')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Sähköposti').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#email-error')
                 .should('be.visible')
@@ -289,7 +289,7 @@ describe('Register', () => {
         it('email must contain dot', function () {
             cy.get('input[name="phoneNumber"]').type('0450985677')
             cy.get('input[name="email"]').type('thisemailisfalsy@fi')
-            cy.get('Body').click({ x:266, y:32 })
+            cy.contains('label', 'Sähköposti').click()
             cy.get('#next-button').should('be.disabled')
             cy.get('#email-error')
                 .should('be.visible')
@@ -326,7 +326,7 @@ describe('Register', () => {
             it ('username must contain at least two characters', function(){
 
                 cy.get('input[name="username"]').type('A')
-                cy.get('Body').click({ x:266, y:32 })
+                cy.contains('label', 'Käyttäjänimi').click()
                 cy.get('#username-error').should('be.visible')
                 cy.get('#register-button').should('be.disabled')
 
@@ -347,7 +347,7 @@ describe('Register', () => {
             it('password min length is 10', function() {
                 cy.get('input[name="password"]').type('sala12')
                 cy.get('input[name="passwordConfirm"]').type('sala12')
-                cy.get('Body').click({ x:266, y:32 })
+                cy.contains('label', 'Salasana').click()
                 cy.get('#register-button').should('be.disabled')
                 cy.get('#passwordConfirm-error')
 
@@ -365,7 +365,7 @@ describe('Register', () => {
             it('password must be confirmed', function() {
                 cy.get('input[name="password"]').type('salainen123')
                 cy.get('input[name="passwordConfirm"]').type('salainen')
-                cy.get('Body').click({ x:266, y:32 })
+                cy.contains('label', 'Salasana').click()
                 cy.get('#register-button').should('be.disabled')
                 cy.get('#passwordConfirm-error')
 

@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY client/package*.json .
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Build frontend
 COPY client .
@@ -16,16 +16,18 @@ RUN npm run build
 
 # Build server
 FROM node:16-alpine
+
 WORKDIR /usr/src/app
 
 # Copy packace.json and package-lock.json
 COPY server/package*.json .
 
-# Install dependencies
-RUN npm install
+# Install production dependencies
+RUN npm ci --only=production
 
 # Copy server code
 COPY server .
+
 # Copy static frontend
 COPY --from=client /usr/src/app/build build
 

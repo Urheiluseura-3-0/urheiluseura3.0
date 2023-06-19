@@ -27,19 +27,33 @@ Konsoliin muodostuu yksinkertainen yhteenveto. Tarkempi testikattavuusraportti g
 ~$ docker start postgres-test
 ```
 
-2. Käynnistetään serveri testi-moodissa:
+
+2. Buildataan frontend
+
+```shell
+~/client$ npm ci
+```
+
+```shell
+~/client$ npm run build
+```
+
+
+3. Siirretään build-kansio serverin juureen
+
+```shell
+~/urheiluseura3.0$ cp -R client/build server/build
+```
+
+
+4. Käynnistetään serveri testi-moodissa:
 
 ```shell
 ~/server$ npm run start:test
 ```
 
-3. Käynnistetään React-sovellus:
 
-```shell
-~/client$ npm start
-```
-
-4. Aja Cypress-testit joko...:
+5. Aja Cypress-testit joko...:
 
 ..visuaalisessa testiohjelmassa:
 

@@ -140,7 +140,7 @@ describe('Eventlist', function () {
         })
 
 
-        cy.visit('http://localhost:3000/home')
+        cy.visit('http://localhost:3001/home')
     })
 
     it('User can see all events', function () {
