@@ -10,7 +10,6 @@ describe('Password reset', function () {
     let userPass
 
     describe('Password reset with correct input and token', function () {
-
         beforeEach(() => {
             recurse(
                 () => cy.task('createTestEmail'),
@@ -24,8 +23,8 @@ describe('Password reset', function () {
             ).then((testAccount) => {
                 userEmail = testAccount.user
                 userPass = testAccount.pass
-                cy.log(`Email account created - (for debugging purposes): ${userEmail}, ${typeof userEmail} `)
-                cy.log(`Email account password - (for debugging purposes): ${userPass}, ${typeof userPass} `)
+                cy.log(`Email account created: ${userEmail}`)
+                cy.log(`Email account password: ${userPass}, ${typeof userPass} `)
                 const user = {
                     firstName: 'Reiska',
                     lastName: 'Testaaja',
@@ -39,13 +38,13 @@ describe('Password reset', function () {
                     passwordConfirm: 'lolleropollero'
                 }
                 cy.request('POST', 'http://localhost:3001/api/register/', user)
-                cy.visit('http://localhost:3000/requestpassword')
+                cy.visit('http://localhost:3001/requestpassword')
                 cy.get('#email').type(userEmail)
                 cy.get('#send-request-button').click()
                 cy.wait(5000)
                 recurse(
                     () => cy.task('getLastEmail', { user: userEmail, pass: userPass }),
-                    Cypress._.isObject, // keep retrying until the task returns an object
+                    Cypress._.isObject,
                     {
                         log: true,
                         timeout: 90000,
@@ -60,36 +59,38 @@ describe('Password reset', function () {
                                 document.body.innerHTML = html
                             })
                         })
+                    cy.wait(1000)
                     cy.get('a').click()
                     cy.wait(1000)
                 })
 
             })
-            it('Link takes to the reset password page', function () {
-                cy.contains('Vaihda salasana')
-            })
-
-            it('user is able to reset the password and is able to login', function () {
-                cy.get('#password').type('reiska12345')
-                cy.get('#passwordConfirmed').type('reiska12345')
-                cy.get('#send').click()
-                cy.contains('Salasanan vaihto onnistui')
-                cy.get('#front-page-link').click()
-
-                cy.get('#username').type('Reiska70')
-                cy.get('#password').type('reiska12345')
-                cy.get('#login-button').click()
-
-                cy.contains('Tapahtumat')
-            })
-
         })
+
+        it('Link takes to the reset password page', function () {
+            cy.contains('Vaihda salasana')
+        })
+
+        it('user is able to reset the password and is able to login', function () {
+            cy.get('#password').type('reiska12345')
+            cy.get('#passwordConfirmed').type('reiska12345')
+            cy.get('#send').click()
+            cy.contains('Salasanan vaihto onnistui')
+            cy.get('#front-page-link').click()
+
+            cy.get('#username').type('Reiska70')
+            cy.get('#password').type('reiska12345')
+            cy.get('#login-button').click()
+
+            cy.contains('Tapahtumat')
+        })
+
     })
 
 
     describe('Password reset with incorrect input or invalid token', function () {
         beforeEach(() => {
-            cy.visit('http://localhost:3000/resetpassword/invaliditoken')
+            cy.visit('http://localhost:3001/resetpassword/invaliditoken')
         }
         )
         it('user sees a notification if password is too short', function () {

@@ -1,7 +1,13 @@
-describe('Password request', function() {
-    beforeEach(function() {
+const { recurse } = require('cypress-recurse')
+
+let userEmail
+let userPass
+
+describe('Password request', function () {
+    beforeEach(function () {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = {
+
+        const firstUser = {
             firstName: 'Tiina',
             lastName: 'Testaaja',
             address: 'Testauskatu 10',
@@ -13,40 +19,78 @@ describe('Password request', function() {
             password: 'salainen1234',
             passwordConfirm: 'salainen1234'
         }
-        cy.request('POST', 'http://localhost:3001/api/register/', user)
+        cy.request('POST', 'http://localhost:3001/api/register/', firstUser)
 
-        cy.visit('http://localhost:3000')
+        recurse(
+            () => cy.task('createTestEmail'),
+            Cypress._.isObject,
+            {
+                log: true,
+                timeout: 20000,
+                delay: 5000,
+                error: 'Could not create test email'
+            }
+        ).then((testAccount) => {
+            userEmail = testAccount.user
+            userPass = testAccount.pass
+            cy.log(`Email account created - (for debugging purposes): ${userEmail}`)
+            cy.log(`Email account password - (for debugging purposes): ${userPass}`)
+            const secondUser = {
+                firstName: 'Reiska',
+                lastName: 'Testaaja',
+                address: 'Testauskatu 10',
+                postalCode: '00100',
+                city: 'Helsinki',
+                phoneNumber: '0401234567',
+                email: userEmail,
+                username: 'Reiska70',
+                password: 'salainensalasana',
+                passwordConfirm: 'salainensalasana'
+            }
+            cy.request('POST', 'http://localhost:3001/api/register/', secondUser)
+        })
+
+
+        cy.visit('http://localhost:3001')
 
         cy.get('#reset-password-link').click()
-        // testataanko myös tällä tyylillä: cy.visit('http://localhost:3000/requestpassword')
     })
 
-    describe('Page view', function() {
-        it('user can see reset form', function() {
+    describe('Page view', function () {
+        it('user can see reset form', function () {
             cy.url().should('include', '/requestpassword')
             cy.contains('Unohditko salasanasi?')
 
         })
     })
 
-    describe('Password request with existing e-mail', function() {
-        it('user sees a notification if sending e-mail address is successful', function() {
-            cy.get('#email').type('tiina.testaaja@keskitty.com')
+    describe('Password request with an existing and functioning e-mail', function () {
+        it('user sees a notification if sending e-mail address is successful', function () {
+            cy.get('#email').type(userEmail)
             cy.get('#send-request-button').click()
 
             cy.contains('Linkki salasanan vaihtoon lähetetty')
         })
     })
 
-    describe('Password request with non-existing e-mail', function() {
-        it('user sees a notification if e-mail address is not found', function() {
+    describe('Password request with an existing but not functioning e-mail', function () {
+        it('user sees a notification if sending e-mail address is successful', function () {
+            cy.get('#email').type('tiina.testaaja@keskitty.com')
+            cy.get('#send-request-button').click()
+
+            cy.contains('Linkin lähetys epäonnistui')
+        })
+    })
+
+    describe('Password request with non-existing e-mail', function () {
+        it('user sees a notification if e-mail address is not found', function () {
             cy.get('#email').type('seppo@keskitty.com')
             cy.get('#send-request-button').click()
 
             cy.contains('Sähköpostiosoitetta ei löytynyt')
         })
 
-        it('user sees a notification if e-mail address is invalid', function() {
+        it('user sees a notification if e-mail address is invalid', function () {
             cy.get('#email').type('seppokeskitty.com')
             cy.get('#send-request-button').click()
 
