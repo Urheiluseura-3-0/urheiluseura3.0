@@ -7,7 +7,7 @@ import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
 import FrontPage from './components/FrontPage'
 import EventForm from './components/EventForm'
-//import JobForm from './components/JobForm'
+import JobForm from './components/JobForm'
 import UserMenu from './components/UserMenu'
 import DefaultMenu from './components/DefaultMenu'
 import Cookies from 'universal-cookie'
@@ -67,7 +67,7 @@ const App = () => {
                 <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
                 <Route path="/home" element={<FrontPage logout={handleLogout} />} />
                 <Route path="/event" element={<EventForm />} />
-                {/* <Route path="/job" element={<JobForm/>}/> */}
+                <Route path="/job" element={<JobForm/>}/>
             </Routes>
         </div>
     )
