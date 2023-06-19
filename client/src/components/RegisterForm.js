@@ -196,51 +196,49 @@ const registerForm = ({ tokenHandler }) => {
         city, phoneNumber, email])
 
     return (
-        < div className='flex justify-center items-center h-screen bg-stone-100' >
-            <div className='p-6 max-w-l bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
-                <h1 className='font-bold text-2xl text-center text-teal-500'>Rekisteröidy</h1>
-                {showAlert && <Notification message={alertMessage} />}
-                {step === 0 &&
-                    <Step0
-                        onNext={handleNext}
-                        onChange={handleChange}
-                        firstName={firstName}
-                        lastName={lastName}
-                        address={address}
-                        postalCode={postalCode}
-                        city={city}
-                        isInputValid={isInputValid}
-                        isFirstNameValid={isFirstNameValid}
-                        isLastNameValid={isLastNameValid}
-                        isAddressValid={isAddressValid}
-                        isPostalCodeValid={isPostalCodeValid}
-                        isCityValid={isCityValid}
-                    />}
-                {step === 1 &&
-                    <Step1
-                        onNext={handleNext}
-                        onBack={handleBack}
-                        onChange={handleChange}
-                        phoneNumber={phoneNumber}
-                        email={email}
-                        isInputValid={isInputValid}
-                        isPhoneNumberValid={isPhoneNumberValid}
-                        isEmailValid={isEmailValid}
-                    />}
-                {step === 2 &&
-                    <Step2
-                        onBack={handleBack}
-                        onChange={handleChange}
-                        onSubmit={handleRegister}
-                        username={username}
-                        password={password}
-                        passwordConfirm={passwordConfirm}
-                        isInputValid={isInputValid}
-                        isUsernameValid={isUsernameValid}
-                        isPasswordValid={isPasswordValid}
-                        isPasswordConfirmValid={isPasswordConfirmValid}
-                    />}
-            </div >
+        <div className='p-6 max-w-l bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
+            <h1 className='font-bold text-2xl text-center text-teal-500'>Rekisteröidy</h1>
+            {showAlert && <Notification message={alertMessage} />}
+            {step === 0 &&
+                <Step0
+                    onNext={handleNext}
+                    onChange={handleChange}
+                    firstName={firstName}
+                    lastName={lastName}
+                    address={address}
+                    postalCode={postalCode}
+                    city={city}
+                    isInputValid={isInputValid}
+                    isFirstNameValid={isFirstNameValid}
+                    isLastNameValid={isLastNameValid}
+                    isAddressValid={isAddressValid}
+                    isPostalCodeValid={isPostalCodeValid}
+                    isCityValid={isCityValid}
+                />}
+            {step === 1 &&
+                <Step1
+                    onNext={handleNext}
+                    onBack={handleBack}
+                    onChange={handleChange}
+                    phoneNumber={phoneNumber}
+                    email={email}
+                    isInputValid={isInputValid}
+                    isPhoneNumberValid={isPhoneNumberValid}
+                    isEmailValid={isEmailValid}
+                />}
+            {step === 2 &&
+                <Step2
+                    onBack={handleBack}
+                    onChange={handleChange}
+                    onSubmit={handleRegister}
+                    username={username}
+                    password={password}
+                    passwordConfirm={passwordConfirm}
+                    isInputValid={isInputValid}
+                    isUsernameValid={isUsernameValid}
+                    isPasswordValid={isPasswordValid}
+                    isPasswordConfirmValid={isPasswordConfirmValid}
+                />}
         </div >
 
     )
