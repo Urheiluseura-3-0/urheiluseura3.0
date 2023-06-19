@@ -54,7 +54,7 @@ const App = () => {
 
     return (
         <div>
-            <div>
+            <div className='relative z-50'>
                 {token
                     ?
                     <UserMenu handleLogout={handleLogout} />
@@ -62,13 +62,15 @@ const App = () => {
                     <DefaultMenu />
                 }
             </div>
-            <Routes>
-                <Route path="/" element={<LoginForm tokenHandler={handleSetToken} />} />
-                <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
-                <Route path="/home" element={<FrontPage logout={handleLogout} />} />
-                <Route path="/event" element={<EventForm />} />
-                {/* <Route path="/job" element={<JobForm/>}/> */}
-            </Routes>
+            <div className='flex justify-center items-center min-h-screen bg-stone-100'>
+                <Routes>
+                    <Route path="/" element={<LoginForm tokenHandler={handleSetToken} />} />
+                    <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
+                    <Route path="/home" element={<FrontPage logout={handleLogout} />} />
+                    <Route path="/event" element={<EventForm />} />
+                    {/* <Route path="/job" element={<JobForm/>}/> */}
+                </Routes>
+            </div>
         </div>
     )
 
