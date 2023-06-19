@@ -7,7 +7,7 @@ const userRouter = require('./controllers/user.js')
 const registerRouter = require('./controllers/register.js')
 const eventRouter = require('./controllers/event.js')
 const teamRouter = require('./controllers/team.js')
-const jobRouter = require('./controllers/job.js')
+const { jobRouter } = require('./controllers/job.js')
 const cookieParser = require('cookie-parser')
 const middleware = require('./utils/middleware.js')
 

@@ -33,13 +33,15 @@ beforeEach(async () => {
 test('non-existing user can not log in', async () => {
     const nonexistingUser = {
         username: 'Jaakko35',
-        password: 'salainen2'
+        password: 'salainen123'
     }
 
-    await api
+    const response = await api
         .post('/api/login')
         .send(nonexistingUser)
-        .expect(401)
+    
+    expect(response.status).toBe(401)
+    expect(response.body.error).toBe('Virheellinen käyttäjänimi tai salasana')
 })
 
 
@@ -53,5 +55,37 @@ test('existing user can log in', async () => {
         .post('/api/login')
         .send(existingUser)
         .expect(200)
+})
+
+test('existing user cannot log in with wrong password', async () => {
+    const existingUser = {
+        username: 'Pekka35',
+        password: 'salainen12345'
+    }
+
+    const response = await api
+        .post('/api/login')
+        .send(existingUser)
+    
+    expect(response.status).toBe(401)
+    expect(response.body.error).toBe('Virheellinen käyttäjänimi tai salasana')
+})
+
+test('logged in user can log out', async () => {
+    const existingUser = {
+        username: 'Pekka35',
+        password: 'salainen12'
+    }
+
+    await api
+        .post('/api/login')
+        .send(existingUser)
+    
+    const response = await api
+        .get('/api/login')
+    
+    expect(response.status).toBe(200)
+    expect(response.body.message).toBe('Uloskirjautuminen onnistui')
+
 })
 

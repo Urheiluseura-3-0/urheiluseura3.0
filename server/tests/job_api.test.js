@@ -4,6 +4,7 @@ const { User } = require('../models')
 const { Job } =  require('../models')
 const app = require('../app')
 const Cookies = require('universal-cookie')
+const { hoursToDecimal } = require('../controllers/job')
 
 const api = supertest(app)
 
@@ -478,4 +479,15 @@ test('validation does not accept too long location', async () =>{
         .send(newJob)
         .expect(401)
     expect(result.body.error).toContain(' Sallittu pituus kentälle Sijainti on 2-40 merkkiä')
+})
+
+test('hoursToDecimal returns correct value', async () => {
+    const result = hoursToDecimal(3,0)
+    expect(result).toBe(3)
+
+    const result2 = hoursToDecimal(2, 30)
+    expect(result2).toBe(2.5)
+
+    const result3 = hoursToDecimal(0, 45)
+    expect(result3).toBe(0.75)
 })

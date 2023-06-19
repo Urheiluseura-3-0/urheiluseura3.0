@@ -81,4 +81,4 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
 
 
 
-module.exports = jobRouter
+module.exports = { jobRouter, hoursToDecimal }
