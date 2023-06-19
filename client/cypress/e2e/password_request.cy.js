@@ -1,7 +1,6 @@
 const { recurse } = require('cypress-recurse')
 
 let userEmail
-let userPass
 
 describe('Password request', function () {
     beforeEach(function () {
@@ -32,9 +31,6 @@ describe('Password request', function () {
             }
         ).then((testAccount) => {
             userEmail = testAccount.user
-            userPass = testAccount.pass
-            cy.log(`Email account created - (for debugging purposes): ${userEmail}`)
-            cy.log(`Email account password - (for debugging purposes): ${userPass}`)
             const secondUser = {
                 firstName: 'Reiska',
                 lastName: 'Testaaja',
@@ -64,8 +60,8 @@ describe('Password request', function () {
         })
     })
 
-    describe('Password request with an existing and functioning e-mail', function () {
-        it('user sees a notification if sending e-mail address is successful', function () {
+    describe('Password reset link request with an existing and functioning e-mail', function () {
+        it('user sees a notification if reset link is successfully sent to given email address', function () {
             cy.get('#email').type(userEmail)
             cy.get('#send-request-button').click()
 
@@ -73,8 +69,8 @@ describe('Password request', function () {
         })
     })
 
-    describe('Password request with an existing but not functioning e-mail', function () {
-        it('user sees a notification if sending e-mail address is successful', function () {
+    describe('Password reset link request with an existing but not functioning e-mail', function () {
+        it('user sees a notification if link cannot be sent ', function () {
             cy.get('#email').type('tiina.testaaja@keskitty.com')
             cy.get('#send-request-button').click()
 

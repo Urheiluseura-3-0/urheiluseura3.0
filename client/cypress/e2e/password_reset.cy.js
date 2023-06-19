@@ -23,8 +23,6 @@ describe('Password reset', function () {
             ).then((testAccount) => {
                 userEmail = testAccount.user
                 userPass = testAccount.pass
-                cy.log(`Email account created: ${userEmail}`)
-                cy.log(`Email account password: ${userPass}, ${typeof userPass} `)
                 const user = {
                     firstName: 'Reiska',
                     lastName: 'Testaaja',
