@@ -85,6 +85,29 @@ const EventForm = () => {
         setTeams(teams)
     }
 
+    const renderFormError= (parameter, parameterValid, errorid, errorMessage) => {
+
+        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
+
+        return (
+            changedParameter || parameterValid ? null: (
+                <p id = {errorid} className = 'peer-focus:hidden text-red-500 text-sm'>
+                    {errorMessage}
+                </p>
+            )
+        )
+    }
+
+    const renderClassName = (parameter, parameterValid) => {
+
+        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
+
+        return(
+            `peer border rounded p-2 w-full ${changedParameter || parameterValid ? 'border-gray-300' : 'border-red-500'
+            }`
+        )
+    }
+
     useEffect(() => {
         validateFields()
     }, [team, opponent, location, date, time, description])
@@ -125,13 +148,8 @@ const EventForm = () => {
                                     setOpponent(target.value)
                                     setIsOpponentValid(target.value.length >= 2 && target.value.length <= 40)
                                 }}
-                                className={`peer border rounded p-2 w-full ${opponent.length === 0 || isOpponentValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
-                            />{opponent.length === 0 || isOpponentValid ? null : (
-                                <p id='opponent-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Vastustajan on oltava vähintään 2 merkkiä
-                                </p>
-                            )}
+                                className={renderClassName(opponent.length, isOpponentValid)}
+                            />{renderFormError(opponent.length, isOpponentValid, 'opponent-error', 'Vastustajan on oltava vähintään 2 merkkiä')}
                         </div>
                         <div>
                             <label className='block'>Paikka</label>
@@ -140,13 +158,8 @@ const EventForm = () => {
                                     setLocation(target.value)
                                     setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
                                 }}
-                                className={`peer border rounded p-2 w-full ${location.length === 0 || isLocationValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
-                            />{location.length === 0 || isLocationValid ? null : (
-                                <p id='location-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Paikan on oltava vähintään 2 merkkiä
-                                </p>
-                            )}
+                                className={renderClassName(location.length, isLocationValid)}
+                            />{renderFormError(location.length, isLocationValid, 'location-error', 'Paikan on oltava vähintään 2 merkkiä')}
                         </div>
                         <div>
                             <label className='block'>Päivämäärä</label>
@@ -155,13 +168,8 @@ const EventForm = () => {
                                     setDate(target.value)
                                     setIsDateValid(validateDate(target.value))
                                 }}
-                                className={`peer border rounded p-2 w-full ${date.valueOf() === '' || isDateValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
-                            />{date.valueOf() === '' || isDateValid ? null : (
-                                <p id='date-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Tarkista päivämäärä
-                                </p>
-                            )}
+                                className={renderClassName(date, isDateValid)}
+                            />{renderFormError(date, isDateValid, 'date-error', 'Tarkista päivämäärä')}
                         </div>
                         <div>
                             <label className='block'>Kellonaika</label>
@@ -170,13 +178,8 @@ const EventForm = () => {
                                     setTime(target.value)
                                     setIsTimeValid(validateTime(target.value))
                                 }}
-                                className={`peer border rounded p-2 w-full ${time.valueOf() === '' || isTimeValid ? 'border-gray-300' : 'border-red-500'
-                                }`}
-                            />{time.valueOf() === '' || isTimeValid ? null : (
-                                <p id='time-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Tarkista kellonaika
-                                </p>
-                            )}
+                                className={renderClassName(time, isTimeValid)}
+                            />{renderFormError(time, isTimeValid, 'time-error', 'Tarkista kellonaika')}
                         </div>
                         <div>
                             <label className='block'>Lisätietoja</label>
