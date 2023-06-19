@@ -14,6 +14,12 @@ function hoursToDecimal(hours,minutes) {
     return decimalHours
 }
 
+function checkErrors(parameter, message, response) {
+    if (!parameter){
+        return response.status(401).json({ error: message})
+    }
+}
+
 jobRouter.post('/', tokenExtractor, async (request, response) => {
 
     try{
@@ -23,23 +29,12 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
         const intHours = parseInt(hours)
         const intMinutes = parseInt(minutes)
 
-        if (!squad) {
-            return response.status(401).json({ error: 'Virheellinen ryhmä' })
-        }
-        if (!date) {
-            return response.status(401).json({ error: 'Virheellinen päivämäärä' })
-        }
-        if (!location) {
-            return response.status(401).json({ error: 'Virheellinen sijainti' })
-        }
-        if (!hours) {
-            return response.status(401).json({ error: 'Virheelliset työtunnit' })
-        }
+        checkErrors(squad, 'Virheellinen ryhmä', response)
+        checkErrors(date, 'Virheellinen päivämäärä', response)
+        checkErrors(location, 'Virheellinen sijainti', response)
+        checkErrors(hours, 'Virheelliset työtunnit', response)
+        checkErrors(minutes, 'Virheelliset minuutit', response)
 
-        if(!minutes) {
-            return response.status(401).json({error: 'Virheelliset minuutit'})
-        }
-        
         const checkJobErrors = validateJobInput(squad, context, date, location, intHours, intMinutes)
 
 
