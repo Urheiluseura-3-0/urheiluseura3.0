@@ -1,5 +1,5 @@
-const {validateRegisterInput, validateLoginInput, validateResetPasswordInput} = require('../controllers/validate_input')
-const {validateOnlyNumbers, validatePhoneNumber, validateEmail, validateNotEmpty, validateLength, validateDate, validateTime} = require('../controllers/validate_input')
+const {validateRegisterInput, validateLoginInput, validateResetPasswordInput} = require('../utils/validate_input')
+const {validateOnlyNumbers, validatePhoneNumber, validateEmail, validateNotEmpty, validateLength, validateDate, validateTime} = require('../utils/validate_input')
 
 test('not empty returns true if not empty', () => {
     const result = validateNotEmpty('Testisyöte')

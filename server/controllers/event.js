@@ -3,7 +3,7 @@ const eventRouter = require('express').Router()
 const { Event } = require('../models')
 const { User } = require('../models')
 const { Team } = require('../models')
-const { validateEventInput } = require('./validate_input.js')
+const { validateEventInput } = require('../utils/validate_input.js')
 const { tokenExtractor } = require('../utils/middleware')
 
 

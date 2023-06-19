@@ -4,10 +4,10 @@ const moment = require('moment')
 
 const resetRouter = require('express').Router()
 const config = require('../utils/config')
+const { sendResetEmail } = require('../utils/email')
 const { User } = require('../models')
 const { Reset } = require('../models')
-const { validateEmail, validateResetPasswordInput } = require('./validate_input.js')
-const { sendResetEmail } = require('./email.js')
+const { validateEmail, validateResetPasswordInput } = require('../utils/validate_input.js')
 
 
 resetRouter.post('/', async (request, response) => {

@@ -1,6 +1,6 @@
 const teamRouter = require('express').Router()
 const {Team} = require('../models')
-const {validateTeamInput} = require('./validate_input.js')
+const {validateTeamInput} = require('../utils/validate_input.js')
 const { tokenExtractor } = require('../utils/middleware')
 
 teamRouter.get('/', tokenExtractor, async (request,response) => {

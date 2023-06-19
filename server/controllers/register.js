@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const registerRouter = require('express').Router()
 const config = require('../utils/config')
 const {User} = require('../models')
-const {validateRegisterInput} = require('./validate_input.js')
+const {validateRegisterInput} = require('../utils/validate_input.js')
 
 registerRouter.post('/', async (request, response) => {
     try {
