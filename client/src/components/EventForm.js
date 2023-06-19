@@ -5,7 +5,7 @@ import Notification from './Notification'
 
 const EventForm = () => {
     const [team, setTeam] = useState('0')
-    const [teams, setTeams] = useState ([])
+    const [teams, setTeams] = useState([])
     const [opponent, setOpponent] = useState('')
     const [location, setLocation] = useState('')
     const [date, setDate] = useState('')
@@ -106,7 +106,7 @@ const EventForm = () => {
                                 setTeam(target.value)
                                 setIsTeamValid(target.value > 0)
                             }}
-                            className={`peer border rounded p-2 w-full ${ !isOpponentValid || isTeamValid ? 'border-gray-300' : 'border-red-500'
+                            className={`peer border rounded p-2 w-full ${!isOpponentValid || isTeamValid ? 'border-gray-300' : 'border-red-500'
                             }`}
                             >
                                 <option value='0'>Valitse joukkue</option>
