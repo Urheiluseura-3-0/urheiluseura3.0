@@ -112,7 +112,7 @@ describe('When a reset request has been made', () => {
             .expect(200)
         expect(result.body.message).toBe('Salasanan vaihto onnistui')
 
-    }, 20000)
+    })
 
     test('Password is not changed with mismatching passwords', async () => {
 
@@ -143,5 +143,5 @@ describe('When a reset request has been made', () => {
 
         expect(result.body.error).toBe('Salasanan nollauspyyntöä ei löytynyt')
 
-    })
+    }, 20000)
 })
