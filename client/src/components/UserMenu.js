@@ -7,14 +7,14 @@ const UserMenu = ({ handleLogout }) => {
 
         <nav className="border-gray-200 bg-teal-400">
             <div id='navigationbar' className="flex flex-wrap items-center justify-between mx-auto p-4">
-                <div className='flex items-center space-x-4'>
-                    <Link id='frontpage-link' className='flex items-center bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center' style={{ padding: 5 }} to="/home">
+                <div className='flex flex-col sm:flex-row items-center space-x-4 space-y-2 sm:space-y-0'>
+                    <Link id='frontpage-link' className='flex items-center bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center py-4' style={{ padding: 5 }} to="/home">
                         Etusivu
                     </Link>
-                    <Link id='addevent-link' className='flex items-center bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center' style={{ padding: 5 }} to="/event">
+                    <Link id='addevent-link' className='flex items-center bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center py-4' style={{ padding: 5 }} to="/event">
                         Lisää tapahtuma
                     </Link>
-                    <Link id='addjob-link' className='flex items-center bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center' style={{ padding: 5 }} to="/job">
+                    <Link id='addjob-link' className='flex items-center bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center py-4' style={{ padding: 5 }} to="/job">
                         Lisää työtunnit
                     </Link>
                 </div>
