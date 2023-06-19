@@ -1,39 +1,46 @@
 const nodemailer = require('nodemailer')
+const config = require('../utils/config')
 
 const sendResetEmail = async (email, token) => {
-    const account = await nodemailer.createTestAccount()
-    
+
     const transporter = nodemailer.createTransport({
-        host: account.smtp.host,
-        port: account.smtp.port,
-        secure: account.smtp.secure,
+        name: config.EMAIL_HOST,
+        host: config.EMAIL_HOST,
+        port: config.EMAIL_PORT,
         auth: {
-            user: account.user,
-            pass: account.pass
+            user: config.EMAIL_USER,
+            pass: config.EMAIL_PASSWORD
         }
-    },
-    {
-        from: 'Lähettäjä <lahettaja@jokuosoite.com>'
     })
 
     const message = {
-        to: email,
-        subject: 'Salasanalinkki',
-        text: `http://localhost:3000/resetpassword/${token}`,
-        html: `<a href="http://localhost:3000/resetpassword/${token}">Vaihda salasana</a>`
+        to: email, 
+        subject: 'Salasanan resetointi',
+        text: `Hei, Salasanasi on resetoitu. Aseta uusi salasana tästä linkistä: ${config.BASEURL}/resetpassword/${token}. 
+        Linkki on voimassa 24 tuntia. Tähän sähköpostiin ei voi vastata.`,
+        html: `<p>Hei,</p><p>Salasanasi on resetoitu. Aseta uusi salasana tästä linkistä:</p><p><a href="${config.BASEURL}/resetpassword/${token}">Vaihda salasana</a></p>
+        <p>Linkki on voimassa 24 tuntia.</p><p>Tähän sähköpostiin ei voi vastata.</p>`
+    }
+    
+    let sentMail = false
+
+    try {
+        await new Promise((resolve, reject) => {
+            transporter.sendMail(message, (error) => {
+                if (error) {
+                    sentMail = false
+                    reject(error)
+                } else {
+                    sentMail = true
+                    resolve()
+                }
+            })
+        })
+    } catch (exception) {
+        return sentMail
     }
 
-
-    transporter.sendMail(message, (error, info) => {
-        if (error) {
-            console.log('Viestiä ei lähetetty', error)
-            return false
-        }
-
-        console.log(`Viesti lähetetty tähän osoitteeseen ${email}`, nodemailer.getTestMessageUrl(info))
-    })
-
-    return true
+    return sentMail
 }
 
 module.exports = { sendResetEmail }

@@ -1,4 +1,4 @@
-const simpleParser = require("mailparser").simpleParser
+const simpleParser = require('mailparser').simpleParser
 
 const parseEmail = async (message) => {
     const source = Buffer.from(message)

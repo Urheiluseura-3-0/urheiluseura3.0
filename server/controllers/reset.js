@@ -22,7 +22,7 @@ resetRouter.post('/', async (request, response) => {
         if (!finduser) {
             return response.status(404).json({ error: 'Sähköpostiosoitetta ei löytynyt' })
         }
-        console.log('resetRouter finduser', finduser)
+
         const userForToken = {
             username: finduser.username,
             id: finduser.id,
@@ -49,10 +49,11 @@ resetRouter.post('/', async (request, response) => {
         })
         await reset.save()
 
-
-        await sendResetEmail(email, token)
-
-        return response.status(200).json({ message: 'Linkki salasanan vaihtoon lähetetty' })
+        if (await sendResetEmail(email, token)) {
+            return response.status(200).json({ message: 'Linkki salasanan vaihtoon lähetetty' })
+        } else {
+            return response.status(400).json({ error: 'Linkin lähetys epäonnistui'})
+        }
     } catch {
         return response.status(400)
     }
@@ -60,16 +61,13 @@ resetRouter.post('/', async (request, response) => {
 
 resetRouter.post('/:token', async (request, response) => {
     try {
-        console.log('request.params.token', request.params.token)
         const reset = await Reset.findOne({ where: { token: request.params.token } })
-        console.log('/:token', reset)
         if (!reset) {
             return response.status(404).json({ error: 'Salasanan nollauspyyntöä ei löytynyt' })
         }
 
         const expirationTime = moment(reset.expires)
         const currentTime = moment()
-        console.log(expirationTime, currentTime)
 
         if (currentTime.isAfter(expirationTime)) {
             reset.destroy()
