@@ -21,7 +21,7 @@ describe('Job', function () {
         cy.get('#password').type('salainen1234')
         cy.get('#login-button').click()
         cy.wait(200)
-        cy.visit('http://localhost:3000/job')
+        cy.visit('http://localhost:3001/job')
     })
 
     describe('Page view', function () {
