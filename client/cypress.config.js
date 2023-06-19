@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 const { defineConfig } = require('cypress')
 
 const createTestEmail = require('./cypress/plugins/create-account')
@@ -7,10 +6,9 @@ const getLastEmail = require('./cypress/plugins/get-last-email')
 
 const parseEmail = require('./cypress/plugins/parse-email')
 
-// eslint-disable-next-line no-undef
-
 module.exports = defineConfig({
     e2e: {
+        // eslint-disable-next-line no-unused-vars
         setupNodeEvents: async (on, config) => {
 
             on('task', {
