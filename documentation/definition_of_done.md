@@ -14,4 +14,4 @@
 5. Peer review
 * ennen kuin koodi lisätään main-haaraan, sille tehdään pull request
 * pull requestin tarkastaa joku muu kuin koodin kirjoittaja
-7. Asiakas hyväksyy user storyn. 
+6. Asiakas hyväksyy user storyn. 
