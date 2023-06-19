@@ -1,9 +1,9 @@
 const supertest = require('supertest')
+const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt')
 const { User } = require('../models')
 const { Reset } = require('../models')
 const app = require('../app')
-const createAccount = require('../../client/cypress/plugins/create-account')
 const api = supertest(app)
 
 let user
@@ -16,8 +16,9 @@ beforeEach(async () => {
 
     const saltRounds = 10
     const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
-    const testAccount = await createAccount()
+    const testAccount = await nodemailer.createTestAccount()
     userEmail = testAccount.user
+    console.log('userEmail', userEmail)
     const initialUsers = [
         {
             firstName: 'Pekka',
