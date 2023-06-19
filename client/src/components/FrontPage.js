@@ -1,7 +1,7 @@
 
 import EventList from './EventList'
 
-const userView = () => {
+const FrontPage = () => {
 
     return (
         <div>
@@ -12,4 +12,4 @@ const userView = () => {
     )
 }
 
-export default userView
+export default FrontPage

@@ -5,11 +5,11 @@ import UserService from './services/user'
 
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
-import UserView from './components/UserView'
+import FrontPage from './components/FrontPage'
 import EventForm from './components/EventForm'
 //import JobForm from './components/JobForm'
 import UserMenu from './components/UserMenu'
-import LogoutMenu from './components/LogoutMenu'
+import DefaultMenu from './components/DefaultMenu'
 import Cookies from 'universal-cookie'
 import './style.css'
 
@@ -59,13 +59,13 @@ const App = () => {
                     ?
                     <UserMenu handleLogout={handleLogout} />
                     :
-                    <LogoutMenu />
+                    <DefaultMenu />
                 }
             </div>
             <Routes>
                 <Route path="/" element={<LoginForm tokenHandler={handleSetToken} />} />
                 <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
-                <Route path="/home" element={<UserView logout={handleLogout} />} />
+                <Route path="/home" element={<FrontPage logout={handleLogout} />} />
                 <Route path="/event" element={<EventForm />} />
                 {/* <Route path="/job" element={<JobForm/>}/> */}
             </Routes>

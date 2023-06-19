@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-const LogoutMenu = () => {
+const DefaultMenu = () => {
     return (
 
         <nav className="border-gray-200 bg-teal-400">
@@ -18,4 +18,4 @@ const LogoutMenu = () => {
     )
 }
 
-export default LogoutMenu
+export default DefaultMenu
