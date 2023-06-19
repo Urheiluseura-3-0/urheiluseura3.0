@@ -20,6 +20,7 @@ const App = () => {
     const location = useLocation()
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
+    const allowedPaths = ['/event', '/job']
 
     const handleLogout = () => {
         UserService.logout()
@@ -29,7 +30,7 @@ const App = () => {
     }
 
     const handleSetToken = () => {
-        const value= (cookies.get('Token'))
+        const value = (cookies.get('Token'))
         setToken(value)
     }
 
@@ -41,10 +42,8 @@ const App = () => {
                 navigate('/')
             }
         } else {
-            if (location.pathname === '/event') {
-                navigate('/event')
-            } else if (location.pathname === '/job') {
-                navigate('/job')
+            if (allowedPaths.includes(location.pathname)) {
+                navigate(location.pathname)
             } else {
                 navigate('/home')
             }
@@ -58,7 +57,7 @@ const App = () => {
             <div>
                 {token
                     ?
-                    <UserMenu handleLogout = {handleLogout}/>
+                    <UserMenu handleLogout={handleLogout} />
                     :
                     <LogoutMenu />
                 }
@@ -67,7 +66,7 @@ const App = () => {
                 <Route path="/" element={<LoginForm tokenHandler={handleSetToken} />} />
                 <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
                 <Route path="/home" element={<UserView logout={handleLogout} />} />
-                <Route path="/event" element={<EventForm/>} />
+                <Route path="/event" element={<EventForm />} />
                 {/* <Route path="/job" element={<JobForm/>}/> */}
             </Routes>
         </div>
