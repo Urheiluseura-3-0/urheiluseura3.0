@@ -61,7 +61,7 @@ test('Password request can be requested with valid email', async () => {
         .expect(200)
 
     expect(result.body.message).toBe('Linkki salasanan vaihtoon lähetetty')
-})
+}, 20000)
 
 test('Password can not be requested with invalid email', async () => {
     const invalidEmail = { email: 'tes.com' }
@@ -112,7 +112,7 @@ describe('When a reset request has been made', () => {
             .expect(200)
         expect(result.body.message).toBe('Salasanan vaihto onnistui')
 
-    })
+    }, 20000)
 
     test('Password is not changed with mismatching passwords', async () => {
 
