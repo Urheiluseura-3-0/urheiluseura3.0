@@ -16,9 +16,9 @@ const sendResetEmail = async (email, token) => {
     const message = {
         to: email, 
         subject: 'Salasanan resetointi',
-        text: `Hei, Salasanasi on resetoitu. Aseta uusi salasana tästä linkistä: ${config.BASEURL}/resetpassword/${token}. 
+        text: `Hei, Olet pyytänyt salasanan uudelleen asetusta. Aseta uusi salasana tästä linkistä: ${config.BASEURL}/resetpassword/${token}. 
         Linkki on voimassa 24 tuntia. Tähän sähköpostiin ei voi vastata.`,
-        html: `<p>Hei,</p><p>Salasanasi on resetoitu. Aseta uusi salasana tästä linkistä:</p><p><a href="${config.BASEURL}/resetpassword/${token}">Vaihda salasana</a></p>
+        html: `<p>Hei,</p><p>Olet pyytänyt salasanan uudelleen asetusta. Aseta uusi salasana tästä linkistä:</p><p><a href="${config.BASEURL}/resetpassword/${token}">Vaihda salasana</a></p>
         <p>Linkki on voimassa 24 tuntia.</p><p>Tähän sähköpostiin ei voi vastata.</p>`
     }
     
