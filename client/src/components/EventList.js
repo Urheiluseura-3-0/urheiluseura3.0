@@ -342,17 +342,15 @@ const EventList = () => {
     }
 
     return (
-        <div className='flex justify-center items-center h-screen bg-stone-100'>
-            <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
-                <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
-                {showAlert && <Notification message={alertMessage} />}
-                <div className="text-xs p-4">
-                    <div>
-                        < ListView />
-                    </div>
+        <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
+            <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
+            {showAlert && <Notification message={alertMessage} />}
+            <div className="text-xs p-4">
+                <div>
+                    < ListView />
                 </div>
-                {clickedEvent !== '' && <EventDetails one_event={clickedEvent} />}
             </div>
+            {clickedEvent !== '' && <EventDetails one_event={clickedEvent} />}
         </div>
     )
 }
