@@ -8,6 +8,7 @@ const registerRouter = require('./controllers/register.js')
 const eventRouter = require('./controllers/event.js')
 const teamRouter = require('./controllers/team.js')
 const resetRouter = require('./controllers/reset.js')
+const { jobRouter } = require('./controllers/job.js')
 const cookieParser = require('cookie-parser')
 const middleware = require('./utils/middleware.js')
 
@@ -27,6 +28,7 @@ app.use('/api/register', registerRouter)
 app.use('/api/event', eventRouter)
 app.use('/api/team', teamRouter)
 app.use('/api/reset', resetRouter)
+app.use('/api/job', jobRouter)
 
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'), function (err) {

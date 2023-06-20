@@ -65,7 +65,7 @@ userRouter.get('/', async (request, response) => {
         return response
             .clearCookie('Token')
             .status(200)
-            .json({ message: 'Succesfully logged out' })
+            .json({ message: 'Uloskirjautuminen onnistui' })
     } catch (error) {
         return response.status(400)
     }

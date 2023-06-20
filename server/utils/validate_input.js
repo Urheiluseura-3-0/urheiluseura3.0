@@ -59,6 +59,27 @@ const validateTime = (value) => {
     return false
 }
 
+const validateOnlyString = (value) => {
+    if(typeof value === 'string'){
+        return true
+    }
+    return false
+}
+
+const validateHours = (value) => {
+    if (value >=0 && value <=24){
+        return true
+    }
+    return false
+}
+
+const validateMinutes = (value) => {
+    if (value >=0 && value <=59){
+        return true
+    }
+    return false
+}
+
 const validateOptionalField = (value, field, max) => {
     const errors = []
     if(!validateLength(value, 0, max)){
@@ -66,6 +87,7 @@ const validateOptionalField = (value, field, max) => {
     }
     return errors
 }
+
 
 
 const validateMandatoryField = (value, field, min, max) => {
@@ -97,6 +119,22 @@ const validateMandatoryField = (value, field, min, max) => {
         }
     } else if (field === 'Aika') {
         if (!validateTime(value)) {
+            errors.push(`${field} on virheellinen`)
+        }
+    } else if (field === 'Ryhmä') {
+        if (!validateOnlyString(value)) {
+            errors.push(`${field} on virheellinen`)
+        }
+    } else if (field === 'Sijainti') {
+        if (!validateOnlyString(value)) {
+            errors.push(`${field} on virheellinen`)
+        }
+    }else if (field === 'Tunnit') {
+        if (!validateHours(value)) {
+            errors.push(`${field} on virheellinen`)
+        }
+    }else if (field === 'Minuutit') {
+        if (!validateMinutes(value)) {
             errors.push(`${field} on virheellinen`)
         }
     }
@@ -167,6 +205,20 @@ const validateResetPasswordInput = (password, passwordConfirm) => {
     return errors
 }
 
+const validateJobInput = (squad, context, date, location, hours, minutes) => {
+    let errors = []
+
+    errors = errors.concat(validateMandatoryField(squad, 'Ryhmä', 2, 40))
+    errors = errors.concat(validateOptionalField(context, 'Konteksti', 200))
+    errors = errors.concat(validateMandatoryField(date, 'Päivä', 2, 40))
+    errors = errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
+    errors = errors.concat(validateMandatoryField(hours, 'Tunnit', 1, 40))
+    errors = errors.concat(validateMandatoryField(minutes, 'Minuutit', 1, 40))
+
+
+    return errors
+}
+
 module.exports = {validateRegisterInput,
     validateLoginInput,
     validateLength,
@@ -178,5 +230,6 @@ module.exports = {validateRegisterInput,
     validateEmail,
     validateEventInput,
     validateTeamInput,
-    validateResetPasswordInput
+    validateResetPasswordInput,
+    validateJobInput
 }
