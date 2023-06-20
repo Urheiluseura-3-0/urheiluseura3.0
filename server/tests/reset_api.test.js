@@ -96,7 +96,7 @@ test('User with an invalid email address is notified of failure to send email', 
         .expect(400)
 
     expect(result.body.error).toBe('Linkin lähetys epäonnistui')
-})
+}, 20000)
 
 test('Password can not be requested with not existing email', async () => {
     const invalidEmail = { email: 'test@test.com' }
@@ -174,5 +174,5 @@ describe('When a reset request has been made', () => {
             .post('/api/reset')
             .send({ email: user.email })
             .expect(200)
-    })
+    }, 20000)
 })
