@@ -1,5 +1,5 @@
 # Build client
-FROM node:16-alpine AS client
+FROM node:18-alpine AS client
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -15,7 +15,7 @@ COPY client .
 RUN npm run build
 
 # Build server
-FROM node:16-alpine
+FROM node:18-alpine
 
 WORKDIR /usr/src/app
 

@@ -3,7 +3,7 @@ const jobRouter = require('express').Router()
 const { Job } = require('../models')
 const { User } = require('../models')
 const { tokenExtractor } = require('../utils/middleware')
-const { validateJobInput } = require('./validate_input.js')
+const { validateJobInput } = require('../utils/validate_input.js')
 
 function hoursToDecimal(hours,minutes) {
 

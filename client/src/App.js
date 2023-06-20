@@ -12,6 +12,8 @@ import UserMenu from './components/UserMenu'
 import DefaultMenu from './components/DefaultMenu'
 import Cookies from 'universal-cookie'
 import './style.css'
+import ResetPasswordRequest from './components/ResetPasswordRequest'
+import ResetPasswordForm from './components/ResetPasswordForm'
 
 
 
@@ -21,6 +23,7 @@ const App = () => {
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
     const allowedPaths = ['/event', '/job']
+    const notLoggedInPaths = ['/', '/register', '/resetpassword/', '/requestpassword']
 
     const handleLogout = () => {
         UserService.logout()
@@ -36,8 +39,8 @@ const App = () => {
 
     useEffect(() => {
         if (!token) {
-            if (location.pathname === '/register') {
-                navigate('/register')
+            if (notLoggedInPaths.includes(location.pathname) || location.pathname.includes('/resetpassword/')) {
+                navigate(location.pathname)
             } else {
                 navigate('/')
             }
@@ -48,7 +51,6 @@ const App = () => {
                 navigate('/home')
             }
         }
-
     }, [])
 
 
@@ -69,7 +71,9 @@ const App = () => {
                         <Route path="/register" element={<RegisterForm tokenHandler={handleSetToken} />} />
                         <Route path="/home" element={<FrontPage logout={handleLogout} />} />
                         <Route path="/event" element={<EventForm />} />
-                        <Route path="/job" element={<JobForm/>}/>
+                        <Route path="/job" element={<JobForm />} />
+                        <Route path="/requestpassword" element={<ResetPasswordRequest />} />
+                        <Route path="/resetpassword/:token" element={<ResetPasswordForm />} />
                     </Routes>
                 </div>
             </div>

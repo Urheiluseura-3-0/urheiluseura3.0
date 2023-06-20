@@ -37,7 +37,7 @@ const validatePhoneNumber = (value) => {
 }
 
 const validateEmail = (value) => {
-    if (value.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g) != null) {
+    if (value.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,5}$/g) != null) {
         return true
     }
     return false
@@ -194,7 +194,16 @@ const validateTeamInput = (name, category)=>{
     errors = errors.concat(validateOptionalField(category, 'Kategoria', 40))
 
     return errors
-}   
+}
+
+const validateResetPasswordInput = (password, passwordConfirm) => {
+    let errors = []
+
+    errors = errors.concat(validateMandatoryField(password, 'Salasana', 10, 30))
+    errors = errors.concat(validateMandatoryField(passwordConfirm, 'Vahvista salasana', 10, 30))
+
+    return errors
+}
 
 const validateJobInput = (squad, context, date, location, hours, minutes) => {
     let errors = []
@@ -214,10 +223,13 @@ module.exports = {validateRegisterInput,
     validateLoginInput,
     validateLength,
     validateNotEmpty,
+    validateDate,
+    validateTime,
     validateOnlyNumbers,
     validatePhoneNumber,
     validateEmail,
     validateEventInput,
     validateTeamInput,
+    validateResetPasswordInput,
     validateJobInput
 }
