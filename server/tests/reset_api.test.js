@@ -10,6 +10,7 @@ let user
 let reset
 
 let userEmail
+let brokenEmailUser
 
 
 beforeEach(async () => {
@@ -42,6 +43,17 @@ beforeEach(async () => {
             phoneNumber: '0509876542',
             email: 'testi@email.com'
         },
+        {
+            firstName: 'Rikki',
+            lastName: 'Sähköposti',
+            username: 'RikkiOn',
+            password: passwordHash,
+            address: 'Rikkitie 1',
+            postalCode: '03300',
+            city: 'Vantaa',
+            phoneNumber: '050123123',
+            email: 'rikkiniston@11112312312312132.333'
+        }
     ]
     await User.destroy({
         where: {},
@@ -49,7 +61,8 @@ beforeEach(async () => {
         cascade: true
     })
     await User.bulkCreate(initialUsers)
-    user = await User.findOne({where: {username: 'Pekka35'}})
+    user = await User.findOne({ where: { username: 'Pekka35' } })
+    brokenEmailUser = await User.findOne({ where: { username: 'RikkiOn' } })
 })
 
 test('Password request can be requested with valid email', async () => {
@@ -72,6 +85,17 @@ test('Password can not be requested with invalid email', async () => {
         .expect(400)
 
     expect(result.body.error).toBe('Virheellinen sähköpostiosoite')
+})
+
+test('User with an invalid email address is notified of failure to send email', async () => {
+    const brokenEmail = { email: brokenEmailUser.email }
+
+    const result = await api
+        .post('/api/reset')
+        .send(brokenEmail)
+        .expect(400)
+
+    expect(result.body.error).toBe('Linkin lähetys epäonnistui')
 })
 
 test('Password can not be requested with not existing email', async () => {
@@ -144,4 +168,11 @@ describe('When a reset request has been made', () => {
         expect(result.body.error).toBe('Salasanan nollauspyyntöä ei löytynyt')
 
     }, 20000)
+
+    test('Reset works also if there is already an existing token for user', async () => {
+        await api
+            .post('/api/reset')
+            .send({ email: user.email })
+            .expect(200)
+    })
 })
