@@ -89,8 +89,8 @@ resetRouter.post('/:token', async (request, response) => {
         const saltRounds = 10
         const passwordHash = await bcrypt.hash(password, saltRounds)
 
-        finduser.update({ password: passwordHash })
-        reset.destroy()
+        await finduser.update({ password: passwordHash })
+        await reset.destroy()
         return response.status(200).json({ message: 'Salasanan vaihto onnistui' })
     } catch {
         return response.status(400)
