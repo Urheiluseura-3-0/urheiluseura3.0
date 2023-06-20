@@ -40,7 +40,6 @@ const App = () => {
     useEffect(() => {
         if (!token) {
             if (notLoggedInPaths.includes(location.pathname) || location.pathname.includes('/resetpassword/')) {
-                console.log(location.pathname)
                 navigate(location.pathname)
             } else {
                 navigate('/')
