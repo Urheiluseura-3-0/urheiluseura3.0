@@ -46,7 +46,7 @@ describe('Password request', function () {
             cy.request('POST', 'http://localhost:3001/api/register/', secondUser)
         })
 
-
+        cy.request('GET', 'http://localhost:3001/api/login')
         cy.visit('http://localhost:3001')
 
         cy.get('#reset-password-link').click()

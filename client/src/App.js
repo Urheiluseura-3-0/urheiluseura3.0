@@ -23,7 +23,7 @@ const App = () => {
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
     const allowedPaths = ['/event', '/job']
-    const notLoggedInPaths = ['/', '/register', '/resetpassword', '/requestpassword']
+    const notLoggedInPaths = ['/', '/register', '/resetpassword/', '/requestpassword']
 
     const handleLogout = () => {
         UserService.logout()
@@ -39,7 +39,8 @@ const App = () => {
 
     useEffect(() => {
         if (!token) {
-            if (notLoggedInPaths.includes(location.pathname)) {
+            if (notLoggedInPaths.includes(location.pathname) || location.pathname.includes('/resetpassword/')) {
+                console.log(location.pathname)
                 navigate(location.pathname)
             } else {
                 navigate('/')
