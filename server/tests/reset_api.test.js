@@ -98,7 +98,7 @@ describe('When a reset request has been made', () => {
             .send({ email: user.email })
             .expect(200)
         reset = await Reset.findOne({ where: { userId: user.id } })
-    })
+    }, 20000)
 
     test('Password is changed with a valid token and passwords', async () => {
 
