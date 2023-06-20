@@ -50,7 +50,9 @@
       "tests",
       "migrations",
       "seeders",
-      "utils"
+      "utils",
+      "app.js",
+      "testing.js"
     ],
     "coverageReporters": [
       "json",
