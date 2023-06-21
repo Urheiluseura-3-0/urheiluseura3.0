@@ -250,16 +250,26 @@ const EventList = () => {
             resetSorters()
         }
     }
-    const resetSelections = () => {
-        setClickedEvent('')
-        resetSorters()
-    }
 
     const resetSorters = () => {
         setSortedByDate('')
         setSortedByLocation('')
         setSortedByStatus('')
         setSortedByTeam('')
+    }
+
+    const handleDateFromChange = (event) => {
+        const value = event.target.value
+        setDateFrom(value)
+        setClickedEvent('')
+        resetSorters()
+    }
+
+    const handleDateToChange = (event) => {
+        const value = event.target.value
+        setDateTo(value)
+        setClickedEvent('')
+        resetSorters()
     }
 
     const ListView = () => {
@@ -278,10 +288,10 @@ const EventList = () => {
                     <button id='timeline-button' className="text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
                     < DateFilters
                         showFilters={showFilters}
-                        resetSelections={resetSelections}
-                        setDateTo={setDateTo}
                         selectedDateFrom={selectedDateFrom}
                         selectedDateTo={selectedDateTo}
+                        handleDateFromChange={handleDateFromChange}
+                        handleDateToChange={handleDateToChange}
                     />
                 </div>
                 <div className='flex justify-center items-center mt-4'>
