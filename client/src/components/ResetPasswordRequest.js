@@ -10,7 +10,7 @@ const ResetPasswordRequest = () => {
 
     const [alertMessage, setAlertMessage] = useState('')
     const [alertType, setAlertType] = useState('')
-    const [showAlert, setShowAlert] =  useState(false)
+    const [showAlert, setShowAlert] = useState(false)
 
     const handlePasswordResetRequest = async (event) => {
         event.preventDefault()
@@ -39,37 +39,34 @@ const ResetPasswordRequest = () => {
     }
 
     return (
-        <div className='flex justify-center items-center h-screen bg-stone-100'>
-            <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
-                <h1 className='font-bold text-2xl text-center text-teal-500'>Unohditko salasanasi?</h1>
-                {showAlert && <Notification message={alertMessage} type={alertType}/>}
-                <p>Anna sähköpostiosoitteesi, niin sinulle lähetetään ohjeet salasanan vaihtamiseksi.</p>
-                <form>
-                    <div className='space-y-3'>
-                        <div className='pt-3'>
-                            <label className='block'>Sähköposti</label>
-                            <input id='email' type='text' className='peer border rounded p-2 w-full border-gray-300' maxLength={40} value={email} onChange={({ target }) => {
-                                setEmail(target.value)
-                                setIsEmailValid(target.value.length >= 5 && target.value.length <= 40)
-                            }}/>{email.length === 0 || isEmailValid ? null : (
-                                <p id='email-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Tarkista sähköpostiosoite
-                                </p>
-                            )}
-                        </div>
-                        <button id='send-request-button'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isEmailValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
-                            disabled={!isEmailValid}
-                            title={isEmailValid ? '' : 'Anna kelvollinen sähköpostiosoite'}
-                            type='submit'
-                            onClick={handlePasswordResetRequest}>Lähetä</button>
+        <div className='p-6 max-w-sm bg-white rounded-xl shadow-lg space-y-3 divide-y divide-slate-200'>
+            <h1 className='font-bold text-2xl text-center text-teal-500'>Unohditko salasanasi?</h1>
+            {showAlert && <Notification message={alertMessage} type={alertType} />}
+            <p>Anna sähköpostiosoitteesi, niin sinulle lähetetään ohjeet salasanan vaihtamiseksi.</p>
+            <form>
+                <div className='space-y-3'>
+                    <div className='pt-3'>
+                        <label className='block'>Sähköposti</label>
+                        <input id='email' type='text' className='peer border rounded p-2 w-full border-gray-300' maxLength={40} value={email} onChange={({ target }) => {
+                            setEmail(target.value)
+                            setIsEmailValid(target.value.length >= 5 && target.value.length <= 40)
+                        }} />{email.length === 0 || isEmailValid ? null : (
+                            <p id='email-error' className='peer-focus:hidden text-red-500 text-sm'>
+                                Tarkista sähköpostiosoite
+                            </p>
+                        )}
                     </div>
-                </form>
-                <div>
-                    <Link id='front-page-link' className='text-sm text-blue-700 underline' to="/">Takaisin etusivulle</Link>
+                    <button id='send-request-button'
+                        className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isEmailValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                        disabled={!isEmailValid}
+                        title={isEmailValid ? '' : 'Anna kelvollinen sähköpostiosoite'}
+                        type='submit'
+                        onClick={handlePasswordResetRequest}>Lähetä</button>
                 </div>
+            </form>
+            <div>
+                <Link id='front-page-link' className='text-sm text-blue-700 underline' to="/">Takaisin etusivulle</Link>
             </div>
-
         </div>
     )
 }
