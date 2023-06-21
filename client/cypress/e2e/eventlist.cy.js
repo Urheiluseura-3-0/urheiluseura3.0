@@ -139,8 +139,12 @@ describe('Eventlist', function () {
             headers: { Cookie: loggedUser.cookie }, body: events[5]
         })
 
-
         cy.visit('http://localhost:3001/home')
+
+        cy.get('#timeline-button').click()
+        cy.get('#datefrom').type('2023-05-19')
+        cy.get('#dateto').type('2023-06-30')
+        cy.get('#timeline-button').click()
     })
 
     it('User can see all events', function () {
