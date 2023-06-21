@@ -19,6 +19,7 @@ let user
 let loggedUser 
 let cookies
 let cryptedToken
+let job
 
 let finalToken
 
@@ -99,6 +100,8 @@ beforeEach(async () => {
     })
 
     await Job.bulkCreate(initialJobs)
+
+    job = await Job.findOne({where: {squad: 'EBT Naiset'}})
 
     user = {username: 'Pekka35', password: 'salainen1234'}
     loggedUser = await api.post('/api/login').send(user)
@@ -490,4 +493,81 @@ test('hoursToDecimal returns correct value', async () => {
 
     const result3 = hoursToDecimal(0, 45)
     expect(result3).toBe(0.75)
+})
+
+test('jobs for user return squads', async () => {
+    const response = await api
+        .get('/api/job')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.squad)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('EBT Naiset')
+    expect(contents).toContain('EBT PojatU19')
+})
+
+
+test('jobs for user return context', async () => {
+    const response = await api
+        .get('/api/job')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.context)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('Psykologinen valmennus')
+})
+
+test('jobs for user return location', async () => {
+    const response = await api
+        .get('/api/job')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.location)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain('Leppävaara')
+})
+
+test('jobs for user return hours', async () => {
+    const response = await api
+        .get('/api/job')
+        .set('Cookie', finalToken)
+    const contents = response.body.map(r => r.hours)
+    expect(response.body).toHaveLength(2)
+    expect(contents).toContain(1.25)
+    expect(contents).toContain(2.25)
+})
+
+test('Get by job id returns correct job', async () => {
+    const response = await api
+        .get(`/api/job/${job.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.squad).toContain('EBT Naiset')
+})
+
+test('Get by job returns error code if id is invalid', async () => {
+    const invalidId = 'ThisIdIsNotRight'
+    await api
+        .get(`/api/job/${invalidId}`)
+        .set('Cookie', finalToken)
+        .expect(400)
+})
+
+test('Get by job returns error code if token is invalid', async () => {
+    const invalidId = 'ThisIdIsNotRight'
+    await api
+        .get(`/api/job/${invalidId}`)
+        .set('Cookie', 'invalidtoken')
+        .expect(401)
+})
+
+test('Get by job returns error code if token is missing', async () => {
+    const invalidId = 'ThisIdIsNotRight'
+    await api
+        .get(`/api/job/${invalidId}`)
+        .set('Cookie', '')
+        .expect(401)
+})
+
+test('Get by job id returns teamname', async() => {
+    const response = await api
+        .get(`/api/job/${job.id}`)
+        .set('Cookie', finalToken)
+    expect(response.body.squad).toContain('EBT Naiset')
 })
