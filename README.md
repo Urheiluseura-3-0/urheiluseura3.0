@@ -3,6 +3,13 @@
 ![GHA badge](https://github.com/Urheiluseura-3-0/urheiluseura3.0/actions/workflows/main.yml/badge.svg)
 [![codecov](https://codecov.io/gh/Urheiluseura-3-0/urheiluseura3.0/branch/main/graph/badge.svg?token=HFJ3TZ8IKV)](https://codecov.io/gh/Urheiluseura-3-0/urheiluseura3.0)
 
+Urheiluseura3.0 on kehitysvaiheessa oleva Espoo Basket Team -urheiluseuran työntekijöille ja hallinnolle tarkoitettu webtietokantasovellus. Sovelluksen tarkoitus on helpottaa EBT:iä veroilmoitusten tekemisestä aiheutuvasta ylimääräisestä työstä. 
+
+Tämänhetkisessä sovelluksessa EBT:n toimitsijat ja valmentajat pystyvät lisäämään tehtyjä tapahtumia ja työtehtäviä. Jatkossa esimiehet pystyvät merkistemään valmentajien työtehtäviä hyväksytyiksi ja joukkuiden valvojat voivat hyväksyä toimitsijoiden lisäämiä tapahtumia.
+
+Valmiissa sovelluksessa kaikki työntekijöiden lisäämät tapahtumat ja työtehtävät saadaan koottua yhteen Excel-taulukkoon, joka voidaan laittaa verottajalle.
+
+
 Helsingin yliopiston Ohjelmistotuotantoprojekti, kesä 2023
 
 ## Projektilinkit
