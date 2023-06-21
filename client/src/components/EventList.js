@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import EventDetails from './EventDetails'
 import eventService from '../services/event'
 import Notification from './Notification'
+import DateFilters from './DateFilters'
 import { formatDate, getDate } from '../utils/listUtils'
 
 
@@ -152,7 +153,7 @@ const EventList = () => {
         }
     }
 
-    const handleClick = (event, one_event) => {
+    const handleEventClick = (event, one_event) => {
         event.preventDefault()
         clickedEvent.id === one_event.id ? setClickedEvent('') : setClickedEvent(one_event)
     }
@@ -249,39 +250,16 @@ const EventList = () => {
             resetSorters()
         }
     }
+    const resetSelections = () => {
+        setClickedEvent('')
+        resetSorters()
+    }
 
     const resetSorters = () => {
         setSortedByDate('')
         setSortedByLocation('')
         setSortedByStatus('')
         setSortedByTeam('')
-    }
-
-
-
-    const ShowFilters = () => {
-        if (showFilters === 'Pienennä') {
-            return (
-                <div className='flex justify px-5 py-2'>
-                    <div>
-                        <label className="block mt-2">Tapahtumat alkaen</label>
-                        <input className='border rounded m-2 border-gray-300' type='date' id='datefrom' value={selectedDateFrom} onChange={({ target }) => {
-                            setDateFrom(target.value)
-                            setClickedEvent('')
-                            resetSorters()
-                        }}></input>
-                    </div>
-                    <div>
-                        <label className="block mt-2">Tapahtumat asti</label>
-                        <input className='border rounded m-2 border-gray-300' type='date' id='dateto' value={selectedDateTo} onChange={({ target }) => {
-                            setDateTo(target.value)
-                            setClickedEvent('')
-                            resetSorters()
-                        }}></input>
-                    </div>
-                </div>
-            )
-        }
     }
 
     const ListView = () => {
@@ -298,7 +276,13 @@ const EventList = () => {
                 <div>
                     <span>Ottelut aikaväliltä {formatDate(selectedDateFrom)} - {formatDate(selectedDateTo)}</span>
                     <button id='timeline-button' className="text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border border-gray-500 hover:border-teal-500 rounded" onClick={handleshowFilters}>{showFilters}</button>
-                    < ShowFilters />
+                    < DateFilters
+                        showFilters={showFilters}
+                        resetSelections={resetSelections}
+                        setDateTo={setDateTo}
+                        selectedDateFrom={selectedDateFrom}
+                        selectedDateTo={selectedDateTo}
+                    />
                 </div>
                 <div className='flex justify-center items-center mt-4'>
                     <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
@@ -313,7 +297,7 @@ const EventList = () => {
                             </thead>
                             <tbody>
                                 {shownEvents.map((one_event, index) =>
-                                    <tr id='eventrow' className={`${one_event.id === clickedEvent.id ? 'bg-gray-400' : index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`} key={one_event.id} onClick={(event) => handleClick(event, one_event)}>
+                                    <tr id='eventrow' className={`${one_event.id === clickedEvent.id ? 'bg-gray-400' : index % 2 === 0 ? 'bg-white' : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`} key={one_event.id} onClick={(event) => handleEventClick(event, one_event)}>
                                         <td className='p-4'>{getDate(one_event.dateTime)}</td>
                                         <td className='p-4'>{one_event.location}</td>
                                         <td className='p-4'>{one_event.EventTeam.name}</td>
