@@ -32,4 +32,4 @@ COPY server .
 COPY --from=client /usr/src/app/build build
 
 # Set the start command
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
