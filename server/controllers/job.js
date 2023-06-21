@@ -74,6 +74,38 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
     }
 })
 
+jobRouter.get('/', tokenExtractor, async (request, response) => {
+    try {
+        const finduser = await User.findByPk(request.decodedToken.id)
+        const jobs = await finduser.getCreatedJobs()
+        return response.json(jobs)
+
+    } catch (error) {
+        return response.status(400)
+    }
+
+})
+
+jobRouter.get('/:id', tokenExtractor, async (request, response) => {
+    try{
+
+        const job= await Job.findByPk(request.params.id)
+
+        if(job ){
+            if (job.createdById === request.decodedToken.id) {return response.json(job)}
+            else{
+                return response.status(400).json({error: 'Virheellinen käyttäjän id'})
+            }
+        
+        }else{
+            return response.status(404).end()
+        }
+
+    }catch(error){
+        return response.status(400).end()
+    }
+})
+
 
 
 module.exports = { jobRouter, hoursToDecimal }
