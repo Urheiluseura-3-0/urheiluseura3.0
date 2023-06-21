@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import EventDetails from './EventDetails'
 import eventService from '../services/event'
 import Notification from './Notification'
+import { formatDate, getDate } from '../utils/listUtils'
 
 
 const EventList = () => {
@@ -26,15 +27,6 @@ const EventList = () => {
 
     const [alertMessage, setAlertMessage] = useState('')
     const [showAlert, setShowAlert] = useState(false)
-
-    const formatDate = (date) => {
-        const formattedDate = new Date(date)
-        const day = formattedDate.getDate().toString().padStart(2, '0')
-        const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0')
-        const year = formattedDate.getFullYear()
-
-        return `${day}.${month}.${year}`
-    }
 
     useEffect(() => {
         eventService.getEvents().then(initialEvents => {
@@ -158,11 +150,6 @@ const EventList = () => {
             setShownEvents(sorted)
             setSortedByStatus('confirmedFirst')
         }
-    }
-
-    const getDate = (datetime) => {
-        const date = new Date(datetime)
-        return date.toLocaleDateString()
     }
 
     const handleClick = (event, one_event) => {
