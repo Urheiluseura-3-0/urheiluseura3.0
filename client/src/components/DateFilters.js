@@ -1,4 +1,9 @@
-const DateFilters = ({ showFilters, selectedDateFrom, selectedDateTo, handleDateFromChange, handleDateToChange }) => {
+const DateFilters = (
+    {   showFilters,
+        selectedDateFrom,
+        selectedDateTo,
+        handleDateFromChange,
+        handleDateToChange }) => {
 
     if (showFilters === 'Pienennä') {
         return (
