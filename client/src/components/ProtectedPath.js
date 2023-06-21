@@ -26,16 +26,11 @@ const getRoles = (token) => {
 
 const ProtectedPath = ({ token, acceptedRoles }) => {
     const roles = getRoles(token)
-    console.log('Roolit', roles)
-    console.log('Hyväksytyt', acceptedRoles)
     const isRoleOk = roles.some(role => acceptedRoles.includes(role))
-    console.log(isRoleOk)
 
     if (isRoleOk) {
-        console.log('Rooli kelpaa')
         return <Outlet />
     } else {
-        console.log('Rooli väärä')
         if (roles.includes('notLogged')) {
             return <Navigate to='/' />
         } else {

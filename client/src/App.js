@@ -20,11 +20,8 @@ import ProtectedPath from './components/ProtectedPath'
 
 const App = () => {
     const navigate = useNavigate()
-    //    const location = useLocation()
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
-    //    const allowedPaths = ['/event']//, '/job']
-    //    const notLoggedInPaths = ['/', '/register', '/resetpassword/', '/requestpassword']
 
     const handleLogout = () => {
         UserService.logout()
@@ -37,23 +34,6 @@ const App = () => {
         const value = (cookies.get('Token'))
         setToken(value)
     }
-
-    /*     useEffect(() => {
-        if (!token) {
-            if (notLoggedInPaths.includes(location.pathname) || location.pathname.includes('/resetpassword/')) {
-                navigate(location.pathname)
-            } else {
-                navigate('/')
-            }
-        } else {
-            if (allowedPaths.includes(location.pathname)) {
-                navigate(location.pathname)
-            } else {
-                navigate('/home')
-            }
-        }
-    }, []) */
-
 
     return (
         <div className='flex flex-col min-h-screen'>
