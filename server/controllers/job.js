@@ -81,7 +81,7 @@ jobRouter.get('/', tokenExtractor, async (request, response) => {
         return response.json(jobs)
 
     } catch (error) {
-        return response.status(400)
+        return response.status(400).end()
     }
 
 })
@@ -89,12 +89,13 @@ jobRouter.get('/', tokenExtractor, async (request, response) => {
 jobRouter.get('/:id', tokenExtractor, async (request, response) => {
     try{
 
-        const job= await Job.findByPk(request.params.id)
+        const job = await Job.findByPk(request.params.id)
 
         if(job ){
-            if (job.createdById === request.decodedToken.id) {return response.json(job)}
+            if (job.createdById === request.decodedToken.id) {
+                return response.json(job) }
             else{
-                return response.status(400).json({error: 'Virheellinen käyttäjän id'})
+                return response.status(400).json({error: 'Virheellinen käyttäjän id'}).end()
             }
         
         }else{
