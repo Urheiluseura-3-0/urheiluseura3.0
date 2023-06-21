@@ -5,26 +5,26 @@ const { User } = require('../models')
 const { tokenExtractor } = require('../utils/middleware')
 const { validateJobInput } = require('../utils/validate_input.js')
 
-function hoursToDecimal(hours,minutes) {
+function hoursToDecimal(hours, minutes) {
 
-    if( minutes === 0) {
+    if (minutes === 0) {
         return hours
     }
-    const decimalHours = hours + minutes/60
+    const decimalHours = hours + minutes / 60
     return decimalHours
 }
 
 function checkErrors(parameter, message, response) {
-    if (!parameter){
-        return response.status(401).json({ error: message})
+    if (!parameter) {
+        return response.status(401).json({ error: message })
     }
 }
 
 jobRouter.post('/', tokenExtractor, async (request, response) => {
 
-    try{
+    try {
 
-        const {squad, context, date, location, hours, minutes } = request.body
+        const { squad, context, date, location, hours, minutes } = request.body
 
         const intHours = parseInt(hours)
         const intMinutes = parseInt(minutes)
@@ -50,15 +50,15 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
         const finduser = await User.findByPk(request.decodedToken.id)
 
         if (!finduser) {
-            return response.status(401).json({error: 'Virhe hakiessa käyttäjää'})
+            return response.status(401).json({ error: 'Virhe hakiessa käyttäjää' })
         }
 
         const job = new Job({
-            createdById : finduser.dataValues.id,
-            squad : squad,
-            context : context,
+            createdById: finduser.dataValues.id,
+            squad: squad,
+            context: context,
             dateTime: date,
-            location : location,
+            location: location,
             hours: workhours
 
         })
@@ -68,8 +68,29 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
 
 
         return response.status(200).json(savedJob)
- 
-    }catch(error){
+
+    } catch (error) {
+        return response.status(400)
+    }
+})
+
+jobRouter.get('/unaccepted', tokenExtractor, async (request, response) => {
+
+    try {
+        const finduser = await User.findByPk(request.decodedToken.id)
+        if (finduser.isForeman === 1) {
+            const jobs = await Job.findAll({
+                where: {
+                    status: 0
+                }
+            })
+
+            return response.json(jobs)
+        } else {
+            return response.status(403).json({ error: 'Oikeudet puuttuu' })
+        }
+
+    } catch (error) {
         return response.status(400)
     }
 })
