@@ -33,9 +33,9 @@ SERVER
 │   └── ...
 ├── tests
 │   └── ...
-├── utils
-│   ├── config.js
-│   ├── db.js
-│   ├── middleware.js
-│   ├── rollback.js
-│   └── validate_input.js
+└── utils
+    ├── config.js
+    ├── db.js
+    ├── middleware.js
+    ├── rollback.js
+    └── validate_input.js
