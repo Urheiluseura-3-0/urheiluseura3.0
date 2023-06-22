@@ -41,7 +41,10 @@ userRouter.post('/', async (request, response) => {
             username: user.username,
             id: user.id,
             isWorker: user.isWorker,
-            isForeman: user.isForeman
+            isForeman: user.isForeman,
+            isCoach: user.isCoach,
+            isSupervisor: user.isSupervisor,
+            isAdmin: user.isAdmin
         }
 
         const token = jwt.sign(
