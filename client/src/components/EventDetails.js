@@ -1,6 +1,6 @@
 
-const EventDetail = ({ one_event }) => {
-    const eventDetails = one_event
+const EventDetail = ({ oneEvent }) => {
+    const eventDetails = oneEvent
     const dateTime = new Date(eventDetails.dateTime)
     const createdAtDate = new Date(eventDetails.createdAt)
 
