@@ -40,7 +40,9 @@ const EventDetail = ({ one_event }) => {
                         </tr>
                         <tr>
                             <td className='p-2 font-semibold'>Luotu</td>
-                            <td className='p-2'>{createdAtDate.toLocaleDateString() + ' ' +  createdAtDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                            <td className='p-2'>
+                                {createdAtDate.toLocaleDateString() + ' '
+                                +  createdAtDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                         </tr>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Hyväksyjän nimi</td>
