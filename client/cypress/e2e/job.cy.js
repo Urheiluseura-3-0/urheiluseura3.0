@@ -114,7 +114,10 @@ describe('Job', function () {
     describe('Context check', function () {
 
         it('Context will not be too long', function () {
-            cy.get('input[id="context"]').type('Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura.Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, niin harraste-, kilpa- kuin huipputasolla.')
+            cy.get('input[id="context"]').type('Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. \
+            EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura. \
+            Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, \
+            niin harraste-, kilpa- kuin huipputasolla.')
             cy.get('input[id="context"]').invoke('val').should('have.length', 200)
         })
     })
