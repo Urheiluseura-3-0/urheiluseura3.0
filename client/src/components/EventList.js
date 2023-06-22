@@ -310,10 +310,12 @@ const EventList = () => {
             <div className="text-xs p-4">
                 < ViewButtons
                     name='Events'
+                    nameForUI='Tapahtumat'
                     viewSelected={viewSelected}
                     handleViewSelected={handleViewSelected}
                 />
                 < DateFilters
+                    nameForUI='Tapahtumat'
                     showFilters={showDateFilters}
                     selectedDateFrom={selectedDateFrom}
                     selectedDateTo={selectedDateTo}

@@ -1,6 +1,7 @@
 
 const ViewButtons = ({
     name,
+    nameForUI,
     viewSelected,
     handleViewSelected
 }) => {
@@ -22,7 +23,7 @@ const ViewButtons = ({
                     : 'ring-1 ring-gray-200  text-gray-600 hover:bg-emerald-200'} px-5 py-2 m-2 rounded-full`}
                 onClick={() => handleViewSelected('confirmed')}
                 disabled={viewSelected === 'confirmed'}>
-                Hyväksytyt tapahtumat
+                Hyväksytyt {nameForUI}
             </button>
             <button id={`all${name}-button`}
                 className={`${viewSelected === 'all'
@@ -30,7 +31,7 @@ const ViewButtons = ({
                     : 'ring-1 ring-gray-200  text-gray-600 hover:bg-blue-200'} px-5 py-2 m-2 rounded-full`}
                 onClick={() => handleViewSelected('all')}
                 disabled={viewSelected === 'all'}>
-                Kaikki tapahtumat
+                Kaikki {nameForUI}
             </button>
         </div>
     )
