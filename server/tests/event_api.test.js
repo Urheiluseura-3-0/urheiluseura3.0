@@ -15,6 +15,15 @@ const handleToken = (token) => {
     
 }
 
+const createEvent = async (newEvent, token) => {
+    return await api
+        .post('/api/event')
+        .set('Cookie', token)
+        .send(newEvent)
+}
+
+
+
 let user
 let loggedUser 
 let cookies
@@ -25,6 +34,7 @@ let team
 let teams
 let event
 
+let newEvent
 
 beforeEach(async () => {
 
@@ -146,13 +156,8 @@ beforeEach(async () => {
 
     team = await Team.findOne({where: {name: 'EBT SB'}})
 
-})
+    newEvent = {
 
-test('event can be added with correct input', async () =>{
-
-    const newEvent = {
-
-        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -160,244 +165,123 @@ test('event can be added with correct input', async () =>{
         description: 'Lipunmyynti'
     }
 
-    await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(200)
+    
+})
+
+test('event can be added with correct input', async () =>{
+
+    newEvent = {...newEvent, team:team.id}
+
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(200)
 })
 
 
 test('event can be added without description', async () => {
 
-    const newEvent = {
-
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: ''
-    }
-
-    await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(200)
+    newEvent = {...newEvent, description:'', team:team.id}
+    
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(200)
 })
 
 
 test('cannot add an event if team is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, team:''}
 
-        team: '',
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
     
-    expect(result.body.error).toContain('Virheellinen tiimi')
+    expect(response.body.error).toContain('Virheellinen tiimi')
 })
 
 test('cannot add an event if opponent is missing', async () => {
 
+    newEvent = {...newEvent, opponent:'', team:team.id}
 
-
-    const newEvent = {
-
-        team: team.id,
-        opponent: '',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
     
-    expect(result.body.error).toBe('Virheellinen vastustaja')
+    expect(response.body.error).toBe('Virheellinen vastustaja')
 })
 
 test('cannot add an event if location is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, location:'', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: '',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('Virheellinen sijainti')
+    expect(response.body.error).toBe('Virheellinen sijainti')
 })
 
 test('cannot add an event if date is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, date:'', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('Virheellinen päivämäärä')
+    expect(response.body.error).toBe('Virheellinen päivämäärä')
 })
 
 test('cannot add an event if time is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, time:'', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'',
-        description: 'Lipunmyynti'
-    }
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('Virheellinen aika')
+    expect(response.body.error).toBe('Virheellinen aika')
 })
 
 
 
 test('cannot add an event if token is invalid', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    const response = await createEvent(newEvent, 'invalidToken')
+    expect(response.status).toBe(401)
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', 'InvalidToken')
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toContain('Kirjaudu ensin sisään')
+    expect(response.body.error).toContain('Kirjaudu ensin sisään')
 })
 
 test('cannot add an event if some input is too short', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, opponent:'H', team:team.id}
 
-        team: team.id,
-        opponent: 'H',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
+    expect(response.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 })
 
 test('cannot add an event if some input is too long', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, opponent:'Honka 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
+    expect(response.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 })
 
 test('cannot add an event if team is not found', async () => {
 
-    const newEvent = {
-
-        team: 12345,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-    
-    expect(result.body.error).toContain('Tiimin hakeminen epäonnistui')
+    newEvent = {...newEvent, team:1234566}
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(401)
+    expect(response.body.error).toContain('Tiimin hakeminen epäonnistui')
 })
 
 test('correct number of events in database', async () => {
     
-    const NewEvent = {
+    newEvent = {...newEvent, team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date: '2023-06-19',
-        time:'12:30',
-        description: 'Siivous'
-    }
-
-    await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(NewEvent)
-        .expect(200)
+    const response = await createEvent(newEvent, finalToken)
+    expect(response.status).toBe(200)
     
     const events = await Event.findAll()
     expect(events.length).toBe(4)
