@@ -3,7 +3,7 @@ import EventDetails from './EventDetails'
 import eventService from '../services/event'
 import Notification from './Notification'
 import DateFilters from './DateFilters'
-import { formatDate, getDate } from '../utils/listUtils'
+import { getLocalizedDate } from '../utils/listUtils'
 
 
 const EventList = () => {
@@ -40,10 +40,10 @@ const EventList = () => {
             setAllEvents(sortedEvents)
 
             const currentDate = new Date()
-            const oneMonthsAgo = new Date()
-            oneMonthsAgo.setMonth(currentDate.getMonth() - 1)
+            const oneMonthAgo = new Date()
+            oneMonthAgo.setMonth(currentDate.getMonth() - 1)
 
-            setDateFrom(oneMonthsAgo.toISOString().split('T')[0])
+            setDateFrom(oneMonthAgo.toISOString().split('T')[0])
             setDateTo(currentDate.toISOString().split('T')[0])
         })
 
@@ -59,14 +59,15 @@ const EventList = () => {
 
     const sortByTeam = (event) => {
         event.preventDefault()
+
         setSortedByDate('')
         setSortedByLocation('')
         setSortedByStatus('')
+
         const sorted = [...shownEvents]
         sorted.sort((a, b) => {
             const teamA = a.EventTeam.name.toLowerCase()
             const teamB = b.EventTeam.name.toLowerCase()
-
             if (teamA > teamB) {
                 return 1
             } else if (teamA < teamB) {
@@ -89,6 +90,7 @@ const EventList = () => {
 
     const sortByDate = (event) => {
         event.preventDefault()
+
         setSortedByLocation('')
         setSortedByTeam('')
         setSortedByStatus('')
@@ -99,6 +101,7 @@ const EventList = () => {
             const dateB = new Date(b.dateTime).getTime()
             return dateA - dateB
         })
+
         if (sortedByDate === 'asc') {
             setSortedByDate('desc')
             setShownEvents(sorted)
@@ -110,14 +113,15 @@ const EventList = () => {
 
     const sortByLocation = (event) => {
         event.preventDefault()
+
         setSortedByDate('')
         setSortedByTeam('')
         setSortedByStatus('')
+
         const sorted = [...shownEvents]
         sorted.sort((a, b) => {
             const locationA = a.location.toLowerCase()
             const locationB = b.location.toLowerCase()
-
             if (locationA > locationB) {
                 return 1
             } else if (locationA < locationB) {
@@ -138,9 +142,11 @@ const EventList = () => {
 
     const sortByStatus = (event) => {
         event.preventDefault()
+
         setSortedByDate('')
         setSortedByTeam('')
         setSortedByLocation('')
+
         const sorted = [...shownEvents]
         sorted.sort((a, b) => {
             const statusA = a.status
@@ -210,8 +216,9 @@ const EventList = () => {
         clickedEvent.id === one_event.id ? setClickedEvent('') : setClickedEvent(one_event)
     }
 
-    const handleshowFilters = (event) => {
+    const handleShowDateFilters = (event) => {
         event.preventDefault()
+
         if (showDateFilters === 'Pienennä') {
             setShowDateFilters('Valitse aikaväli')
         } else {
@@ -220,6 +227,7 @@ const EventList = () => {
     }
     const handleShowUnconfirmed = (event) => {
         event.preventDefault()
+
         if (unconfirmedClicked) {
             setUnconfirmedClicked(false)
         } else {
@@ -235,6 +243,7 @@ const EventList = () => {
 
     const handleShowConfirmed = (event) => {
         event.preventDefault()
+
         if (confirmedClicked) {
             setConfirmedClicked(false)
         } else {
@@ -249,6 +258,7 @@ const EventList = () => {
 
     const handleAllClicked = (event) => {
         event.preventDefault()
+
         if (allClicked) {
             setAllClicked(false)
         } else {
@@ -316,21 +326,15 @@ const EventList = () => {
                         Kaikki tapahtumat
                     </button>
                 </div>
-                <div>
-                    <span>Ottelut aikaväliltä {formatDate(selectedDateFrom)} - {formatDate(selectedDateTo)}</span>
-                    <button
-                        id='timeline-button'
-                        className='text-gray-600 font-semibold hover:text-gray py-1 px-2 m-2 border
-                                   border-gray-500 hover:border-teal-500 rounded'
-                        onClick={handleshowFilters}>{showDateFilters}</button>
-                    < DateFilters
-                        showFilters={showDateFilters}
-                        selectedDateFrom={selectedDateFrom}
-                        selectedDateTo={selectedDateTo}
-                        handleDateFromChange={handleDateFromChange}
-                        handleDateToChange={handleDateToChange}
-                    />
-                </div>
+                < DateFilters
+                    showFilters={showDateFilters}
+                    selectedDateFrom={selectedDateFrom}
+                    selectedDateTo={selectedDateTo}
+                    handleDateFromChange={handleDateFromChange}
+                    handleDateToChange={handleDateToChange}
+                    handleShowDateFilters={handleShowDateFilters}
+                    showDateFilters={showDateFilters}
+                />
                 <div className='flex justify-center items-center mt-4'>
                     <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
                         <table id='events' className='text-center text-xs bg-stone-100'>
@@ -373,7 +377,7 @@ const EventList = () => {
                                                 : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`}
                                         key={one_event.id}
                                         onClick={(event) => handleEventClick(event, one_event)}>
-                                        <td className='p-4'>{getDate(one_event.dateTime)}</td>
+                                        <td className='p-4'>{getLocalizedDate(one_event.dateTime)}</td>
                                         <td className='p-4'>{one_event.location}</td>
                                         <td className='p-4'>{one_event.EventTeam.name}</td>
                                         <td

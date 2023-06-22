@@ -10,9 +10,9 @@ const formatDate = (date) => {
     return `${day}.${month}.${year}`
 }
 
-const getDate = (datetime) => {
+const getLocalizedDate = (datetime) => {
     const date = new Date(datetime)
     return date.toLocaleDateString()
 }
 
-export { formatDate, getDate }
+export { formatDate, getLocalizedDate }
