@@ -48,6 +48,18 @@ beforeEach(async () => {
             city: 'Helsinki',
             phoneNumber: '0509876543',
             email: 'osoite2@email.com'
+        },
+        {
+            firstName: 'Teemu',
+            lastName: 'Testinen',
+            username: 'Teemu35',
+            password: passwordHash,
+            address: 'Osoite',
+            postalCode: '00300',
+            city: 'Helsinki',
+            phoneNumber: '0509876543',
+            email: 'osoite3@email.com',
+            isForeman: 1
         }
     ]
 
@@ -62,12 +74,13 @@ beforeEach(async () => {
     const dateString = '2023-06-19T12:30:00.000Z'
     const timestamp = Date.parse(dateString)
     const dateTime = new Date(timestamp)
-    user = await User.findOne({where: {username: 'Pekka35'}})
+    const pekka = await User.findOne({where: {username: 'Pekka35'}})
     const mikko = await User.findOne({where: {username: 'Mikko35'}})
+    const teemu = await User.findOne({where: {username: 'Teemu35'}})
 
     const initialJobs = [
         {
-            createdById: user.id,
+            createdById: pekka.id,
             squad: 'EBT Naiset',
             context: 'Psykologinen valmennus',
             dateTime: dateTime,
@@ -75,7 +88,7 @@ beforeEach(async () => {
             hours: 1.25
         },
         {
-            createdById: user.id,
+            createdById: pekka.id,
             squad: 'EBT PojatU19',
             context: 'Psykologinen valmennus',
             dateTime: dateTime,
@@ -89,6 +102,16 @@ beforeEach(async () => {
             dateTime: dateTime,
             location: 'Leppävaara',
             hours: 4.75
+        },
+        {
+            createdById: mikko.id,
+            squad: 'EBT Miehet',
+            context: 'Lajivalmennus',
+            dateTime: dateTime,
+            location: 'Espoo',
+            hours: 1.5,
+            status: 1,
+            confirmedById: teemu.id
         }
 
     ]
@@ -398,7 +421,7 @@ test('correct number of events in database', async () =>{
         .expect(200)
 
     const jobs = await Job.findAll()
-    expect(jobs.length).toBe(4)
+    expect(jobs.length).toBe(5)
 })
 
 test('validation does not accept too short squad name', async () =>{
@@ -490,4 +513,28 @@ test('hoursToDecimal returns correct value', async () => {
 
     const result3 = hoursToDecimal(0, 45)
     expect(result3).toBe(0.75)
+})
+
+test('basic user can not fetch unaccepted events', async () => {
+    const response = await api
+        .get('/api/job/unaccepted')
+        .set('Cookie', finalToken)
+        .expect(403)
+    expect(response.body.error).toContain('Oikeudet puuttuu')
+})
+
+test('foreman can fetch unaccepted events', async () => {
+
+    user = {username: 'Teemu35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = handleToken(cryptedToken)
+
+    const response = await api
+        .get('/api/job/unaccepted')
+        .set('Cookie', finalToken)
+        .expect(200)
+    expect(response.body).toHaveLength(3)
 })
