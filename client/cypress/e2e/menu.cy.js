@@ -77,7 +77,7 @@ describe('Menu', function() {
             cy.get('#frontpage-link').click()
             cy.contains('Tapahtumat')
             cy.contains('Odottaa hyväksyntää')
-            cy.contains('Hyväksytyt tapahtumat')
+            cy.contains('Hyväksytyt Tapahtumat')
             cy.url().should('include', '/home')
         })
 

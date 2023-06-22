@@ -156,7 +156,7 @@ describe('Eventlist', function () {
         cy.get('#unconfirmedEvents-button')
             .should('have.class', 'bg-rose-400')
             .should('have.class', 'ring-rose-600')
-        cy.get('#eventrow').each(($row) => {
+        cy.get('#eventsrow').each(($row) => {
             cy.wrap($row)
                 .find('td:nth-child(4)')
                 .should('contain', 'Odottaa hyväksyntää')
@@ -180,7 +180,7 @@ describe('Eventlist', function () {
             cy.get('#timeline-button').click()
             cy.get('#datefrom').type('2023-05-30')
             cy.get('#dateto').type('2023-06-15')
-            cy.get('#events').find('#eventrow').should('have.length', 1)
+            cy.get('#events').find('#eventsrow').should('have.length', 1)
         })
 
         it('User can sort unconfirmed events by day', function () {
@@ -255,7 +255,7 @@ describe('Eventlist', function () {
             cy.get('#timeline-button').click()
             cy.get('#datefrom').type('2023-05-30')
             cy.get('#dateto').type('2023-06-15')
-            cy.get('#events').find('#eventrow').should('have.length', 1)
+            cy.get('#events').find('#eventsrow').should('have.length', 1)
         })
 
         it('User can hide timeline for all events', function () {
