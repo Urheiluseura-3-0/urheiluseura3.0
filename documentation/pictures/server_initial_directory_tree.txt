@@ -1,5 +1,6 @@
 ### Serverin hakemisto- ja tiedostorakenne
 
+SERVER
 ├── index.js
 ├── app.js
 ├── build
