@@ -5,7 +5,7 @@
 
 Urheiluseura3.0 on kehitysvaiheessa oleva websovellus, joka on tarkoitettu Espoo Basket Team -urheiluseuran työntekijöille ja hallinnolle. Sovelluksen on tarkoitus helpottaa verottajalle lähetettävien ilmoitusten keräämistä.
 
-Tämänhetkisessä sovelluksessa EBT:n toimitsijat ja valmentajat pystyvät lisäämään tehtyjä tapahtumia ja työtehtäviä. Jatkossa esimiehet pystyvät merkistemään valmentajien työtehtäviä hyväksytyiksi ja joukkuiden valvojat voivat hyväksyä toimitsijoiden lisäämiä tapahtumia.
+Tämänhetkisessä sovelluksessa EBT:n toimitsijat ja valmentajat pystyvät lisäämään tapahtumia ja työtehtäviä. Jatkossa esimiehet pystyvät merkistemään valmentajien työtehtäviä hyväksytyiksi ja joukkuiden valvojat voivat hyväksyä toimitsijoiden lisäämiä tapahtumia.
 
 Valmiissa sovelluksessa kaikki työntekijöiden lisäämät tapahtumat ja työtehtävät saadaan koottua yhteen Excel-taulukkoon, joka voidaan laittaa verottajalle.
 
