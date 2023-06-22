@@ -1,5 +1,6 @@
 const {validateRegisterInput, validateLoginInput, validateResetPasswordInput} = require('../utils/validate_input')
-const {validateOnlyNumbers, validatePhoneNumber, validateEmail, validateNotEmpty, validateLength, validateDate, validateTime} = require('../utils/validate_input')
+const {validateOnlyNumbers, validatePhoneNumber, validateEmail,
+    validateNotEmpty, validateLength, validateDate, validateTime} = require('../utils/validate_input')
 
 test('not empty returns true if not empty', () => {
     const result = validateNotEmpty('Testisyöte')
@@ -127,6 +128,7 @@ test('validate reset password input returns errors if one of the inputs is too s
 })
 
 test('validate reset password input returns errors if one of the inputs is too long', () => {
-    const result = validateResetPasswordInput('salaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'salasana123')
+    const result = validateResetPasswordInput(
+        'salaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'salasana123')
     expect (result).toHaveLength(1)
 })

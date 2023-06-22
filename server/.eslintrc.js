@@ -28,6 +28,13 @@ module.exports = {
         'semi': [
             'error',
             'never'
+        ],
+        'max-len': [
+            'error',
+            {
+                'code': 120,
+                'tabWidth':4
+            }
         ]
     }
 }

@@ -446,7 +446,9 @@ test('validation does not accept too long context', async () =>{
     const newJob = {
 
         squad: 'EBT Tytöt',
-        context: 'Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura.Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, niin harraste-, kilpa- kuin huipputasolla.',
+        context: 'Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. \
+        EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura. \
+        Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, niin harraste-, kilpa- kuin huipputasolla.',
         date: '2023-06-11',
         location: 'Leppävaara',
         hours: '3',

@@ -107,7 +107,8 @@ const validateMandatoryField = (value, field, min, max) => {
         }
     } else if (field === 'Puhelinnumero') {
         if (!validatePhoneNumber(value)) {
-            errors.push(` ${field} voi alkaa numerolla tai merkillä + ja sisältää muuten vain numeroita, välilyöntejä ja yhdysmerkkejä`)
+            errors.push(` ${field} voi alkaa numerolla tai merkillä + 
+            ja sisältää muuten vain numeroita, välilyöntejä ja yhdysmerkkejä`)
         }
     } else if (field === 'E-mail') {
         if (!validateEmail(value)) {
