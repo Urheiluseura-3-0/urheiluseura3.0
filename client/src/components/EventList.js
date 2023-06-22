@@ -3,6 +3,8 @@ import EventDetails from './EventDetails'
 import eventService from '../services/event'
 import Notification from './Notification'
 import DateFilters from './DateFilters'
+import ViewButtons from './ViewButtons'
+import ViewTable from './ViewTable'
 import { getLocalizedDate } from '../utils/listUtils'
 
 
@@ -10,9 +12,7 @@ const EventList = () => {
 
     const [showDateFilters, setShowDateFilters] = useState('Valitse aikaväli')
 
-    const [unconfirmedClicked, setUnconfirmedClicked] = useState(true)
-    const [confirmedClicked, setConfirmedClicked] = useState(false)
-    const [allClicked, setAllClicked] = useState(false)
+    const [viewSelected, setViewSelected] = useState('unconfirmed')
 
     const [selectedStatus, setStatus] = useState('0')
     const [selectedDateFrom, setDateFrom] = useState('')
@@ -170,8 +170,8 @@ const EventList = () => {
         if (selectedStatus === '') {
             return filtered
         }
-        const filteredEvents = filtered.filter((one_event) => {
-            return one_event.status === Number(selectedStatus)
+        const filteredEvents = filtered.filter((oneEvent) => {
+            return oneEvent.status === Number(selectedStatus)
         })
 
         return filteredEvents
@@ -191,8 +191,8 @@ const EventList = () => {
             setShowAlert(false)
             setAlertMessage('')
         }
-        const filteredEvents = filtered.filter((one_event) => {
-            return one_event.dateTime.substring(0, 10) >= selectedDateFrom
+        const filteredEvents = filtered.filter((oneEvent) => {
+            return oneEvent.dateTime.substring(0, 10) >= selectedDateFrom
         })
         return filteredEvents
     }
@@ -202,8 +202,8 @@ const EventList = () => {
             return filtered
         }
 
-        const filteredEvents = filtered.filter((one_event) => {
-            return one_event.dateTime.substring(0, 10) <= selectedDateTo
+        const filteredEvents = filtered.filter((oneEvent) => {
+            return oneEvent.dateTime.substring(0, 10) <= selectedDateTo
         })
         return filteredEvents
     }
@@ -211,9 +211,9 @@ const EventList = () => {
 
     //Event handlers
 
-    const handleEventClick = (event, one_event) => {
+    const handleEventClick = (event, oneEvent) => {
         event.preventDefault()
-        clickedEvent.id === one_event.id ? setClickedEvent('') : setClickedEvent(one_event)
+        clickedEvent.id === oneEvent.id ? setClickedEvent('') : setClickedEvent(oneEvent)
     }
 
     const handleShowDateFilters = (event) => {
@@ -225,54 +225,25 @@ const EventList = () => {
             setShowDateFilters('Pienennä')
         }
     }
-    const handleShowUnconfirmed = (event) => {
-        event.preventDefault()
 
-        if (unconfirmedClicked) {
-            setUnconfirmedClicked(false)
-        } else {
-            setUnconfirmedClicked(true)
+    const handleViewSelected = (selectedView) => {
+        setViewSelected(selectedView)
+        if (selectedView === 'unconfirmed') {
             setStatus('0')
-            setConfirmedClicked(false)
-            setAllClicked(false)
-            setClickedEvent('')
-            resetSorters()
         }
-
-    }
-
-    const handleShowConfirmed = (event) => {
-        event.preventDefault()
-
-        if (confirmedClicked) {
-            setConfirmedClicked(false)
-        } else {
-            setConfirmedClicked(true)
+        else if (selectedView === 'confirmed') {
             setStatus('1')
-            setUnconfirmedClicked(false)
-            setAllClicked(false)
-            setClickedEvent('')
-            resetSorters()
         }
-    }
-
-    const handleAllClicked = (event) => {
-        event.preventDefault()
-
-        if (allClicked) {
-            setAllClicked(false)
-        } else {
-            setAllClicked(true)
+        else if (selectedView === 'all') {
             setStatus('')
-            setConfirmedClicked(false)
-            setUnconfirmedClicked(false)
-            setClickedEvent('')
-            resetSorters()
         }
+        setClickedEvent('')
+        resetSorters()
     }
 
     const handleDateFromChange = (event) => {
         event.preventDefault()
+
         const value = event.target.value
         setDateFrom(value)
         setClickedEvent('')
@@ -281,6 +252,7 @@ const EventList = () => {
 
     const handleDateToChange = (event) => {
         event.preventDefault()
+
         const value = event.target.value
         setDateTo(value)
         setClickedEvent('')
@@ -296,36 +268,51 @@ const EventList = () => {
         setSortedByTeam('')
     }
 
+    const eventColumns = [
+        {
+            id: 'date',
+            text: 'Päivä',
+            sort: sortByDate,
+            render: (event) => getLocalizedDate(event.dateTime),
+        },
+        {
+            id: 'location',
+            text: 'Paikka',
+            sort: sortByLocation,
+            render: (event) => event.location,
+        },
+        {
+            id: 'team',
+            text: 'Joukkue',
+            sort: sortByTeam,
+            render: (event) => event.EventTeam.name,
+        },
+        {
+            id: 'status',
+            text: 'Status',
+            sort: sortByStatus,
+            render: (event) => (
+                <span
+                    className={
+                        String(event.status) === '0' ? 'text-rose-400' : 'text-emerald-400'
+                    }
+                >
+                    {String(event.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}
+                </span>
+            )
+        },
+    ]
 
-
-    const ListView = () => {
-        return (
-            <div>
-                <div className='flex justify-center items-center'>
-                    <button
-                        id='unconfirmedEvents-button'
-                        className={`${unconfirmedClicked
-                            ? 'bg-rose-400 ring-2 ring-rose-600 text-white font-semibold text-sm'
-                            : 'ring-1 ring-gray-200  text-gray-600 hover:bg-rose-200'} px-5 py-2 m-2 rounded-full`}
-                        onClick={handleShowUnconfirmed}
-                        disabled={unconfirmedClicked}>
-                        Odottaa hyväksyntää
-                    </button>
-                    <button
-                        id='confirmedEvents-button'
-                        className={`${confirmedClicked
-                            ? 'bg-emerald-400 ring-2 ring-emerald-600 text-white font-semibold text-sm'
-                            : 'ring-1 ring-gray-200  text-gray-600 hover:bg-emerald-200'} px-5 py-2 m-2 rounded-full`}
-                        onClick={handleShowConfirmed} disabled={confirmedClicked}>Hyväksytyt tapahtumat</button>
-                    <button id='allEvents-button'
-                        className={`${allClicked
-                            ? 'bg-blue-400 ring-2 ring-blue-600 text-white font-semibold text-sm'
-                            : 'ring-1 ring-gray-200  text-gray-600 hover:bg-blue-200'} px-5 py-2 m-2 rounded-full`}
-                        onClick={handleAllClicked}
-                        disabled={allClicked}>
-                        Kaikki tapahtumat
-                    </button>
-                </div>
+    return (
+        <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
+            <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
+            {showAlert && <Notification message={alertMessage} />}
+            <div className="text-xs p-4">
+                < ViewButtons
+                    name='Events'
+                    viewSelected={viewSelected}
+                    handleViewSelected={handleViewSelected}
+                />
                 < DateFilters
                     showFilters={showDateFilters}
                     selectedDateFrom={selectedDateFrom}
@@ -335,79 +322,15 @@ const EventList = () => {
                     handleShowDateFilters={handleShowDateFilters}
                     showDateFilters={showDateFilters}
                 />
-                <div className='flex justify-center items-center mt-4'>
-                    <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
-                        <table id='events' className='text-center text-xs bg-stone-100'>
-                            <thead>
-                                <tr>
-                                    <th
-                                        className='p-4 cursor-pointer hover:bg-gray-300'
-                                        id='date'
-                                        onClick={(event) => sortByDate(event)}>
-                                        Päivä
-                                    </th>
-                                    <th
-                                        className='p-4 cursor-pointer hover:bg-gray-300'
-                                        id='location'
-                                        onClick={(event) => sortByLocation(event)}>
-                                        Paikka
-                                    </th>
-                                    <th
-                                        className='p-4 cursor-pointer hover:bg-gray-300'
-                                        id='team'
-                                        onClick={(event) => sortByTeam(event)}>
-                                        Joukkue
-                                    </th>
-                                    <th
-                                        className='p-4 cursor-pointer hover:bg-gray-300'
-                                        id='status'
-                                        onClick={(event) => sortByStatus(event)}>
-                                        Status
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {shownEvents.map((one_event, index) =>
-                                    <tr
-                                        id='eventrow'
-                                        className={`${one_event.id === clickedEvent.id
-                                            ? 'bg-gray-400'
-                                            : index % 2 === 0
-                                                ? 'bg-white'
-                                                : 'bg-stone-100'} border hover:bg-gray-300 text-center cursor-pointer`}
-                                        key={one_event.id}
-                                        onClick={(event) => handleEventClick(event, one_event)}>
-                                        <td className='p-4'>{getLocalizedDate(one_event.dateTime)}</td>
-                                        <td className='p-4'>{one_event.location}</td>
-                                        <td className='p-4'>{one_event.EventTeam.name}</td>
-                                        <td
-                                            className={`${String(one_event.status) === '0'
-                                                ? 'text-rose-400'
-                                                : 'text-emerald-400'} p-4`}>
-                                            {String(one_event.status) === '0'
-                                                ? 'Odottaa hyväksyntää'
-                                                : 'Hyväksytty'}
-                                        </td>
-                                    </tr>)
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                < ViewTable
+                    name='events'
+                    columns={eventColumns}
+                    shownItems={shownEvents}
+                    clickedItem={clickedEvent}
+                    handleItemClick={handleEventClick}
+                />
             </div>
-        )
-    }
-
-    return (
-        <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
-            <h2 className='font-bold text-2xl text-center text-teal-500'>Tapahtumat</h2>
-            {showAlert && <Notification message={alertMessage} />}
-            <div className="text-xs p-4">
-                <div>
-                    < ListView />
-                </div>
-            </div>
-            {clickedEvent !== '' && <EventDetails one_event={clickedEvent} />}
+            {clickedEvent !== '' && <EventDetails oneEvent={clickedEvent} />}
         </div>
     )
 }
