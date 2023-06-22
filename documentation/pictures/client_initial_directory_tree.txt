@@ -1,0 +1,42 @@
+### Clientin hakemisto- ja tiedostorakenne
+
+// Voiko publicin ottaa pois?
+
+CLIENT
+├── build
+│   └── ...
+├── cypress
+│   └── ...
+├── public
+│   └── ...
+├── src
+│   ├── App.js
+│   ├── index.js
+│   ├── cypress.config.js
+│   ├── components
+│   │   ├── steps
+│   │   │   └──..
+│   │   ├── DefaultMenu.js
+│   │   ├── EventDetails.js
+│   │   ├── EventForm.js
+│   │   ├── EventList.js
+│   │   ├── FrontPage.js
+│   │   ├── JobForm.js
+│   │   ├── LoginForm.js
+│   │   ├── Notification.js
+│   │   ├── RegisterForm.js
+│   │   ├── ResetPasswordForm.js
+│   │   ├── ResetPasswordRequest.js
+│   │   └── UserMenu.js
+│   ├── services
+│       ├── event.js
+│       ├── job.js
+│       ├── register.js
+│       ├── resetpassword.js
+│       ├── team.js
+│       └── user.js
+│
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+└── tailwind.config.js
