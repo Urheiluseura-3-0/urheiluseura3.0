@@ -35,7 +35,10 @@ const Step2 = ({
                         maxLength={15}
                         name='username'
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid ? 'border-gray-300' : 'border-red-500'}`}
+                        className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
+                        }`}
                     />{username.length === 0 || isUsernameValid ? null : (
                         <p id='username-error' className='peer-focus:hidden text-red-500 text-sm'>
                             Käyttäjänimen minimipituus on 5 merkkiä
@@ -51,7 +54,10 @@ const Step2 = ({
                         maxLength={30}
                         name='password'
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid ? 'border-gray-300' : 'border-red-500'}`}
+                        className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
+                        }`}
                     />{password.length === 0 || isPasswordValid ? null : (
                         <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
                             Salasanan minimipituus on 10 merkkiä
@@ -67,7 +73,11 @@ const Step2 = ({
                         maxLength={30}
                         name='passwordConfirm'
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${passwordConfirm.length === 0 || isPasswordConfirmValid ? 'border-gray-300' : 'border-red-500'}`}
+                        className={`peer border  ${passwordConfirm.length === 0 || isPasswordConfirmValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'}
+                            rounded p-2 w-full
+                        `}
                     />{passwordConfirm.length === 0 || isPasswordConfirmValid ? null : (
                         <p id='passwordConfirm-error' className='peer-focus:hidden text-red-500 text-sm'>
                             Salasanat eivät täsmää tai se on liian lyhyt
@@ -77,14 +87,19 @@ const Step2 = ({
                 <div className='flex justify-between items-center space-x-5'>
                     <button
                         id='back-button'
-                        className='bg-gray-200 hover:bg-gray-400 px-5 py-1 leading-5 rounded-full font-semibold text-black'
+                        className='bg-gray-200 hover:bg-gray-400 px-5 py-1 leading-5
+                            rounded-full font-semibold text-black'
                         onClick={handleBack}
                     >
                         Takaisin
                     </button>
                     <button
                         id='register-button'
-                        className={`bg-teal-400 hover:bg-teal-600 px-3 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                        className={`bg-teal-400 hover:bg-teal-600 px-3 py-1 leading-5 rounded-full ${isInputValid
+                            ? ''
+                            : 'opacity-30 cursor-not-allowed hover:'}
+                            font-semibold text-white
+                            `}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}
                         type='submit'

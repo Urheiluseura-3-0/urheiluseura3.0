@@ -32,7 +32,9 @@ const Step0 = ({
                         name='firstname'
                         maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${firstName.length === 0 || isFirstNameValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${firstName.length === 0 || isFirstNameValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
                     />{firstName.length === 0 || isFirstNameValid ? null : (
                         <p id='firstname-error' className='peer-focus:hidden text-red-500 text-sm'>
@@ -48,7 +50,9 @@ const Step0 = ({
                         name='lastname'
                         maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${lastName.length === 0 || isLastNameValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${lastName.length === 0 || isLastNameValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
                     />{lastName.length === 0 || isLastNameValid ? null : (
                         <p id='lastname-error' className='peer-focus:hidden text-red-500 text-sm'>
@@ -65,13 +69,16 @@ const Step0 = ({
                         name='address'
                         maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${address.length === 0 || isAddressValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${address.length === 0 || isAddressValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
-                    />{address.length === 0 || isAddressValid ? null : (
-                        <p id='address-error' className='peer-focus:hidden text-red-500 text-sm'>
-                            Osoitteen on oltava vähintään 2 merkkiä
-                        </p>
-                    )}
+                    />{address.length === 0 || isAddressValid ? null
+                        : (
+                            <p id='address-error' className='peer-focus:hidden text-red-500 text-sm'>
+                                Osoitteen on oltava vähintään 2 merkkiä
+                            </p>
+                        )}
                 </div>
                 <div className='flex flex-col'>
                     <label className='block'>Postinumero</label>
@@ -81,11 +88,13 @@ const Step0 = ({
                         name='postalCode'
                         maxLength={5}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${postalCode.length === 0 || isPostalCodeValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${postalCode.length === 0 || isPostalCodeValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
                     />{postalCode.length === 0 || isPostalCodeValid ? null : (
                         <p id='postalCode-error' className='peer-focus:hidden text-red-500 text-sm'>
-                        Postinumero on aina 5 numeroa pitkä
+                            Postinumero on aina 5 numeroa pitkä
                         </p>
                     )}
                 </div>
@@ -97,11 +106,13 @@ const Step0 = ({
                         name='city'
                         maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${city.length === 0 || isCityValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${city.length === 0 || isCityValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
                     />{city.length === 0 || isCityValid ? null : (
                         <p id='city-error' className='peer-focus:hidden text-red-500 text-sm'>
-                        Nimen oltava vähintään 2 merkkiä pitkä
+                            Nimen oltava vähintään 2 merkkiä pitkä
                         </p>
                     )}
                 </div>
@@ -109,7 +120,11 @@ const Step0 = ({
                 <div className='flex justify-end'>
                     <button
                         id='next-button'
-                        className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                        className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
+                            ? ''
+                            : 'opacity-30 cursor-not-allowed hover:'}
+                            font-semibold text-white
+                        }`}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}
                         type='submit'
