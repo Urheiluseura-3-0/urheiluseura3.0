@@ -1,10 +1,10 @@
 const supertest = require('supertest')
-const bcrypt = require('bcrypt')
 const { User } = require('../models')
 const { Event } =  require('../models')
 const { Team } =  require('../models')
 const app = require('../app')
 const Cookies = require('universal-cookie')
+const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
@@ -15,11 +15,25 @@ const handleToken = (token) => {
     
 }
 
-const createEvent = async (newEvent, token) => {
-    return await api
+const expectTruthyAddedEvent = async (newEvent, token) => {
+    await api
         .post('/api/event')
         .set('Cookie', token)
         .send(newEvent)
+        .expect(200)
+        
+}
+const expectFalsyAddedEvent = async (newEvent, token, message) => {
+    const response = await api
+        .post('/api/event')
+        .set('Cookie', token)
+        .send(newEvent)
+
+    
+    expect(response.status).toBe(401)
+    expect(response.body.error).toContain(message)
+    
+        
 }
 
 
@@ -38,61 +52,16 @@ let newEvent
 
 beforeEach(async () => {
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
 
-    const initialUsers = [
-        {
-            firstName: 'Pekka',
-            lastName: 'Testinen',
-            username: 'Pekka35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite@email.com'
-        },
-        {
-            firstName: 'Mikko',
-            lastName: 'Testinen',
-            username: 'Mikko35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite2@email.com'
-        }
-    ]
+    testhelper.destroyAllUsers()
 
-    await User.destroy({
-        where: {},
-        truncate: true,
-        cascade: true
-    })
+    const initialUsers = await testhelper.initializeInitialUsers()
 
     await User.bulkCreate(initialUsers)
 
-    const initialTeams = [
-        {
-            name: 'Naiset 3',
-            category: 'N2D'
-        },
-        {
-            name: 'EBT SB',
-            category: 'N4D'
-        },
-        {
-            name: 'EBT',
-            category: 'N3D'
-        },
-    ]
-    await Team.destroy({
-        where: {},
-        truncate:true,
-        cascade: true
-    })
+    const initialTeams = testhelper.initialTeams
+
+    testhelper.destroyAllTeams()
 
     teams = await Team.bulkCreate(initialTeams)
 
@@ -171,9 +140,9 @@ beforeEach(async () => {
 test('event can be added with correct input', async () =>{
 
     newEvent = {...newEvent, team:team.id}
-
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(200)
+    await expectTruthyAddedEvent(newEvent, finalToken)
+    
+    
 })
 
 
@@ -181,8 +150,7 @@ test('event can be added without description', async () => {
 
     newEvent = {...newEvent, description:'', team:team.id}
     
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(200)
+    await expectTruthyAddedEvent(newEvent, finalToken)
 })
 
 
@@ -190,50 +158,41 @@ test('cannot add an event if team is missing', async () => {
 
     newEvent = {...newEvent, team:''}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen tiimi')
     
-    expect(response.body.error).toContain('Virheellinen tiimi')
 })
 
 test('cannot add an event if opponent is missing', async () => {
 
     newEvent = {...newEvent, opponent:'', team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen vastustaja')
     
-    expect(response.body.error).toBe('Virheellinen vastustaja')
 })
 
 test('cannot add an event if location is missing', async () => {
 
     newEvent = {...newEvent, location:'', team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen sijainti')
 
-    expect(response.body.error).toBe('Virheellinen sijainti')
+   
 })
 
 test('cannot add an event if date is missing', async () => {
 
     newEvent = {...newEvent, date:'', team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen päivämäärä')
 
-    expect(response.body.error).toBe('Virheellinen päivämäärä')
 })
 
 test('cannot add an event if time is missing', async () => {
 
     newEvent = {...newEvent, time:'', team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen aika')
 
-    expect(response.body.error).toBe('Virheellinen aika')
 })
 
 
@@ -242,46 +201,40 @@ test('cannot add an event if token is invalid', async () => {
 
     newEvent = {...newEvent, team:team.id}
 
-    const response = await createEvent(newEvent, 'invalidToken')
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, 'invalidToken', 'Kirjaudu ensin sisään')
 
-    expect(response.body.error).toContain('Kirjaudu ensin sisään')
 })
 
 test('cannot add an event if some input is too short', async () => {
 
     newEvent = {...newEvent, opponent:'H', team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken,'Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 
-    expect(response.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
+   
 })
 
 test('cannot add an event if some input is too long', async () => {
 
-    newEvent = {...newEvent, opponent:'Honka 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', team:team.id}
+    newEvent = {...newEvent, 
+        opponent:'Honka 00000000000000000000000000000000000', 
+        team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 
-    expect(response.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 })
 
 test('cannot add an event if team is not found', async () => {
 
     newEvent = {...newEvent, team:1234566}
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(401)
-    expect(response.body.error).toContain('Tiimin hakeminen epäonnistui')
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Tiimin hakeminen epäonnistui')
 })
 
 test('correct number of events in database', async () => {
     
     newEvent = {...newEvent, team:team.id}
 
-    const response = await createEvent(newEvent, finalToken)
-    expect(response.status).toBe(200)
+    await expectTruthyAddedEvent(newEvent, finalToken)
     
     const events = await Event.findAll()
     expect(events.length).toBe(4)
