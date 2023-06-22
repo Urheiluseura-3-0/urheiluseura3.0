@@ -71,7 +71,10 @@ const LoginForm = ({ tokenHandler }) => {
                                 setUsername(target.value)
                                 setIsUsernameValid(target.value.length >= 5 && target.value.length <= 15)
                             }}
-                            className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid ? 'border-gray-300' : 'border-red-500'}`}
+                            className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid
+                                ? 'border-gray-300'
+                                : 'border-red-500'
+                            }`}
                         />{username.length === 0 || isUsernameValid ? null : (
                             <p id='username-error' className='peer-focus:hidden text-red-500 text-sm'>
                                 Käyttäjänimen minimipituus on 5 merkkiä
@@ -90,7 +93,10 @@ const LoginForm = ({ tokenHandler }) => {
                                 setPassword(target.value)
                                 setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
                             }}
-                            className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid ? 'border-gray-300' : 'border-red-500'}`}
+                            className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid
+                                ? 'border-gray-300'
+                                : 'border-red-500'
+                            }`}
                         />{password.length === 0 || isPasswordValid ? null : (
                             <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
                                 Salasanan minimipituus on 10 merkkiä
@@ -100,7 +106,11 @@ const LoginForm = ({ tokenHandler }) => {
                     <div>
                         <button
                             id='login-button'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
+                                ? ''
+                                : 'opacity-30 cursor-not-allowed hover:'}
+                                font-semibold text-white
+                            `}
                             disabled={!isInputValid}
                             title={isInputValid ? '' : 'Syötä käyttäjätunnus ja salasana'}
                             type='submit'>
@@ -108,12 +118,22 @@ const LoginForm = ({ tokenHandler }) => {
                     </div>
                     <div>
                         <span className='text-sm text-teal-500'>Unohditko salasanasi? </span>
-                        <Link id='reset-password-link' className='text-sm text-blue-700 underline' to="/requestpassword">Palauta tästä</Link>
+                        <Link
+                            id='reset-password-link'
+                            className='text-sm text-blue-700 underline'
+                            to="/requestpassword">
+                            Palauta tästä
+                        </Link>
                     </div>
                 </div>
                 <div>
                     <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
-                    <Link id='register-link' className='text-sm text-blue-700 underline' to="/register">Rekisteröidy</Link>
+                    <Link
+                        id='register-link'
+                        className='text-sm text-blue-700 underline'
+                        to="/register">
+                        Rekisteröidy
+                    </Link>
                 </div>
             </form>
         </div>

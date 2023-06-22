@@ -47,7 +47,14 @@ module.exports = {
         ],
         'no-console': 0,
         'react/prop-types': 0,
-        'react/react-in-jsx-scope': 'off'
+        'react/react-in-jsx-scope': 'off',
+        'max-len': [
+            'error',
+            {
+                'code': 120,
+                'tabWidth':4
+            }
+        ]
     },
     'settings': {
         'react': {
