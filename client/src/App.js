@@ -40,7 +40,7 @@ const App = () => {
             <div className='relative z-50 w-full'>
                 {token
                     ?
-                    <UserMenu handleLogout={handleLogout} />
+                    <UserMenu handleLogout={handleLogout} token={token}/>
                     :
                     <DefaultMenu />
                 }
@@ -57,9 +57,12 @@ const App = () => {
                         <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'foreman']}/>}>
                             <Route path="/home" element={<FrontPage logout={handleLogout} />} />
                         </Route>
-                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker']}/>}>
+                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach']}/>}>
                             <Route path="/event" element={<EventForm />} />
                             <Route path="/job" element={<JobForm />} />
+                        </Route>
+                        <Route element={<ProtectedPath token={token} acceptedRoles={[]}/>}>
+                            <Route path="*"/>
                         </Route>
                     </Routes>
                 </div>

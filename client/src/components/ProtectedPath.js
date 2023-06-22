@@ -20,18 +20,27 @@ const getRoles = (token) => {
     if (decodedToken.isWorker === 1) {
         roles.push('worker')
     }
+    if (decodedToken.isCoach === 1) {
+        roles.push('coach')
+    }
+    if (decodedToken.isSupervisor === 1) {
+        roles.push('supervisor')
+    }
+    if (decodedToken.isAdmin === 1) {
+        roles.push('admin')
+    }
 
     return roles
 }
 
 const ProtectedPath = ({ token, acceptedRoles }) => {
-    const roles = getRoles(token)
-    const isRoleOk = roles.some(role => acceptedRoles.includes(role))
+    const userRoles = getRoles(token)
+    const isRoleOk = userRoles.some(role => acceptedRoles.includes(role))
 
     if (isRoleOk) {
         return <Outlet />
     } else {
-        if (roles.includes('notLogged')) {
+        if (userRoles.includes('notLogged')) {
             return <Navigate to='/' />
         } else {
             return <Navigate to='/home' />
