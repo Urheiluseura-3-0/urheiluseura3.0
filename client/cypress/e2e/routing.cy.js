@@ -114,6 +114,7 @@ describe('Routing', function() {
 
             const role = {
                 isForeman : 1,
+                isSupervisor: 0,
                 isWorker : 0,
                 isCoach : 0
             }
@@ -122,7 +123,7 @@ describe('Routing', function() {
                 .then((response) => {
                     const id = response.body.id
 
-                    cy.request('PUT', `http://localhost:3001/api/updateuser/${id}`, role)
+                    cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
                 })
             cy.get('#username').type('Tiina14')
             cy.get('#password').type('salainen1234')

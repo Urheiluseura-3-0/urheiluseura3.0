@@ -54,7 +54,8 @@ const App = () => {
                             <Route path="/requestpassword" element={<ResetPasswordRequest />} />
                             <Route path="/resetpassword/:token" element={<ResetPasswordForm />} />
                         </Route>
-                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'foreman']}/>}>
+                        <Route element={<ProtectedPath token={token}
+                            acceptedRoles={['worker', 'coach', 'foreman', 'supervisor', 'admin']}/>}>
                             <Route path="/home" element={<FrontPage logout={handleLogout} />} />
                         </Route>
                         <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach']}/>}>
