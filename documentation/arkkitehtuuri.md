@@ -1,45 +1,42 @@
 # Arkkitehtuuri
 
-## Yleisrakenne
+
+## Kehitysympäristö
+### Yleisrakenne
 
 
 ![Frontend-Backend-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/FRONTEND-BACKEND-database.drawio.png)
 
+### Frontend
 
-## Frontend
-
-### Teknologiat
+#### Teknologiat
 - React
-    * tarjoaa käyttöliittymän
+   * käyttöliittymä
 
 - Axios
-    * selaimen ja palvelimen välinen kommunikointi
+   * selaimen ja palvelimen välinen kommunikointi
 
-### Hakemisto- ja tiedostorakenne
-
-Frontendin hallinta tapahtuu kansiossa Client. Clientin sisältämien hakemistojen ja rakenteen kannalta oleellisten tiedostojen tehtävät kerrotaan alhaalla.
-
-#### Kuva Clientin hakemisto- ja tiedostorakenteesta
-![Client directory tree image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/client_tree_structure.png)
+- React Router
+  * navigointi
+ 
+- Tailwind
+  * tyylittely
 
 #### Hakemistot
+
+Frontendin hallinta tapahtuu kansiossa Client. Clientin sisältämien hakemistojen tehtävät kerrotaan alla.
+
 - components
     * sisältää eri näkymät, jotka renderöidään näytölle
 - services
     * hoitaa palvelimelle menevät pyynnöt
-#### Tiedostot
-- App.js
-    * aloituskomponentti
-    * React Router mahdollistaa React-sovelluksen navigoinnin
-- index.js
-    * ottaa reactin käyttöön ja renderöi App-komponentin
 
-## Backend
+### Backend
 
-### Teknologiat
+#### Teknologiat
 
 - Node.js
-    * tarjoaa ajoympäristön Javascript-koodin suorittamiselle
+    * tarjoaa suoritusympäristön Javascript-koodin suorittamiselle
 
 - Express
     *  tarjoaa:
@@ -52,14 +49,10 @@ Frontendin hallinta tapahtuu kansiossa Client. Clientin sisältämien hakemistoj
     * tarjoaa migraation, eli tavan tehdä muutoksia tietokantaan
 
 
-### Hakemisto- ja tiedostorakenne
+#### Hakemisto- ja tiedostorakenne
 
-Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistojen ja rakenteen kannalta oleellisten tiedostojen tehtävät kerrotaan alhaalla.
+Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistojen tehtävät kerrotaan alla.
 
-#### Kuva Serverin hakemisto- ja tiedostorakenteesta
-![Server directory tree image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/server_tree_structure.png)
-
-#### Hakemistot
 - config
     *
 - controllers
@@ -73,22 +66,16 @@ Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistoje
 - utils
     * tarjoaa säiltyspaikan useasti käytettäville moduuleille ja funktioille
 
-#### Tiedostot
--
--
+### Database
 
-## Database
-
-### Teknologiat
+#### Teknologiat
 
 - PostgreSQL
    - tarjoaa relaatiotietokannan sovelluksen käyttöön
 - Docker
   - kehitysympäristössä käytetään Dockeria PSQL-tietokannan ajamiseen
 
-#### Kuva tietokantataulusta
-
-![Database image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/Tietokantakaavio.png)
+[Kuva tietokantataulusta](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/Tietokantakaavio.png)
 
 ## Docker
 
