@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import jobService from '../services/job'
-//import JobDetail from './JobDetail'
+import JobDetail from './JobDetail'
 import ViewTable from './ViewTable'
 import { getLocalizedDate } from '../utils/listUtils'
 
@@ -173,7 +173,7 @@ const ForemanView = () => {
     ]
     return (
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
-            <h2 className='font-bold text-2xl text-center text-rose-400'>Hyväksymättömät työtehtävät</h2>
+            <h2 className='font-bold text-2xl text-center text-rose-400'>Hyväksymättömät työtunnit</h2>
             < ViewTable
                 name='jobs'
                 columns={jobColumns}
@@ -181,6 +181,9 @@ const ForemanView = () => {
                 clickedItem={clickedUnconfirmed}
                 handleItemClick={handleEventClick}
             />
+            <div>
+                {clickedUnconfirmed !== '' && <JobDetail oneJob={clickedUnconfirmed} />}
+            </div>
         </div>
     )
 }
