@@ -19,7 +19,7 @@ const JobDetail = ({  oneJob }) => {
                             <td className='p-2'>{jobDetails.squad}</td>
                         </tr>
                         <tr>
-                            <td className='p-3 font-semibold'>Tunnit</td>
+                            <td className='p-2 font-semibold'>Tunnit</td>
                             <td className='p-2'>{hoursMinutes}</td>
                         </tr>
                         <tr className='bg-stone-100'>

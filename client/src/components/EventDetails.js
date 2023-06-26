@@ -15,7 +15,7 @@ const EventDetail = ({ oneEvent }) => {
                             <td className='p-2'>{eventDetails.EventTeam.name}</td>
                         </tr>
                         <tr>
-                            <td className='p-3 font-semibold'>Vastustaja</td>
+                            <td className='p-2 font-semibold'>Vastustaja</td>
                             <td className='p-2'>{eventDetails.opponent}</td>
                         </tr>
                         <tr className='bg-stone-100'>
