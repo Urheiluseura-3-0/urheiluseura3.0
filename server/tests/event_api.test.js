@@ -8,12 +8,6 @@ const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
-const handleToken = (token) => {
-
-    const finalToken = token.split(';')[0]
-    return finalToken
-    
-}
 
 const expectTruthyAddedEvent = async (newEvent, token) => {
     await api
@@ -121,7 +115,7 @@ beforeEach(async () => {
     cookies = new Cookies(loggedUser.headers['set-cookie'])
     cryptedToken = cookies.cookies[0]
 
-    finalToken = handleToken(cryptedToken)
+    finalToken = testhelper.handleToken(cryptedToken)
 
     team = await Team.findOne({where: {name: 'EBT SB'}})
 
