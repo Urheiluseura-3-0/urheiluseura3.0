@@ -206,12 +206,13 @@ const validateResetPasswordInput = (password, passwordConfirm) => {
     return errors
 }
 
-const validateJobInput = (squad, context, date, location, hours, minutes) => {
+const validateJobInput = (squad, context, date, time, location, hours, minutes) => {
     let errors = []
 
     errors = errors.concat(validateMandatoryField(squad, 'Ryhmä', 2, 40))
     errors = errors.concat(validateOptionalField(context, 'Konteksti', 200))
     errors = errors.concat(validateMandatoryField(date, 'Päivä', 2, 40))
+    errors = errors.concat(validateMandatoryField(time, 'Aika', 0, 30))
     errors = errors.concat(validateMandatoryField(location, 'Sijainti', 2, 40))
     errors = errors.concat(validateMandatoryField(hours, 'Tunnit', 1, 40))
     errors = errors.concat(validateMandatoryField(minutes, 'Minuutit', 1, 40))
