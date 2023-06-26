@@ -8,6 +8,7 @@ import RegisterForm from './components/RegisterForm'
 import FrontPage from './components/FrontPage'
 import EventForm from './components/EventForm'
 import JobForm from './components/JobForm'
+import JobList from './components/JobList'
 import UserMenu from './components/UserMenu'
 import DefaultMenu from './components/DefaultMenu'
 import Cookies from 'universal-cookie'
@@ -22,7 +23,7 @@ const App = () => {
     const location = useLocation()
     const cookies = new Cookies()
     const [token, setToken] = useState(cookies.get('Token'))
-    const allowedPaths = ['/event', '/job']
+    const allowedPaths = ['/event', '/job', '/jobs', '/home']
     const notLoggedInPaths = ['/', '/register', '/resetpassword/', '/requestpassword']
 
     const handleLogout = () => {
@@ -72,6 +73,7 @@ const App = () => {
                         <Route path="/home" element={<FrontPage logout={handleLogout} />} />
                         <Route path="/event" element={<EventForm />} />
                         <Route path="/job" element={<JobForm />} />
+                        <Route path="/jobs" element={<JobList />} />
                         <Route path="/requestpassword" element={<ResetPasswordRequest />} />
                         <Route path="/resetpassword/:token" element={<ResetPasswordForm />} />
                     </Routes>
