@@ -85,7 +85,9 @@ const JobForm = () => {
         const parsedHours = parseInt(hours, 10)
         const parsedMinutes = parseInt(minutes, 10)
         return parsedHours >= 0 && parsedHours <= 23
-            && (parsedMinutes <= 59 && parsedMinutes >= 0 && parsedHours > 0 || (parsedMinutes <= 59 && parsedMinutes > 0))
+            && (parsedMinutes <= 59 && parsedMinutes >= 0
+            && parsedHours > 0
+            || (parsedMinutes <= 59 && parsedMinutes > 0))
             || (parsedHours === 24 && parsedMinutes === 0)
     }
 
@@ -142,7 +144,8 @@ const JobForm = () => {
                             }}
                             className={renderClassName(squad.length, isSquadValid)}
                         />{
-                            renderFormError(squad.length, isSquadValid, 'squad-error', 'Ryhmän nimen on oltava vähintään 2 merkkiä')
+                            renderFormError(squad.length, isSquadValid,
+                                'squad-error', 'Ryhmän nimen on oltava vähintään 2 merkkiä')
                         }
                     </div>
                     <div>
@@ -153,7 +156,8 @@ const JobForm = () => {
                                 setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
                             }}
                             className={renderClassName(location.length, isLocationValid)}
-                        />{renderFormError(location.length, isLocationValid, 'location-error', 'Paikan nimen on oltava vähintään 2 merkkiä')}
+                        />{renderFormError(location.length, isLocationValid,
+                            'location-error', 'Paikan nimen on oltava vähintään 2 merkkiä')}
                     </div>
                     <div>
                         <label className='block'>Päivämäärä</label>
@@ -180,7 +184,12 @@ const JobForm = () => {
                         <div>
                             <label className='block'>Tunnit</label>
                             <div>
-                                <input className='peer border rounded p-2 w-full border-gray-300' id='hours' type='number' value={hours} min={0} max={24}
+                                <input
+                                    className='peer border rounded p-2 w-full border-gray-300'
+                                    id='hours'
+                                    type='number'
+                                    value={hours}
+                                    min={0} max={24}
                                     onChange={({ target }) => {
                                         setHours(target.value)
                                         setIsWorkedTimeValid(validateHours(target.value))
@@ -190,7 +199,12 @@ const JobForm = () => {
                         </div>
                         <div>
                             <label className='block'>Minuutit</label>
-                            <input className='peer border rounded p-2 w-full border-gray-300' id='minutes' type='number' value={minutes} min={0} max={59}
+                            <input
+                                className='peer border rounded p-2 w-full border-gray-300'
+                                id='minutes'
+                                type='number'
+                                value={minutes}
+                                min={0} max={59}
                                 onChange={({ target }) => {
                                     setMinutes(target.value)
                                     setIsWorkedTimeValid(validateMinutes(target.value))
@@ -211,7 +225,11 @@ const JobForm = () => {
                     <div className='flex'>
                         <button
                             id='add-job'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
+                                ? ''
+                                : 'opacity-30 cursor-not-allowed hover:'}
+                                font-semibold text-white 
+                            `}
                             disabled={!isInputValid}
                             title={isInputValid ? null : 'Täytä puuttuvat kentät'}
                             onClick={handleSubmit}>Lähetä</button>
