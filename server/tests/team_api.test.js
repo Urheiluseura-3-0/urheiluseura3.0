@@ -47,8 +47,7 @@ beforeEach(async () => {
 
     finalToken = testhelper.handleToken(cryptedToken)
 
-    await Team.create(initialTeams[0])
-    await Team.create(initialTeams[1])
+    await Team.bulkCreate(initialTeams)
 
     newTeam = {
         name:'WU19 Black',
@@ -65,7 +64,7 @@ test('Get all returns all teams', async () => {
         .get('/api/team')
         .set('Cookie', finalToken)
     const contents = response.body.map(r => r.name)
-    expect(response.body).toHaveLength(2)
+    expect(response.body).toHaveLength(3)
     expect(contents).toContain('Naiset 3')
     expect(contents).toContain('EBT SB')
 
