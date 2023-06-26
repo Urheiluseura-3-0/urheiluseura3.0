@@ -14,7 +14,7 @@ let userEmail
 let brokenEmailUser
 let passwords 
 
-const excpectResetStatus = async (email, expectedStatus, message) => {
+const expectResetStatus = async (email, expectedStatus, message) => {
 
     const response = await api
         .post('/api/reset')
@@ -27,7 +27,7 @@ const excpectResetStatus = async (email, expectedStatus, message) => {
 
 }
 
-const excpectStatusForBothPasswords = async (token, passwords, expectedStatus, message) => {
+const expectStatusForBothPasswords = async (token, passwords, expectedStatus, message) => {
 
     const response = await api
         .post(`/api/reset/${token}`)
@@ -80,26 +80,26 @@ beforeEach(async () => {
 test('Password request can be requested with valid email', async () => {
     const validEmail = { email: user.email }
 
-    await excpectResetStatus(validEmail, 200, 'Linkki salasanan vaihtoon lähetetty' )
+    await expectResetStatus(validEmail, 200, 'Linkki salasanan vaihtoon lähetetty' )
 
 }, 20000)
 
 test('Password can not be requested with invalid email', async () => {
     const invalidEmail = { email: 'tes.com' }
 
-    await excpectResetStatus(invalidEmail, 400, 'Virheellinen sähköpostiosoite')
+    await expectResetStatus(invalidEmail, 400, 'Virheellinen sähköpostiosoite')
 })
 
 test('User with an invalid email address is notified of failure to send email', async () => {
     const brokenEmail = { email: brokenEmailUser.email }
 
-    await excpectResetStatus(brokenEmail, 400, 'Linkin lähetys epäonnistui')
+    await expectResetStatus(brokenEmail, 400, 'Linkin lähetys epäonnistui')
 }, 20000)
 
 test('Password can not be requested with not existing email', async () => {
     const invalidEmail = { email: 'test@test.com' }
 
-    await excpectResetStatus(invalidEmail, 404, 'Sähköpostiosoitetta ei löytynyt')
+    await expectResetStatus(invalidEmail, 404, 'Sähköpostiosoitetta ei löytynyt')
 })
 
 describe('When a reset request has been made', () => {
@@ -111,13 +111,13 @@ describe('When a reset request has been made', () => {
         })
 
         const email = {email : user.email}
-        await excpectResetStatus(email, 200)
+        await expectResetStatus(email, 200)
         reset = await Reset.findOne({ where: { userId: user.id } })
     }, 20000)
 
     test('Password is changed with a valid token and passwords', async () => {
         
-        await excpectStatusForBothPasswords(reset.token, passwords, 200,'Salasanan vaihto onnistui')
+        await expectStatusForBothPasswords(reset.token, passwords, 200,'Salasanan vaihto onnistui')
 
     }, 20000)
 
@@ -125,7 +125,7 @@ describe('When a reset request has been made', () => {
 
         passwords = {...passwords, passwordConfirm: 'kissakoira123'}
 
-        await excpectStatusForBothPasswords(reset.token, passwords, 400,'Salasanat eivät täsmää')
+        await expectStatusForBothPasswords(reset.token, passwords, 400,'Salasanat eivät täsmää')
 
     }, 20000)
 
@@ -133,13 +133,13 @@ describe('When a reset request has been made', () => {
 
         const erroneousToken = 'asd123asdlkjasdoij123jnahsdokjajsd'
 
-        await excpectStatusForBothPasswords(erroneousToken, passwords, 404,'Salasanan nollauspyyntöä ei löytynyt')
+        await expectStatusForBothPasswords(erroneousToken, passwords, 404,'Salasanan nollauspyyntöä ei löytynyt')
 
     }, 20000)
 
     test('Reset works also if there is already an existing token for user', async () => {
 
-        await excpectResetStatus({email: user.email}, 200)
+        await expectResetStatus({email: user.email}, 200)
         
     }, 20000)
 })
