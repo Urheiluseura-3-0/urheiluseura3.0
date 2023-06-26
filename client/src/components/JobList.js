@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import jobService from '../services/job'
+import JobDetail from './JobDetail'
 import Notification from './Notification'
 import DateFilters from './DateFilters'
 import ViewButtons from './ViewButtons'
@@ -16,9 +17,9 @@ const JobList = () => {
     const [selectedDateTo, setDateTo] = useState('')
 
     const [sortedBySquad, setSortedBySquad] = useState('')
-    const [sortedByLocation, setSortedByLocation] = useState('')
     const [sortedByDate, setSortedByDate] = useState('')
     const [sortedByStatus, setSortedByStatus] = useState('')
+    const [sortedByHours, setSortedByHours] = useState('')
 
     const [allJobs, setAllJobs] = useState([])
     const [shownJobs, setShownJobs] = useState(allJobs)
@@ -58,8 +59,8 @@ const JobList = () => {
         event.preventDefault()
 
         setSortedByDate('')
-        setSortedByLocation('')
         setSortedByStatus('')
+        setSortedByHours('')
 
         const sorted = [...shownJobs]
         sorted.sort((a, b) => {
@@ -88,9 +89,9 @@ const JobList = () => {
     const sortByDate = (event) => {
         event.preventDefault()
 
-        setSortedByLocation('')
         setSortedBySquad('')
         setSortedByStatus('')
+        setSortedByHours('')
 
         const sorted = [...shownJobs]
         sorted.sort((a, b) => {
@@ -108,41 +109,12 @@ const JobList = () => {
         }
     }
 
-    const sortByLocation = (event) => {
-        event.preventDefault()
-
-        setSortedByDate('')
-        setSortedBySquad('')
-        setSortedByStatus('')
-
-        const sorted = [...shownJobs]
-        sorted.sort((a, b) => {
-            const locationA = a.location.toLowerCase()
-            const locationB = b.location.toLowerCase()
-            if (locationA > locationB) {
-                return 1
-            } else if (locationA < locationB) {
-                return -1
-            } else {
-                return 0
-            }
-        })
-
-        if (sortedByLocation === 'asc') {
-            setShownJobs([...sorted].reverse())
-            setSortedByLocation('desc')
-        } else {
-            setShownJobs(sorted)
-            setSortedByLocation('asc')
-        }
-    }
-
     const sortByStatus = (event) => {
         event.preventDefault()
 
         setSortedByDate('')
         setSortedBySquad('')
-        setSortedByLocation('')
+        setSortedByHours('')
 
         const sorted = [...shownJobs]
         sorted.sort((a, b) => {
@@ -163,8 +135,31 @@ const JobList = () => {
     const sortByHours = (event) => {
         event.preventDefault()
 
-        console.log('Sort Hours')
-        return
+        setSortedByDate('')
+        setSortedBySquad('')
+        setSortedByStatus('')
+
+        const sorted = [...shownJobs]
+        sorted.sort((a, b) => {
+            const teamA = a.hours
+            const teamB = b.hours
+            if (teamA > teamB) {
+                return 1
+            } else if (teamA < teamB) {
+                return -1
+            } else {
+                return 0
+            }
+        })
+
+
+        if (sortedByHours === 'asc') {
+            setSortedByHours('desc')
+            setShownJobs([...sorted].reverse())
+        } else {
+            setSortedByHours('asc')
+            setShownJobs(sorted)
+        }
     }
 
 
@@ -267,7 +262,7 @@ const JobList = () => {
 
     const resetSorters = () => {
         setSortedByDate('')
-        setSortedByLocation('')
+        setSortedByHours('')
         setSortedByStatus('')
         setSortedBySquad('')
     }
@@ -280,22 +275,20 @@ const JobList = () => {
             render: (job) => getLocalizedDate(job.dateTime),
         },
         {
-            id: 'location',
-            text: 'Paikka',
-            sort: sortByLocation,
-            render: (job) => job.location,
+            id: 'hours',
+            text: 'Tunnit',
+            sort: sortByHours,
+            render: (job) => {
+                const hours = Math.floor(job.hours)
+                const minutes = Math.round((job.hours - hours) * 60)
+                return `${hours}h ${minutes}min`
+            },
         },
         {
             id: 'squad',
             text: 'Ryhmä',
             sort: sortBySquad,
             render: (job) => job.squad,
-        },
-        {
-            id: 'hours',
-            text: 'Tunnit',
-            sort: sortByHours,
-            render: (job) => job.hours,
         },
         {
             id: 'status',
@@ -314,7 +307,7 @@ const JobList = () => {
     ]
 
     return (
-        <div className='p-6 bg-white rounded-xl shadow-lg space-y-3 divide-y'>
+        <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
             <h2 className='font-bold text-2xl text-center text-teal-500'>Työtunnit</h2>
             {showAlert && <Notification message={alertMessage} />}
             <div className="text-xs p-4">
@@ -342,7 +335,7 @@ const JobList = () => {
                     handleItemClick={handleEventClick}
                 />
             </div>
-            {clickedJob !== '' && console.log(clickedJob)}
+            {clickedJob !== '' && <JobDetail oneJob={clickedJob}/>}
         </div>
     )
 }
