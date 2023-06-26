@@ -173,7 +173,7 @@ const ForemanView = () => {
     ]
     return (
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3 divide-y'>
-            <h2 className='font-bold text-2xl text-center text-rose-400'>Hyväksymättömät työtunnit</h2>
+            <h2 className='font-bold text-2xl text-center text-teal-500'>Hyväksymättömät työtunnit</h2>
             < ViewTable
                 name='jobs'
                 columns={jobColumns}
