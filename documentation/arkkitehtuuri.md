@@ -42,7 +42,7 @@ Frontendin hallinta tapahtuu kansiossa **client**, joka sisältää hakemistot
 
 #### Hakemistot
 
-Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistojen tehtävät kerrotaan alla.
+Backendin hallinta tapahtuu kansiossa **server**. Serverin sisältämien hakemistojen tehtävät kerrotaan alla.
 
 - config
     * kertoo seeding-tiedostoille (tietokantataulun datan alustustiedostot), mihin alustus tehdään
@@ -51,7 +51,7 @@ Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistoje
 - migrations
     * tietokantamuutoksiin liittyvät tiedostot
 - models
-    * tietokanta skeemat
+    * tietokantaskeemat
 - seeders
     * tietokantataulujen datan alustustiedostot
 - utils
@@ -70,9 +70,9 @@ Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistoje
 
 ## Tuotantoympäristö
 
-#### Dockerfile
-  - Tuotantoversio on kontitettu Dockerfileen. Dockerfilessä clientin koodista tehdään staattinen versio, joka ajetaan server-hakemistossa Expressin static-middlewaren avulla.
+#### Docker
+  - Tuotantoversio on kontitetaan sovelluksen juuressa sijaitsevassa Dockerfilessä. Dockerfilessä clientin koodista tehdään staattinen versio, joka ajetaan server-hakemistossa Expressin **static-middlewaren** avulla.
 
 #### Fly.io
-  - palvelin
-  - PSQL-tietokannan kontitus ja suorittaminen
+  - toimii sovelluksen tuotantoversion palvelimena
+  - hoitaa PSQL-tietokannan kontituksen ja suorittamisen
