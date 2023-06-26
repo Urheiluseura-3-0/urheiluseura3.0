@@ -3,8 +3,7 @@
 ## Yleisrakenne
 
 
-VAIHDA UUSI KUVA
-![Client-Server-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/client-server-database.png)
+![Frontend-Backend-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/FRONTEND-BACKEND-database.drawio.png)
 
 
 ## Frontend
