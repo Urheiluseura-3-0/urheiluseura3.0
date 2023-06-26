@@ -11,7 +11,7 @@ const JobDetail = ({  oneJob }) => {
     return (
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3'>
             <h2 className='font-bold text-2xl text-center text-teal-500'>Tarkemmat tiedot</h2>
-            <div className='peer border rounded border-gray-800 rounded-xs overflow-hidden'>
+            <div className='peer border rounded border-gray-800 rounded-xs overflow-auto'>
                 <table id = 'jobdetail' className='w-full'>
                     <tbody>
                         <tr className='bg-stone-100'>
@@ -19,7 +19,7 @@ const JobDetail = ({  oneJob }) => {
                             <td className='p-2'>{jobDetails.squad}</td>
                         </tr>
                         <tr>
-                            <td className='p-3 font-semibold'>Tunnit</td>
+                            <td className='p-2 font-semibold'>Tunnit</td>
                             <td className='p-2'>{hoursMinutes}</td>
                         </tr>
                         <tr className='bg-stone-100'>
