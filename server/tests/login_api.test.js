@@ -1,33 +1,39 @@
 const supertest = require('supertest')
-const bcrypt = require('bcrypt')
 const { User } = require('../models')
 const app = require('../app')
+const testhelper = require('./test.helper')
 
 const api = supertest(app)
+let existingUser
+let initialUser
+
+const excpectLoginStatus = async (user, expectedStatus, message) => {
+
+    const response = await api
+        .post('/api/login')
+        .send(user)
+    
+    if(message){
+        expect(response.body.error || response.body.message).toBe(message)
+    }
+    expect(response.status).toBe(expectedStatus)
+
+}
 
 beforeEach(async () => {
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen12', saltRounds)
+    const initialUsers = await testhelper.initializeInitialUsers()
 
-    const initialUser = [
-        {
-            firstName: 'Pekka',
-            lastName: 'Testinen',
-            username: 'Pekka35',
-            password: passwordHash,
-            address: 'Osoite',
-            city: 'Helsinki',
-            postalCode: '00300',
-            phoneNumber: '0509876543',
-            email: 'osoite@email.com'
-        }
-    ]
-    await User.destroy({
-        where: {},
-        truncate: true,
-        cascade: true
-    })
-    await User.create(initialUser[0])
+    initialUser = initialUsers[0]
+
+    testhelper.destroyAllUsers()
+
+    await User.create(initialUser)
+    
+    existingUser = {
+        username: 'Pekka35',
+        password: 'salainen1234'
+    }
+
 })
 
 test('non-existing user can not log in', async () => {
@@ -36,46 +42,25 @@ test('non-existing user can not log in', async () => {
         password: 'salainen123'
     }
 
-    const response = await api
-        .post('/api/login')
-        .send(nonexistingUser)
-    
-    expect(response.status).toBe(401)
-    expect(response.body.error).toBe('Virheellinen käyttäjänimi tai salasana')
+    await excpectLoginStatus(nonexistingUser, 401, 'Virheellinen käyttäjänimi tai salasana')
+
 })
 
 
 test('existing user can log in', async () => {
-    const existingUser = {
-        username: 'Pekka35',
-        password: 'salainen12'
-    }
+   
+    await excpectLoginStatus(existingUser, 200)
 
-    await api
-        .post('/api/login')
-        .send(existingUser)
-        .expect(200)
 })
 
 test('existing user cannot log in with wrong password', async () => {
-    const existingUser = {
-        username: 'Pekka35',
-        password: 'salainen12345'
-    }
-
-    const response = await api
-        .post('/api/login')
-        .send(existingUser)
+    existingUser = {... existingUser, password :'thisiswrong123'}
+   
+    await excpectLoginStatus(existingUser, 401, 'Virheellinen käyttäjänimi tai salasana')
     
-    expect(response.status).toBe(401)
-    expect(response.body.error).toBe('Virheellinen käyttäjänimi tai salasana')
 })
 
 test('logged in user can log out', async () => {
-    const existingUser = {
-        username: 'Pekka35',
-        password: 'salainen12'
-    }
 
     await api
         .post('/api/login')
