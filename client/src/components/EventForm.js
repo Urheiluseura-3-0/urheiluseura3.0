@@ -129,7 +129,9 @@ const EventForm = () => {
                             setTeam(target.value)
                             setIsTeamValid(target.value > 0)
                         }}
-                        className={`peer border rounded p-2 w-full ${!isOpponentValid || isTeamValid ? 'border-gray-300' : 'border-red-500'}`}
+                        className={`peer border rounded p-2 w-full ${!isOpponentValid || isTeamValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'}`}
                         >
                             <option value='0'>Valitse joukkue</option>
                             {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
@@ -148,7 +150,8 @@ const EventForm = () => {
                                 setIsOpponentValid(target.value.length >= 2 && target.value.length <= 40)
                             }}
                             className={renderClassName(opponent.length, isOpponentValid)}
-                        />{renderFormError(opponent.length, isOpponentValid, 'opponent-error', 'Vastustajan on oltava vähintään 2 merkkiä')}
+                        />{renderFormError(opponent.length, isOpponentValid,
+                            'opponent-error', 'Vastustajan on oltava vähintään 2 merkkiä')}
                     </div>
                     <div>
                         <label className='block'>Paikka</label>
@@ -158,7 +161,8 @@ const EventForm = () => {
                                 setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
                             }}
                             className={renderClassName(location.length, isLocationValid)}
-                        />{renderFormError(location.length, isLocationValid, 'location-error', 'Paikan on oltava vähintään 2 merkkiä')}
+                        />{renderFormError(location.length, isLocationValid,
+                            'location-error', 'Paikan on oltava vähintään 2 merkkiä')}
                     </div>
                     <div>
                         <label className='block'>Päivämäärä</label>
@@ -193,7 +197,11 @@ const EventForm = () => {
                     <div className='flex'>
                         <button
                             id='add-event'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
+                                ? ''
+                                : 'opacity-30 cursor-not-allowed hover:'}
+                                font-semibold text-white
+                                `}
                             disabled={!isInputValid}
                             title={isInputValid ? null : 'Täytä puuttuvat kentät'}
                             onClick={handleEvent}>Lisää tapahtuma</button>

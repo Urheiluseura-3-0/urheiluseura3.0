@@ -51,32 +51,60 @@ const ResetPasswordForm = () => {
             <form>
                 <div>
                     <label className='block'>Salasana</label>
-                    <input id='password' type='password' className='peer border rounded p-2 w-full border-gray-300' maxLength={30} value={password} onChange={({ target }) => {
-                        setPassword(target.value)
-                        setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
-                        setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
-                            target.value.localeCompare(password) === 0)
-                    }} />{password.length === 0 || isPasswordValid ? null : (
-                        <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
-                            Salasanan minimipituus on 10 merkkiä
-                        </p>
-                    )}
+                    <input
+                        id='password'
+                        type='password'
+                        className='peer border rounded p-2 w-full border-gray-300'
+                        maxLength={30}
+                        value={password}
+                        onChange={({ target }) => {
+                            setPassword(target.value)
+                            setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
+                            setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
+                                target.value.localeCompare(password) === 0)
+                        }} />
+                    {password.length === 0 || isPasswordValid
+                        ? null
+                        : (
+                            <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
+                                Salasanan minimipituus on 10 merkkiä
+                            </p>
+                        )}
                 </div>
                 <div>
                     <label className='block'>Vahvista salasana</label>
-                    <input id='passwordConfirmed' type='password' className='peer border rounded p-2 w-full border-gray-300' maxLength={30} value={passwordConfirm} onChange={({ target }) => {
-                        setPasswordConfirm(target.value)
-                        setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
-                            target.value.localeCompare(password) === 0)
-                    }} />{passwordConfirm.length === 0 || isPasswordConfirmValid ? null : (
-                        <p id='passwordConfirm-error' className='peer-focus:hidden text-red-500 text-sm'>
-                            Salasanat eivät täsmää tai se on liian lyhyt
-                        </p>
-                    )}
+                    <input
+                        id='passwordConfirmed'
+                        type='password'
+                        className='peer border rounded p-2 w-full border-gray-300'
+                        maxLength={30}
+                        value={passwordConfirm}
+                        onChange={({ target }) => {
+                            setPasswordConfirm(target.value)
+                            setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
+                                target.value.localeCompare(password) === 0)
+                        }} />
+                    {passwordConfirm.length === 0 || isPasswordConfirmValid
+                        ? null
+                        : (
+                            <p id='passwordConfirm-error' className='peer-focus:hidden text-red-500 text-sm'>
+                                Salasanat eivät täsmää tai se on liian lyhyt
+                            </p>
+                        )}
                 </div>
             </form>
-            <button id='send' type='submit' className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${(isPasswordValid && isPasswordConfirmValid) ? '' : 'opacity-30 cursor-not-allowed hover:'}`} disabled={!(isPasswordValid && isPasswordConfirmValid)}
-                title={(isPasswordValid && isPasswordConfirmValid) ? '' : 'Tarkista salasanat'} onClick={handleReset}>Lähetä</button>
+            <button
+                id='send'
+                type='submit'
+                className={`bg-teal-400 hover:bg-teal-600 px-5 py-1  ${(isPasswordValid && isPasswordConfirmValid)
+                    ? ''
+                    : 'opacity-30 cursor-not-allowed hover:'}
+                leading-5 rounded-full font-semibold text-white`}
+                disabled={!(isPasswordValid && isPasswordConfirmValid)}
+                title={(isPasswordValid && isPasswordConfirmValid)
+                    ? ''
+                    : 'Tarkista salasanat'}
+                onClick={handleReset}>Lähetä</button>
             <div>
                 <Link id='front-page-link' className='text-sm text-blue-700 underline' to="/">Takaisin etusivulle</Link>
             </div>

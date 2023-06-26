@@ -31,7 +31,9 @@ const Step1 = ({
                         name='phoneNumber'
                         maxLength={15}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${phoneNumber.length === 0 || isPhoneNumberValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${phoneNumber.length === 0 || isPhoneNumberValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
                     />{phoneNumber.length === 0 || isPhoneNumberValid ? null : (
                         <p id='phoneNumber-error' className='peer-focus:hidden text-red-500 text-sm'>
@@ -47,7 +49,9 @@ const Step1 = ({
                         name='email'
                         maxLength={40}
                         onChange={onChange}
-                        className={`peer border rounded p-2 w-full ${email.length === 0 || isEmailValid ? 'border-gray-300' : 'border-red-500'
+                        className={`peer border rounded p-2 w-full ${email.length === 0 || isEmailValid
+                            ? 'border-gray-300'
+                            : 'border-red-500'
                         }`}
                     />{email.length === 0 || isEmailValid ? null : (
                         <p id='email-error' className='peer-focus:hidden text-red-500 text-sm'>
@@ -59,7 +63,8 @@ const Step1 = ({
 
                     <button
                         id='back-button'
-                        className='bg-gray-200 hover:bg-gray-400 px-5 py-1 leading-5 rounded-full font-semibold text-black'
+                        className='bg-gray-200 hover:bg-gray-400 px-5 py-1 leading-5 rounded-full
+                            font-semibold text-black'
                         onClick={handleBack}
                     >
                         Takaisin
@@ -67,7 +72,11 @@ const Step1 = ({
 
                     <button
                         id='next-button'
-                        className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full font-semibold text-white ${isInputValid ? '' : 'opacity-30 cursor-not-allowed hover:'}`}
+                        className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full  ${isInputValid
+                            ? ''
+                            : 'opacity-30 cursor-not-allowed hover:'}
+                             font-semibold text-white
+                        `}
                         disabled={!isInputValid}
                         title={isInputValid ? '' : 'Täytä puuttuvat kentät'}
                         type='submit'
