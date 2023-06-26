@@ -7,7 +7,7 @@ const api = supertest(app)
 let existingUser
 let initialUser
 
-const excpectLoginStatus = async (user, expectedStatus, message) => {
+const expectLoginStatus = async (user, expectedStatus, message) => {
 
     const response = await api
         .post('/api/login')
@@ -42,21 +42,21 @@ test('non-existing user can not log in', async () => {
         password: 'salainen123'
     }
 
-    await excpectLoginStatus(nonexistingUser, 401, 'Virheellinen käyttäjänimi tai salasana')
+    await expectLoginStatus(nonexistingUser, 401, 'Virheellinen käyttäjänimi tai salasana')
 
 })
 
 
 test('existing user can log in', async () => {
    
-    await excpectLoginStatus(existingUser, 200)
+    await expectLoginStatus(existingUser, 200)
 
 })
 
 test('existing user cannot log in with wrong password', async () => {
     existingUser = {... existingUser, password :'thisiswrong123'}
    
-    await excpectLoginStatus(existingUser, 401, 'Virheellinen käyttäjänimi tai salasana')
+    await expectLoginStatus(existingUser, 401, 'Virheellinen käyttäjänimi tai salasana')
     
 })
 
