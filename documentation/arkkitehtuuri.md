@@ -1,10 +1,6 @@
 # Arkkitehtuuri
-
-
 ## Kehitysympäristö
 ### Yleisrakenne
-
-
 ![Frontend-Backend-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/FRONTEND-BACKEND-database.drawio.png)
 
 ### Frontend
@@ -24,7 +20,7 @@
 
 #### Hakemistot
 
-Frontendin hallinta tapahtuu kansiossa Client. Clientin sisältämien hakemistojen tehtävät kerrotaan alla.
+Frontendin hallinta tapahtuu kansiossa **client**, joka sisältää hakemistot
 
 - components
     * sisältää eri näkymät, jotka renderöidään näytölle
@@ -36,25 +32,20 @@ Frontendin hallinta tapahtuu kansiossa Client. Clientin sisältämien hakemistoj
 #### Teknologiat
 
 - Node.js
-    * tarjoaa suoritusympäristön Javascript-koodin suorittamiselle
 
 - Express
-    *  tarjoaa:
-        * reitityksen 
-        * rajapinnan selaimen kanssa kommunikointiin
-        * middleware-funktioiden käytön
 
 - Sequelize
-    * ORM-kirjasto, eli mahdollistaa Javascript olioiden tallentamisen tietokantaan ilman SQL-kielen käyttöä
+    * ORM-kirjasto, eli mahdollistaa Javascript-olioiden tallentamisen tietokantaan ilman SQL-kielen käyttöä
     * tarjoaa migraation, eli tavan tehdä muutoksia tietokantaan
 
 
-#### Hakemisto- ja tiedostorakenne
+#### Hakemistot
 
 Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistojen tehtävät kerrotaan alla.
 
 - config
-    *
+    * 
 - controllers
     * routejen määrittely
 - migrations
@@ -77,8 +68,11 @@ Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistoje
 
 [Kuva tietokantataulusta](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/Tietokantakaavio.png)
 
-## Docker
+## Tuotantoympäristö
 
-Sovelluksen kehitys- ja tuotantoympäristöissä käytetään hyödyksi Docker-kontteja. Docker-kontit tarjoavat kevyen ja tehokkaan ajoympäristön Urheiluseura-sovellukselle tuotantoversiossa. Tuotantoversiota varten sovellushakemiston juuresta löytyy Dockerfile. Siinä client- ja server -hakemistojen koodit buildataan erikseen. Clientin koodista tehdään staattinen versio, joka kopiodaan server-hakemistoon. Tiedoston lopusta löytyy sovelluksen käynnityskomento.
+#### Dockerfile
+  - Tuotantoversio on kontitettu Dockerfileen. Dockerfilessä clientin koodista tehdään staattinen versio, joka ajetaan server-hakemistossa Expressin static-middlewaren avulla.
 
-Kehitysympäristössä käytetään Docker-konttia PostgreSQL-tietokannan ajamiseen.
+#### Fly.io
+  - palvelin
+  - PSQL-tietokannan kontitus ja suorittaminen
