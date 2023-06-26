@@ -1,5 +1,4 @@
 const supertest = require('supertest')
-//const bcrypt = require('bcrypt')
 const {User} = require('../models')
 const app = require('../app')
 const testhelper = require('../tests/test.helper')
@@ -8,11 +7,13 @@ const api = supertest(app)
 let initialUser
 let newUser
 
-const expectFaultyRegisteredUser = async(newUser) => {
-    await api
+const expectFalsyRegisteredUser = async(newUser) => {
+    const response= await api
         .post('/api/register')
         .send(newUser)
-        .expect(401)
+
+    expect(response.status).toBe(401)
+    
 }
 
 
@@ -87,55 +88,55 @@ test('cannot register with existing username and otherwise correct input', async
         passwordConfirm: 'salainen401'
     }
 
-    expectFaultyRegisteredUser(existingUser)
+    await expectFalsyRegisteredUser(existingUser)
 })
 
 test('cannot register if first name is missing', async () => {
     newUser = {...newUser, firstName:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if last name is missing', async () => {
     newUser = {...newUser, lastName:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if username is missing', async () => {
     newUser = {...newUser, username:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if address is missing', async () => {
     newUser = {...newUser, address:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if city is missing', async () => {
     newUser = {...newUser, city:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if postal code is missing', async () => {
     newUser = {...newUser, postalCode:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if phone number is missing', async () => {
     newUser = {...newUser, phoneNumber:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 test('cannot register if email is missing', async () => {
     newUser = {...newUser, email:''}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
 
 
@@ -143,26 +144,26 @@ test('cannot register if postal code is invalid', async () => {
 
     newUser = {...newUser, postalCode : '0030'}
 
-    expectFaultyRegisteredUser(newUser)  
+    await expectFalsyRegisteredUser(newUser)  
 })
 
 test('cannot register if phone number is invalid', async () => {
 
     newUser = {...newUser, phoneNumber : 'ABCDE'}
 
-    expectFaultyRegisteredUser(newUser)  
+    await expectFalsyRegisteredUser(newUser)  
 })
 
 test('cannot register if email is invalid', async () => {
 
     newUser = {...newUser, email : 'invalidemail@'}
 
-    expectFaultyRegisteredUser(newUser)  
+    await expectFalsyRegisteredUser(newUser)  
 })
 
 test('cannot register if passwords do not match', async () => {
     
     newUser = {...newUser, password:'salainen401'}
 
-    expectFaultyRegisteredUser(newUser)
+    await expectFalsyRegisteredUser(newUser)
 })
