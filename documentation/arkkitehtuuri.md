@@ -71,7 +71,7 @@ Backendin hallinta tapahtuu kansiossa **server**. Serverin sisältämien hakemis
 ## Tuotantoympäristö
 
 #### Docker
-  - Tuotantoversio on kontitetaan sovelluksen juuressa sijaitsevassa Dockerfilessä. Dockerfilessä clientin koodista tehdään staattinen versio, joka ajetaan server-hakemistossa Expressin **static-middlewaren** avulla.
+  - Tuotantoversio kontitetaan sovelluksen juuressa sijaitsevassa Dockerfilessä. Dockerfilessä clientin koodista tehdään staattinen versio, joka ajetaan server-hakemistossa Expressin **static-middlewaren** avulla.
 
 #### Fly.io
   - toimii sovelluksen tuotantoversion palvelimena
