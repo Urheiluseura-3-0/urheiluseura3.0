@@ -3,7 +3,7 @@ const { tokenExtractor } = require('../utils/middleware')
 const { User } = require('../models')
 
 userRoleRouter.put('/:id', tokenExtractor, async (request, response) => {
-    if (process.env.NODE_ENV !== 'test' && request.decodedToken.isAdmin === 0) {
+    if (request.decodedToken.isAdmin === 0 && process.env.NODE_ENV !== 'test') {
         return response.status(401).json({error: 'Käyttäjäroolien muuttaminen ei ole sallittua'})
     }
 
