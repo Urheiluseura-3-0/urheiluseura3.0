@@ -520,16 +520,15 @@ test('hoursToDecimal returns correct value', async () => {
     expect(result3).toBe(0.75)
 })
 
-<<<<<<< HEAD
-test('basic user can not fetch unaccepted events', async () => {
+test('basic user can not fetch unconfirmed events', async () => {
     const response = await api
-        .get('/api/job/unaccepted')
+        .get('/api/job/unconfirmed')
         .set('Cookie', finalToken)
         .expect(403)
     expect(response.body.error).toContain('Oikeudet puuttuu')
 })
 
-test('foreman can fetch unaccepted events', async () => {
+test('foreman can fetch unconfirmed events', async () => {
 
     user = {username: 'Teemu35', password: 'salainen1234'}
     loggedUser = await api.post('/api/login').send(user)
@@ -539,11 +538,11 @@ test('foreman can fetch unaccepted events', async () => {
     finalToken = handleToken(cryptedToken)
 
     const response = await api
-        .get('/api/job/unaccepted')
+        .get('/api/job/unconfirmed')
         .set('Cookie', finalToken)
         .expect(200)
     expect(response.body).toHaveLength(3)
-=======
+})
 test('jobs for user return squads', async () => {
     const response = await api
         .get('/api/job')
@@ -619,5 +618,4 @@ test('Get by job id returns teamname', async() => {
         .get(`/api/job/${job.id}`)
         .set('Cookie', finalToken)
     expect(response.body.squad).toContain('EBT Naiset')
->>>>>>> origin/feature/jobList
 })
