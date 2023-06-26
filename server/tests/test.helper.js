@@ -1,5 +1,6 @@
 const { Team } = require('../models')
 const { User } = require('../models')
+
 const bcrypt = require('bcrypt')
 
 
@@ -18,6 +19,12 @@ const initialTeams = [
     }
 ]
 
+const handleToken = (token) => {
+
+    const finalToken = token.split(';')[0]
+    return finalToken
+
+}
 
 
 const teamsInDb = async () => {
@@ -67,7 +74,7 @@ const initializeInitialUsers = async () => {
             postalCode: '00300',
             city: 'Helsinki',
             phoneNumber: '0509876543',
-            email: 'osoite2@email.com'
+            email: 'testi@email.com'
         }
     ]
 
@@ -75,5 +82,5 @@ const initializeInitialUsers = async () => {
 }
 
 module.exports = {
-    initialTeams, teamsInDb, initializeInitialUsers, destroyAllUsers, destroyAllTeams
+    initialTeams, teamsInDb, initializeInitialUsers, destroyAllUsers, destroyAllTeams, handleToken
 }
