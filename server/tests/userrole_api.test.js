@@ -1,54 +1,15 @@
 const supertest = require('supertest')
-const bcrypt = require('bcrypt')
 const { User } = require('../models')
 const app = require('../app')
 const Cookies = require('universal-cookie')
+const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
-const handleToken = (token) => {
-
-    const finalToken = token.split(';')[0]
-    return finalToken
-    
-}
-
 beforeEach(async () => {
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen12', saltRounds)
-
-    const initialUsers = [
-        {
-            firstName: 'Pekka',
-            lastName: 'Testinen',
-            username: 'Pekka35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite@email.com'
-        },
-        {
-            firstName: 'Mikko',
-            lastName: 'Testinen',
-            username: 'Mikko35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite2@email.com'
-        }
-    ]
-    await User.destroy({
-        where: {},
-        truncate: true,
-        cascade: true
-    })
-
+    testhelper.destroyAllUsers()
+    const initialUsers = await testhelper.initializeInitialUsers()
     await User.bulkCreate(initialUsers)
-
 })
 
 test('User role is worker and coach when a new user is created', async () => {
@@ -61,11 +22,11 @@ test('User role is worker and coach when a new user is created', async () => {
 })
 
 test('Role changes when a request is made', async () => {
-    const user = {username: 'Pekka35', password: 'salainen12'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
     const cookies = new Cookies(loggedUser.headers['set-cookie'])
     const cryptedToken = cookies.cookies[0]
-    const finalToken = handleToken(cryptedToken)
+    const finalToken = testhelper.handleToken(cryptedToken)
 
     const roles = {
         isWorker: 0,
@@ -97,11 +58,11 @@ test('Role changes when a request is made', async () => {
 })
 
 test('Cannot change roles of id that does not exist', async () => {
-    const user = {username: 'Pekka35', password: 'salainen12'}
+    const user = {username: 'Pekka35', password: 'salainen1234'}
     const loggedUser = await api.post('/api/login').send(user)
     const cookies = new Cookies(loggedUser.headers['set-cookie'])
     const cryptedToken = cookies.cookies[0]
-    const finalToken = handleToken(cryptedToken)
+    const finalToken = testhelper.handleToken(cryptedToken)
 
     const roles = {
         isWorker: 0,
