@@ -45,7 +45,7 @@ Frontendin hallinta tapahtuu kansiossa **client**, joka sisältää hakemistot
 Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistojen tehtävät kerrotaan alla.
 
 - config
-    * 
+    * kertoo seeding-tiedostoille (tietokantataulun datan alustustiedostot), mihin alustus tehdään
 - controllers
     * routejen määrittely
 - migrations
