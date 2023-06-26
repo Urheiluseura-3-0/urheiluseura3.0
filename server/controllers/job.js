@@ -74,7 +74,7 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
     }
 })
 
-jobRouter.get('/unaccepted', tokenExtractor, async (request, response) => {
+jobRouter.get('/unconfirmed', tokenExtractor, async (request, response) => {
 
     try {
         const finduser = await User.findByPk(request.decodedToken.id)
