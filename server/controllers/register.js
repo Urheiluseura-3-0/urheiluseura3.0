@@ -2,42 +2,36 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const registerRouter = require('express').Router()
 const config = require('../utils/config')
-const {User} = require('../models')
-const {validateRegisterInput} = require('../utils/validate_input.js')
+const { User } = require('../models')
+const { validateRegisterInput } = require('../utils/validate_input.js')
 
 registerRouter.post('/', async (request, response) => {
     try {
-        const username = request.body.username
-        const password = request.body.password
-        const passwordConfirm = request.body.passwordConfirm
-        const firstName = request.body.firstName
-        const lastName = request.body.lastName
-        const address = request.body.address
-        const city = request.body.city
-        const postalCode = request.body.postalCode
-        const phoneNumber = request.body.phoneNumber
-        const email = request.body.email
+
+        const {
+            username, password, passwordConfirm, firstName, lastName, address, city, postalCode, phoneNumber, email
+        } = request.body
 
         if (password != passwordConfirm) {
-            return response.status(401).json({error: 'Salasanat eivät täsmää.'})
+            return response.status(401).json({ error: 'Salasanat eivät täsmää.' })
         }
-        
-        const finduser = await User.findOne({where: {username: username}})
+
+        const finduser = await User.findOne({ where: { username: username } })
 
         if (finduser) {
-            return response.status(401).json({error: 'Käyttäjätunnus on jo olemassa.'}) 
+            return response.status(401).json({ error: 'Käyttäjätunnus on jo olemassa.' })
         }
 
-        const findemail = await User.findOne({where: {email: email}})
+        const findemail = await User.findOne({ where: { email: email } })
         if (findemail) {
-            return response.status(401).json({error: 'Sähköpostiosoite on jo käytössä'})
+            return response.status(401).json({ error: 'Sähköpostiosoite on jo käytössä' })
         }
 
-        const checkInputErrors = validateRegisterInput(firstName, lastName, username, password, address, city, 
+        const checkInputErrors = validateRegisterInput(firstName, lastName, username, password, address, city,
             postalCode, phoneNumber, email)
 
         if (checkInputErrors.length > 0) {
-            return response.status(401).json({error: `${checkInputErrors}`})
+            return response.status(401).json({ error: `${checkInputErrors}` })
         }
 
         const saltRounds = 10
@@ -71,10 +65,12 @@ registerRouter.post('/', async (request, response) => {
             config.SECRET,
             { expiresIn: 60 * 60 }
         )
+
         return response
-            .cookie('Token', token, { maxAge: 900000 })
+            .cookie('UrheiluseuraToken', token, { maxAge: 900000 })
             .status(200)
             .json(savedUser)
+
     } catch (error) {
         return response.status(400)
     }

@@ -54,7 +54,7 @@ userRouter.post('/login', async (request, response) => {
         )
 
         return response
-            .cookie('Token', token, { maxAge: 900000 })
+            .cookie('UrheiluseuraToken', token, { maxAge: 900000 })
             .status(200)
             .send({ username: user.username, name: user.name })
 
@@ -68,7 +68,7 @@ userRouter.post('/logout', async (request, response) => {
 
     try {
         return response
-            .clearCookie('Token')
+            .clearCookie('UrheiluseuraToken')
             .status(200)
             .json({ message: 'Uloskirjautuminen onnistui' })
     } catch (error) {
