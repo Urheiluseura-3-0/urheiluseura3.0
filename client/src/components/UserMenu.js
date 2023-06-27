@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
 
 
-const UserMenu = ({ handleLogout }) => {
-
+const UserMenu = ({ handleLogout, token }) => {
+    const decodedToken = jwt_decode(token)
     return (
 
         <nav className="border-gray-200 bg-teal-400">
@@ -17,33 +18,37 @@ const UserMenu = ({ handleLogout }) => {
                         to="/home">
                         Etusivu
                     </Link>
-                    <Link
-                        id='addevent-link'
-                        className='flex items-center \
+                    {(decodedToken.isWorker === 1 || decodedToken.isCoach === 1) &&
+                        <>
+                            <Link
+                                id='addevent-link'
+                                className='flex items-center \
                           bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 \
                             text-sm font-semibold text-gray-600 text-center py-4'
-                        style={{ padding: 5 }}
-                        to="/event">
-                        Lisää tapahtuma
-                    </Link>
-                    <Link
-                        id='addjob-link'
-                        className='flex items-center \
+                                style={{ padding: 5 }}
+                                to="/event">
+                                Lisää tapahtuma
+                            </Link>
+                            <Link
+                                id='addjob-link'
+                                className='flex items-center \
                           bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 \
                             text-sm font-semibold text-gray-600 text-center py-4'
-                        style={{ padding: 5 }}
-                        to="/job">
-                        Lisää työtunnit
-                    </Link>
-                    <Link
-                        id='user-jobs-link'
-                        className='flex items-center \
-                          bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 \
-                            text-sm font-semibold text-gray-600 text-center py-4'
-                        style={{ padding: 5 }}
-                        to="/jobs">
-                        Katso työtunnit
-                    </Link>
+                                style={{ padding: 5 }}
+                                to="/job">
+                                Lisää työtunnit
+                            </Link>
+                            <Link
+                                id='user-jobs-link'
+                                className='flex items-center \
+                            bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700\
+                            hover:bg-teal-200 text-sm font-semibold text-gray-600 text-center py-4'
+                                style={{ padding: 5 }}
+                                to="/jobs">
+                                Katso työtunnit
+                            </Link>
+                        </>
+                    }
                 </div>
                 <button
                     id='logout-button'

@@ -1,19 +1,36 @@
 const supertest = require('supertest')
-const bcrypt = require('bcrypt')
 const { User } = require('../models')
 const { Event } =  require('../models')
 const { Team } =  require('../models')
 const app = require('../app')
 const Cookies = require('universal-cookie')
+const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
-const handleToken = (token) => {
 
-    const finalToken = token.split(';')[0]
-    return finalToken
-    
+const expectTruthyAddedEvent = async (newEvent, token) => {
+    await api
+        .post('/api/event')
+        .set('Cookie', token)
+        .send(newEvent)
+        .expect(200)
+        
 }
+const expectFalsyAddedEvent = async (newEvent, token, message) => {
+    const response = await api
+        .post('/api/event')
+        .set('Cookie', token)
+        .send(newEvent)
+
+    
+    expect(response.status).toBe(401)
+    expect(response.body.error).toContain(message)
+    
+        
+}
+
+
 
 let user
 let loggedUser 
@@ -25,64 +42,20 @@ let team
 let teams
 let event
 
+let newEvent
 
 beforeEach(async () => {
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
 
-    const initialUsers = [
-        {
-            firstName: 'Pekka',
-            lastName: 'Testinen',
-            username: 'Pekka35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite@email.com'
-        },
-        {
-            firstName: 'Mikko',
-            lastName: 'Testinen',
-            username: 'Mikko35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite2@email.com'
-        }
-    ]
+    testhelper.destroyAllUsers()
 
-    await User.destroy({
-        where: {},
-        truncate: true,
-        cascade: true
-    })
+    const initialUsers = await testhelper.initializeInitialUsers()
 
     await User.bulkCreate(initialUsers)
 
-    const initialTeams = [
-        {
-            name: 'Naiset 3',
-            category: 'N2D'
-        },
-        {
-            name: 'EBT SB',
-            category: 'N4D'
-        },
-        {
-            name: 'EBT',
-            category: 'N3D'
-        },
-    ]
-    await Team.destroy({
-        where: {},
-        truncate:true,
-        cascade: true
-    })
+    const initialTeams = testhelper.initialTeams
+
+    testhelper.destroyAllTeams()
 
     teams = await Team.bulkCreate(initialTeams)
 
@@ -142,17 +115,12 @@ beforeEach(async () => {
     cookies = new Cookies(loggedUser.headers['set-cookie'])
     cryptedToken = cookies.cookies[0]
 
-    finalToken = handleToken(cryptedToken)
+    finalToken = testhelper.handleToken(cryptedToken)
 
     team = await Team.findOne({where: {name: 'EBT SB'}})
 
-})
+    newEvent = {
 
-test('event can be added with correct input', async () =>{
-
-    const newEvent = {
-
-        team: team.id,
         opponent: 'Honka I B',
         location: 'Espoonlahden urheiluhalli',
         date:'2023-06-19',
@@ -160,245 +128,107 @@ test('event can be added with correct input', async () =>{
         description: 'Lipunmyynti'
     }
 
-    await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(200)
+    
+})
+
+test('event can be added with correct input', async () =>{
+
+    newEvent = {...newEvent, team:team.id}
+    await expectTruthyAddedEvent(newEvent, finalToken)
+    
+    
 })
 
 
 test('event can be added without description', async () => {
 
-    const newEvent = {
-
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: ''
-    }
-
-    await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(200)
+    newEvent = {...newEvent, description:'', team:team.id}
+    
+    await expectTruthyAddedEvent(newEvent, finalToken)
 })
 
 
 test('cannot add an event if team is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, team:''}
 
-        team: '',
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen tiimi')
     
-    expect(result.body.error).toContain('Virheellinen tiimi')
 })
 
 test('cannot add an event if opponent is missing', async () => {
 
+    newEvent = {...newEvent, opponent:'', team:team.id}
 
-
-    const newEvent = {
-
-        team: team.id,
-        opponent: '',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen vastustaja')
     
-    expect(result.body.error).toBe('Virheellinen vastustaja')
 })
 
 test('cannot add an event if location is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, location:'', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: '',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen sijainti')
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('Virheellinen sijainti')
+   
 })
 
 test('cannot add an event if date is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, date:'', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen päivämäärä')
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('Virheellinen päivämäärä')
 })
 
 test('cannot add an event if time is missing', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, time:'', team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'',
-        description: 'Lipunmyynti'
-    }
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Virheellinen aika')
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toBe('Virheellinen aika')
 })
 
 
 
 test('cannot add an event if token is invalid', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    await expectFalsyAddedEvent(newEvent, 'invalidToken', 'Kirjaudu ensin sisään')
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', 'InvalidToken')
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toContain('Kirjaudu ensin sisään')
 })
 
 test('cannot add an event if some input is too short', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, opponent:'H', team:team.id}
 
-        team: team.id,
-        opponent: 'H',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    await expectFalsyAddedEvent(newEvent, finalToken,'Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
+   
 })
 
 test('cannot add an event if some input is too long', async () => {
 
-    const newEvent = {
+    newEvent = {...newEvent, 
+        opponent:'Honka 00000000000000000000000000000000000', 
+        team:team.id}
 
-        team: team.id,
-        opponent: 'Honka 00000000000000000000000000000000000000000000000000000000000000000\
-                   000000000000000000000000000000',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-
-    expect(result.body.error).toContain('Sallittu pituus kentälle Vastustaja on 2-40 merkkiä')
 })
 
 test('cannot add an event if team is not found', async () => {
 
-    const newEvent = {
-
-        team: 12345,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date:'2023-06-19',
-        time:'12:30',
-        description: 'Lipunmyynti'
-    }
-
-    const result = await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(newEvent)
-        .expect(401)
-    
-    expect(result.body.error).toContain('Tiimin hakeminen epäonnistui')
+    newEvent = {...newEvent, team:1234566}
+    await expectFalsyAddedEvent(newEvent, finalToken, 'Tiimin hakeminen epäonnistui')
 })
 
 test('correct number of events in database', async () => {
     
-    const NewEvent = {
+    newEvent = {...newEvent, team:team.id}
 
-        team: team.id,
-        opponent: 'Honka I B',
-        location: 'Espoonlahden urheiluhalli',
-        date: '2023-06-19',
-        time:'12:30',
-        description: 'Siivous'
-    }
-
-    await api
-        .post('/api/event')
-        .set('Cookie', finalToken)
-        .send(NewEvent)
-        .expect(200)
+    await expectTruthyAddedEvent(newEvent, finalToken)
     
     const events = await Event.findAll()
     expect(events.length).toBe(4)
