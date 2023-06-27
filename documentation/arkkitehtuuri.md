@@ -1,78 +1,89 @@
 # Arkkitehtuuri
+
+Sovellus on toteutettu hyvin pitkälti [Full stack open](https://fullstackopen.com/en/#course-contents) kurssin materiaaleja hyödyntäen. Jos teknologia on merkitty tähdellä *, sitä ei löydy kurssin materiaaleista.
 ## Kehitysympäristö
 ### Yleisrakenne
 ![Frontend-Backend-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/FRONTEND-BACKEND-database.drawio.png)
 
 ### Frontend
+Frontendin koodi löytyy kansiosta [**client**](https://github.com/Urheiluseura-3-0/urheiluseura3.0/tree/main/client).
 
 #### Teknologiat
-- React
+- [React](https://react.dev/learn)
    * käyttöliittymä
 
-- Axios
+- [Axios](https://axios-http.com/docs/intro)
    * selaimen ja palvelimen välinen kommunikointi
 
-- React Router
+- [React Router](https://reactrouter.com/en/main)
   * navigointi
  
-- Tailwind
+- [Tailwind CSS*](https://tailwindcss.com/docs/guides/create-react-app)
   * tyylittely
 
 #### Hakemistot
-
-Frontendin hallinta tapahtuu kansiossa **client**, joka sisältää hakemistot
-
-- components
-    * sisältää eri näkymät, jotka renderöidään näytölle
-- services
-    * hoitaa palvelimelle menevät pyynnöt
+- cypress
+    * E2E-testaukseen liittyvät tiedostot
+- public
+    * reactin oletuskansio
+- src
+    * frontendin varsinainen lähdekoodi
+      - components
+          * sisältää eri näkymät, jotka renderöidään näytölle
+      - services
+          * hoitaa palvelimelle menevät pyynnöt
+      - utils
+          * frontendin apufunktiot
 
 ### Backend
+Backendin koodi löytyy kansiosta [**server**](https://github.com/Urheiluseura-3-0/urheiluseura3.0/tree/main/server). 
 
 #### Teknologiat
 
-- Node.js
+- [Node.js](https://nodejs.org/en/docs)
+  * palvelimen suoritusympäristö
 
-- Express
+- [Express](https://expressjs.com/)
+  * hoitaa tietokannan ja palvelimen välisen kommunikoinnin
 
-- Sequelize
+- [Sequelize](https://sequelize.org/docs/v6/)
     * ORM-kirjasto, eli mahdollistaa Javascript-olioiden tallentamisen tietokantaan ilman SQL-kielen käyttöä
     * tarjoaa migraation, eli tavan tehdä muutoksia tietokantaan
+
+- [Nodemailer*](https://nodemailer.com/about/)
+    * sähköpostien lähetyksen käsittely
 
 
 #### Hakemistot
 
-Backendin hallinta tapahtuu kansiossa Server. Serverin sisältämien hakemistojen tehtävät kerrotaan alla.
-
 - config
-    * kertoo seeding-tiedostoille (tietokantataulun datan alustustiedostot), mihin alustus tehdään
+    * tietokantojen alustuksen (seeding) konfiguraatio
 - controllers
-    * routejen määrittely
+    * reitityksen määrittely
 - migrations
-    * tietokantamuutoksiin liittyvät tiedostot
+    * tietokantaan tehdyt muutokset
 - models
-    * tietokanta skeemat
+    * tietokannan skeemat
 - seeders
-    * tietokantataulujen datan alustustiedostot
+    * tietokantataulujen datan alustustiedostot (vain kehitysympäristö)
+- tests
+    * backend-testit
 - utils
-    * tarjoaa säiltyspaikan useasti käytettäville moduuleille ja funktioille
+    * backendin apufunktiot
 
-### Database
+### Tietokanta
 
-#### Teknologiat
-
-- PostgreSQL
-   - tarjoaa relaatiotietokannan sovelluksen käyttöön
-- Docker
-  - kehitysympäristössä käytetään Dockeria PSQL-tietokannan ajamiseen
+Sovelluksen tietokantana käytetään [Postgresql-tietokantaa](https://www.postgresql.org/docs/), jota käsitellään jo aiemmin mainitun Sequelize ORM-kirjaston avulla.
+Tietokanta pyörii kehitysympäristössä Docker-kontissa. Kontteja on kaksi erillistä, [yksi kehityskäyttöön ja toinen testaukseen](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md#tietokannan-ensimm%C3%A4inen-k%C3%A4ytt%C3%B6%C3%B6notto-kehitysymp%C3%A4rist%C3%B6%C3%A4-varten).
 
 [Kuva tietokantataulusta](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/Tietokantakaavio.png)
 
 ## Tuotantoympäristö
 
 #### Dockerfile
-  - Tuotantoversio on kontitettu Dockerfileen. Dockerfilessä clientin koodista tehdään staattinen versio, joka ajetaan server-hakemistossa Expressin static-middlewaren avulla.
+  - Tuotantoversio rakennetaan Dockerfilestä. Frontendin koodista tehdään staattinen versio, joka tarjoillaan palvelimelta Expressin static-middlewaren avulla.
+  - Dockerfile ei luo tuotantoversion käyttämää tietokantaa
 
 #### Fly.io
-  - palvelin
-  - PSQL-tietokannan kontitus ja suorittaminen
+  - Palvelu, johon projektin "main"-haaran versio viedään automaattisesti Github Actionsin kautta.
+  - Hoitaa tietokannan luomisen, konfiguraation ja yhdistämisen sovellukseen.
