@@ -1,26 +1,30 @@
 
-const EventDetail = ({ oneEvent }) => {
-    const eventDetails = oneEvent
-    const dateTime = new Date(eventDetails.dateTime)
-    const createdAtDate = new Date(eventDetails.createdAt)
+const JobDetail = ({  oneJob }) => {
+    const jobDetails = oneJob
+    const dateTime = new Date(jobDetails.dateTime)
+    const createdAtDate = new Date(jobDetails.createdAt)
+
+    const hours = Math.floor(oneJob.hours)
+    const minutes = Math.round((oneJob.hours - hours) * 60)
+    const hoursMinutes= `${hours}h ${minutes}min`
 
     return (
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3'>
             <h2 className='font-bold text-2xl text-center text-teal-500'>Tarkemmat tiedot</h2>
             <div className='peer border rounded border-gray-800 rounded-xs overflow-auto'>
-                <table id = 'eventdetail' className='w-full'>
+                <table id = 'jobdetail' className='w-full'>
                     <tbody>
                         <tr className='bg-stone-100'>
-                            <td className='p-2 font-semibold'>Joukkue</td>
-                            <td className='p-2'>{eventDetails.EventTeam.name}</td>
+                            <td className='p-2 font-semibold'>Ryhmä</td>
+                            <td className='p-2'>{jobDetails.squad}</td>
                         </tr>
                         <tr>
-                            <td className='p-2 font-semibold'>Vastustaja</td>
-                            <td className='p-2'>{eventDetails.opponent}</td>
+                            <td className='p-2 font-semibold'>Tunnit</td>
+                            <td className='p-2'>{hoursMinutes}</td>
                         </tr>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Paikka</td>
-                            <td className='p-2'>{eventDetails.location}</td>
+                            <td className='p-2'>{jobDetails.location}</td>
                         </tr>
                         <tr>
                             <td className='p-2 font-semibold'>Päivä</td>
@@ -32,11 +36,11 @@ const EventDetail = ({ oneEvent }) => {
                         </tr>
                         <tr>
                             <td className='p-2 font-semibold'>Lisätiedot</td>
-                            <td className='p-2'>{eventDetails.description}</td>
+                            <td className='p-2'>{jobDetails.context}</td>
                         </tr>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Status</td>
-                            <td className='p-2'>{eventDetails.status === 0 ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
+                            <td className='p-2'>{jobDetails.status === 0 ? 'Odottaa hyväksyntää' : 'Hyväksytty'}</td>
                         </tr>
                         <tr>
                             <td className='p-2 font-semibold'>Luotu</td>
@@ -56,4 +60,4 @@ const EventDetail = ({ oneEvent }) => {
 
 }
 
-export default EventDetail
+export default JobDetail

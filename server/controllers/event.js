@@ -106,7 +106,10 @@ eventRouter.get('/:id', tokenExtractor, async (request, response) => {
             },
         })
         if (event) {
-            return response.json(event)
+            if (event.createdById === request.decodedToken.id) {return response.json(event)}
+            else{
+                return response.status(400).json({error: 'Virheellinen käyttäjän id'})
+            }
         } else {
             return response.status(404).end()
         }
