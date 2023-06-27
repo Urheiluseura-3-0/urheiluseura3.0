@@ -38,6 +38,15 @@ const UserMenu = ({ handleLogout, token }) => {
                             to="/job">
                         Lisää työtunnit
                         </Link>
+                        <Link
+                            id='user-jobs-link'
+                            className='flex items-center \
+                          bg-white rounded ring-1 ring-gray-700 ring-opacity-50 hover:ring-gray-700 hover:bg-teal-200 \
+                            text-sm font-semibold text-gray-600 text-center py-4'
+                            style={{ padding: 5 }}
+                            to="/jobs">
+                        Katso työtunnit
+                        </Link>
                     </>
                     }
                 </div>

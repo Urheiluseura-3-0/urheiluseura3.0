@@ -8,6 +8,7 @@ import RegisterForm from './components/RegisterForm'
 import FrontPage from './components/FrontPage'
 import EventForm from './components/EventForm'
 import JobForm from './components/JobForm'
+import JobList from './components/JobList'
 import UserMenu from './components/UserMenu'
 import DefaultMenu from './components/DefaultMenu'
 import Cookies from 'universal-cookie'
@@ -61,6 +62,7 @@ const App = () => {
                         <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach']}/>}>
                             <Route path="/event" element={<EventForm />} />
                             <Route path="/job" element={<JobForm />} />
+                            <Route path="/jobs" element={<JobList />} />
                         </Route>
                         <Route element={<ProtectedPath token={token} acceptedRoles={[]}/>}>
                             <Route path="*"/>
