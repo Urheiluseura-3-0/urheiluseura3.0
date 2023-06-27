@@ -7,7 +7,8 @@ Riippumatta siitä minne sovellusta olet laittamassa, tarvitsee se toimiakseen p
 
 | Muuttuja     | Kuvaus                                                                                                                                                                        |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DATABASE_URL | Tietokannan osoite. Jotkin palvelut, kuten fly.io, määrittävät tämän käyttöönoton yhteydessä. |	
+| DATABASE_URL | Tietokannan osoite. Jotkin palvelut, kuten fly.io, määrittävät tämän käyttöönoton yhteydessä. |
+| BASE_URL | Sivuston tuotantoversion osoite. Tällä hetkellä käytetään vain sähköpostia lähetettäessä. |	
 | EMAIL_HOST | Sähköpostipalvelimen osoite |
 | EMAIL_PORT | Sähköpostipalvelimen portti |
 | EMAIL_USER | Sähköpostipalvelun käyttäjänimi |
