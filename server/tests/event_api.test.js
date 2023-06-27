@@ -273,7 +273,7 @@ test('Get by event returns error code if id is invalid', async () => {
 })
 
 test('Get by event returns missing code if event is not found', async () => {
-    const invalidId = 0
+    const invalidId = mikkosEvent.id+15
     await api
         .get(`/api/event/${invalidId}`)
         .set('Cookie', finalToken)

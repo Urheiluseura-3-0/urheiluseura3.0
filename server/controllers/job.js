@@ -26,6 +26,9 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
         checkMissing(hours, 'Virheelliset työtunnit', response)
         checkMissing(minutes, 'Virheelliset minuutit', response)
 
+        const intHours = parseInt(hours)
+        const intMinutes = parseInt(minutes)
+
         const checkJobErrors = validateJobInput(squad, context, date, time, location, intHours, intMinutes)
 
         if (checkJobErrors.length > 0) {
@@ -33,8 +36,6 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
 
         }
 
-        const intHours = parseInt(hours)
-        const intMinutes = parseInt(minutes)
         const workhours = hoursToDecimal(intHours, intMinutes)
 
         const finduser = await User.findByPk(request.decodedToken.id)
