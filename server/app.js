@@ -11,6 +11,7 @@ const resetRouter = require('./controllers/reset.js')
 const { jobRouter } = require('./controllers/job.js')
 const cookieParser = require('cookie-parser')
 const middleware = require('./utils/middleware.js')
+const userRoleRouter = require('./controllers/userrole.js')
 
 if (process.env.NODE_ENV === 'test') {
     const testingRouter = require('./controllers/testing')
@@ -29,6 +30,7 @@ app.use('/api/event', eventRouter)
 app.use('/api/team', teamRouter)
 app.use('/api/reset', resetRouter)
 app.use('/api/job', jobRouter)
+app.use('/api/userrole', userRoleRouter)
 
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, '/build/index.html'), function (err) {
