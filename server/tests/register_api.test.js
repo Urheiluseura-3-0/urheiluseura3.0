@@ -1,37 +1,34 @@
 const supertest = require('supertest')
-const bcrypt = require('bcrypt')
 const {User} = require('../models')
 const app = require('../app')
+const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
+let initialUser
+let newUser
+
+const expectFalsyRegisteredUser = async(newUser) => {
+    const response= await api
+        .post('/api/register')
+        .send(newUser)
+
+    expect(response.status).toBe(401)
+    
+}
+
 
 beforeEach(async () => {
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen', saltRounds)
 
-    const initialUser = [
-        {
-            firstName: 'Pekka',
-            lastName: 'Testinen',
-            username: 'Pekka35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite@email.com'
-        }
-    ]
-    await User.destroy({
-        where: {},
-        truncate: true,
-        cascade: true
-    })
-    await User.create(initialUser[0])
-})
 
-test('can register with non-existing username and otherwise correct input', async () => {
-    const newUser = {
+    const initialUsers = await testhelper.initializeInitialUsers()
+
+    initialUser = initialUsers[0]
+
+    testhelper.destroyAllUsers()
+
+    await User.create(initialUser)
+
+    newUser = {
         firstName: 'Jaakko',
         lastName: 'Testaaja',
         username: 'Jaakko35',
@@ -43,6 +40,9 @@ test('can register with non-existing username and otherwise correct input', asyn
         phoneNumber: '0509876543',
         email: 'uusiosoite@email.com'
     }
+})
+
+test('can register with non-existing username and otherwise correct input', async () => {
 
     await api
         .post('/api/register')
@@ -54,29 +54,10 @@ test('can register with non-existing username and otherwise correct input', asyn
 })
 
 test('correct number of users in database', async () => {
-    const newUser = {
-        firstName: 'Jaakko',
-        lastName: 'Testaaja',
-        username: 'Jaakko35',
-        password: 'salainen22',
-        passwordConfirm: 'salainen22',
-        address: 'Osoite',
-        postalCode: '00300',
-        city: 'Helsinki',
-        phoneNumber: '0509876543',
-        email: 'uusiosoite@email.com'
-    }
 
-    const existingUser = {
-        firstName: 'Pekka',
-        lastName: 'Testinen',
-        username: 'Pekka35',
-        password: 'salainen123',
-        passwordConfirm: 'salainen123',
-        address: 'Osoite',
-        postalCode: '00300',
-        city: 'Helsinki',
-        phoneNumber: '0509876543',
+    const existingUser = { ...initialUser, 
+        password: 'salainen123', 
+        passwordConfirm:'salainen123',
         email: 'uusiosoite2@email.com'
     }
 
@@ -99,81 +80,90 @@ test('correct number of users in database', async () => {
 })
 
 test('cannot register with existing username and otherwise correct input', async () => {
-    const existingUser = {
-        firstName: 'Pekka',
-        lastName: 'Testaaja',
-        username: 'Pekka35',
-        password: 'salainen123',
-        passwordConfirm: 'salainen123',
-        address: 'Osoite',
-        city: 'Helsinki',
-        postalCode: '00300',
-        phoneNumber: '0509876543',
-        email: 'osoite@email.com'
+
+
+    const existingUser = { ...initialUser,
+        lastName: 'Testinen',
+        password: 'salainen401',
+        passwordConfirm: 'salainen401'
     }
 
-    await api
-        .post('/api/register')
-        .send(existingUser)
-        .expect(401)
+    await expectFalsyRegisteredUser(existingUser)
 })
 
-test('cannot register if mandatory values are missing', async () => {
-    const newUser = {
-        firstName: 'Jaakko',
-        lastName: '',
-        username: 'Jaakko35',
-        password: 'salainen123',
-        passwordConfirm: 'salainen123',
-        address: 'Osoite',
-        city: 'Helsinki',
-        postalCode: '00300',
-        phoneNumber: '0509876543',
-        email: 'osoite@email.com'
-    }
+test('cannot register if first name is missing', async () => {
+    newUser = {...newUser, firstName:''}
 
-    await api
-        .post('/api/register')
-        .send(newUser)
-        .expect(401)
+    await expectFalsyRegisteredUser(newUser)
 })
 
-test('cannot register if input is invalid', async () => {
-    const newUser = {
-        firstName: 'Jaakko',
-        lastName: 'Testaaja',
-        username: 'Jaakko35',
-        password: 'salainen123',
-        passwordConfirm: 'salainen123',
-        address: 'Osoite',
-        postalCode: '0030',
-        city: 'Helsinki',
-        phoneNumber: '0509876543',
-        email: 'osoite@email.com'
-    }
+test('cannot register if last name is missing', async () => {
+    newUser = {...newUser, lastName:''}
 
-    await api
-        .post('/api/register')
-        .send(newUser)
-        .expect(401)    
+    await expectFalsyRegisteredUser(newUser)
+})
+
+test('cannot register if username is missing', async () => {
+    newUser = {...newUser, username:''}
+
+    await await expectFalsyRegisteredUser(newUser)
+})
+
+test('cannot register if address is missing', async () => {
+    newUser = {...newUser, address:''}
+
+    await expectFalsyRegisteredUser(newUser)
+})
+
+test('cannot register if city is missing', async () => {
+    newUser = {...newUser, city:''}
+
+    await expectFalsyRegisteredUser(newUser)
+})
+
+test('cannot register if postal code is missing', async () => {
+    newUser = {...newUser, postalCode:''}
+
+    await expectFalsyRegisteredUser(newUser)
+})
+
+test('cannot register if phone number is missing', async () => {
+    newUser = {...newUser, phoneNumber:''}
+
+    await expectFalsyRegisteredUser(newUser)
+})
+
+test('cannot register if email is missing', async () => {
+    newUser = {...newUser, email:''}
+
+    await expectFalsyRegisteredUser(newUser)
+})
+
+
+test('cannot register if postal code is invalid', async () => {
+
+    newUser = {...newUser, postalCode : '0030'}
+
+    await expectFalsyRegisteredUser(newUser)  
+})
+
+test('cannot register if phone number is invalid', async () => {
+
+    newUser = {...newUser, phoneNumber : 'ABCDE'}
+
+    await expectFalsyRegisteredUser(newUser)  
+})
+
+test('cannot register if email is invalid', async () => {
+
+    newUser = {...newUser, email : 'invalidemail@'}
+
+    await expectFalsyRegisteredUser(newUser)  
 })
 
 test('cannot register if passwords do not match', async () => {
-    const newUser = {
-        firstName: 'Jaakko',
-        lastName: 'Testaaja',
-        username: 'Jaakko35',
-        password: 'salainen22',
-        passwordConfirm: 'salainen123',
-        address: 'Osoite',
-        postalCode: '00300',
-        city: 'Helsinki',
-        phoneNumber: '0509876543',
-        email: 'osoite@email.com'
-    }
+    
+    newUser = {...newUser, password:'salainen401'}
 
-    await api
-        .post('/api/register')
-        .send(newUser)
-        .expect(401)    
+    await expectFalsyRegisteredUser(newUser)
 })
