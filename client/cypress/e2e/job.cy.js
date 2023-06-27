@@ -68,7 +68,7 @@ describe('Job', function () {
 
         it('user cannot send form if location name is too short', function () {
             cy.get('input[id="location"]').type('E')
-            cy.get('Body').click({ x: 266, y: 32 })
+            cy.get('input[id="squad"]')
             cy.get('#add-job').should('be.disabled')
         })
 

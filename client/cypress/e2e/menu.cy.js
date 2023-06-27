@@ -43,17 +43,33 @@ describe('Menu', function() {
                 password: 'salainen1234',
                 passwordConfirm: 'salainen1234'
             }
+            const role = {
+                isForeman : 0,
+                isSupervisor: 0,
+                isWorker : 1,
+                isCoach : 0
+            }
+
             cy.request('POST', 'http://localhost:3001/api/register/', user)
+                .then((response) => {
+                    const id = response.body.id
+
+                    cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
+                })
+            cy.wait(500)
             cy.get('#username').type('Tiina14')
             cy.get('#password').type('salainen1234')
             cy.get('#login-button').click()
+        })
+
+        it('Worker sees  correct frontpage', function() {
+            cy.contains('Tapahtumat')
         })
 
         it('Navigation bar contains correct buttons', function() {
             cy.get('#navigationbar')
                 .should('contain', 'Etusivu')
                 .should('contain', 'Lisää tapahtuma')
-                .should('contain', 'Lisää työtunnit')
                 .should('contain', 'Kirjaudu ulos')
         })
 
@@ -63,13 +79,6 @@ describe('Menu', function() {
             cy.contains('Vastustaja')
             cy.contains('Lisätietoja')
             cy.url().should('include', '/event')
-        })
-
-        it('Add job button routes to a page with job form', function() {
-            cy.get('#addjob-link').click()
-            cy.contains('Ryhmä')
-            cy.contains('Aloitusaika')
-            cy.contains('Lisätietoja')
         })
 
         it('Frontpage button routes back to frontpage', function() {

@@ -81,7 +81,7 @@ describe('Password reset', function () {
             cy.get('#password').type('reiska12345')
             cy.get('#login-button').click()
 
-            cy.contains('Tapahtumat')
+            cy.contains('Työtunnit')
         })
 
     })
