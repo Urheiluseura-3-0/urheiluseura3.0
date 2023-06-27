@@ -99,6 +99,7 @@ beforeEach(async () => {
         squad: 'EBT Tytöt',
         context: 'Lajivalmennus',
         date: '2023-06-11',
+        time: '16:00',
         location: 'Leppävaara',
         hours: '3',
         minutes: '45'
@@ -139,6 +140,22 @@ test('cannot add a job if date is invalid', async () =>{
     newJob = {...newJob, date:'Kolmastoista viidettä 2023'}
 
     await expectFalsyAddedJob(newJob, finalToken, 'Päivä on virheellinen')
+
+})
+
+test('cannot add a job if time is missing', async () =>{
+
+    newJob = {...newJob, time:''}
+
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen aikaleima')
+
+})
+
+test('cannot add a job if time is invalid', async () =>{
+
+    newJob = {...newJob, time:'Viisitoista kolmekymmentä'}
+
+    await expectFalsyAddedJob(newJob, finalToken, 'Aika on virheellinen')
 
 })
 
