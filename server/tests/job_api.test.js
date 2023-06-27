@@ -1,10 +1,10 @@
 const supertest = require('supertest')
-const bcrypt = require('bcrypt')
 const { User } = require('../models')
 const { Job } =  require('../models')
 const app = require('../app')
 const Cookies = require('universal-cookie')
 const { hoursToDecimal } = require('../controllers/job')
+const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
@@ -15,48 +15,45 @@ const handleToken = (token) => {
     
 }
 
+const expectTruthyAddedJob = async (newJob, token) => {
+    await api
+        .post('/api/job')
+        .set('Cookie', token)
+        .send(newJob)
+        .expect(200)
+        
+}
+const expectFalsyAddedJob = async (newJob, token, message) => {
+    const response = await api
+        .post('/api/job')
+        .set('Cookie', token)
+        .send(newJob)
+
+    
+    expect(response.status).toBe(401)
+    expect(response.body.error).toContain(message)   
+}
+
+
+
 let user
 let loggedUser 
 let cookies
 let cryptedToken
+<<<<<<< HEAD
 let job
 
+=======
+>>>>>>> main
 let finalToken
+let newJob
 
 beforeEach(async () => {
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash('salainen1234', saltRounds)
 
-    const initialUsers = [
-        {
-            firstName: 'Pekka',
-            lastName: 'Testinen',
-            username: 'Pekka35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite@email.com'
-        },
-        {
-            firstName: 'Mikko',
-            lastName: 'Testinen',
-            username: 'Mikko35',
-            password: passwordHash,
-            address: 'Osoite',
-            postalCode: '00300',
-            city: 'Helsinki',
-            phoneNumber: '0509876543',
-            email: 'osoite2@email.com'
-        }
-    ]
 
-    await User.destroy({
-        where: {},
-        truncate: true,
-        cascade: true
-    })
+    const initialUsers = await testhelper.initializeInitialUsers()
+
+    testhelper.destroyAllUsers() 
 
     await User.bulkCreate(initialUsers)
 
@@ -110,289 +107,122 @@ beforeEach(async () => {
 
     finalToken = handleToken(cryptedToken)
 
+    newJob = {
+
+        squad: 'EBT Tytöt',
+        context: 'Lajivalmennus',
+        date: '2023-06-11',
+        location: 'Leppävaara',
+        hours: '3',
+        minutes: '45'
+    }
+
 } )
 
 test('job can be added with correct input', async () =>{
 
-    const newJob = {
-
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
-
-    await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(200)
+    await expectTruthyAddedJob(newJob, finalToken)
+    
 })
 
 test('job can be added without context', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, context:''}
 
-        squad: 'EBT Tytöt',
-        context: '',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
-
-    await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(200)
+    await expectTruthyAddedJob(newJob, finalToken)
 })
 
 test('cannot add a job if squad is missing', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, squad:''}
 
-        squad: '',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
+    
 
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Virheellinen ryhmä')
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen ryhmä')
 })
 
 test('cannot add a job if date is missing', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, date:''}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Virheellinen päivämäärä')
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen päivämäärä')
 
 })
 
 test('cannot add a job if date is invalid', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, date:'Kolmastoista viidettä 2023'}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: 'Kolmastoista viidettä 2023',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Päivä on virheellinen')
+    await expectFalsyAddedJob(newJob, finalToken, 'Päivä on virheellinen')
 
 })
 
 test('cannot add a job if location is missing', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, location:''}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: '',
-        hours: '3',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Virheellinen sijainti')
-
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen sijainti')
 })
 
 test('cannot add a job if hours are missing', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, hours:''}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Virheelliset työtunnit')
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheelliset työtunnit')
 
 })
 
 test('cannot add a job if hours are invalid', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, hours:'viisi'}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: 'Viisi',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Tunnit on virheellinen')
+    await expectFalsyAddedJob(newJob, finalToken, 'Tunnit on virheellinen')
 
 })
 
 test('cannot add a job if hours are too high', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, hours:'38'}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '38',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Tunnit on virheellinen')
+    await expectFalsyAddedJob(newJob, finalToken, 'Tunnit on virheellinen')
 
 })
 
 
 test('cannot add a job if minutes are missing', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, minutes:''}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: ''
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Virheelliset minuutit')
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheelliset minuutit')
 
 })
 
 test('cannot add a job if minutes are invalid', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, minutes:'viisitoista'}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: 'viisitoista'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Minuutit on virheellinen')
+    await expectFalsyAddedJob(newJob, finalToken, 'Minuutit on virheellinen')
 
 })
 
 test('cannot add a job if minutes are too high', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, minutes:'68'}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '68'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Minuutit on virheellinen')
+    await expectFalsyAddedJob(newJob, finalToken, 'Minuutit on virheellinen')
 
 })
 
 
 test('cannot add a job if token is invalid', async () =>{
 
-    const newJob = {
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', 'InvalidToken')
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain('Kirjaudu ensin sisään')
+    await expectFalsyAddedJob(newJob, 'invalidToken', 'Kirjaudu ensin sisään')
 
 })
 
 test('correct number of events in database', async () =>{
 
-    const newJob = {
-
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
 
     await api
         .post('/api/job')
@@ -406,84 +236,36 @@ test('correct number of events in database', async () =>{
 
 test('validation does not accept too short squad name', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, squad:'O'}
 
-        squad: 'O',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
+    await expectFalsyAddedJob(newJob, finalToken,' Sallittu pituus kentälle Ryhmä on 2-40 merkkiä')
 
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain(' Sallittu pituus kentälle Ryhmä on 2-40 merkkiä')
 })
 
 test('validation does not accept too long squad name', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, squad:'Tämänkentänpituusonylineljäkymmentämerkkiä'}
+    await expectFalsyAddedJob(newJob, finalToken,' Sallittu pituus kentälle Ryhmä on 2-40 merkkiä')
 
-        squad: 'Tämänkentänpituusonylineljäkymmentämerkkiä',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
-    }
-
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain(' Sallittu pituus kentälle Ryhmä on 2-40 merkkiä')
 })
 
 test('validation does not accept too long context', async () =>{
-
-    const newJob = {
-
-        squad: 'EBT Tytöt',
-        context: 'Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. \
+    newJob = {...newJob, context:
+        'Espoo Basket Team (EBT) on Suomen Koripalloliiton jäsenseura. \
         EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura. \
-        Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, niin harraste-, kilpa- kuin huipputasolla.',
-        date: '2023-06-11',
-        location: 'Leppävaara',
-        hours: '3',
-        minutes: '45'
+        Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, niin harraste-, kilpa- kuin huipputasolla.'
     }
 
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain(' Sallittu pituus kentälle Konteksti on 200 merkkiä')
+    await expectFalsyAddedJob(newJob, finalToken,' Sallittu pituus kentälle Konteksti on 200 merkkiä')
+
 })
 
 test('validation does not accept too long location', async () =>{
 
-    const newJob = {
+    newJob = {...newJob, location:'Tämänkentänpituusonylineljäkymmentämerkkiä'}
 
-        squad: 'EBT Tytöt',
-        context: 'Lajivalmennus',
-        date: '2023-06-11',
-        location: 'Tämänkentänpituusonylineljäkymmentämerkkiä',
-        hours: '3',
-        minutes: '45'
-    }
+    await expectFalsyAddedJob(newJob, finalToken, ' Sallittu pituus kentälle Sijainti on 2-40 merkkiä')
 
-    const result = await api
-        .post('/api/job')
-        .set('Cookie', finalToken)
-        .send(newJob)
-        .expect(401)
-    expect(result.body.error).toContain(' Sallittu pituus kentälle Sijainti on 2-40 merkkiä')
 })
 
 test('hoursToDecimal returns correct value', async () => {

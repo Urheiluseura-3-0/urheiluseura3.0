@@ -6,8 +6,7 @@ const { tokenExtractor } = require('../utils/middleware')
 const { validateJobInput } = require('../utils/validate_input.js')
 
 function hoursToDecimal(hours,minutes) {
-
-    if( minutes === 0) {
+    if (minutes === 0) {
         return hours
     }
     const decimalHours = hours + minutes/60
@@ -22,7 +21,7 @@ function checkErrors(parameter, message, response) {
 
 jobRouter.post('/', tokenExtractor, async (request, response) => {
 
-    try{
+    try {
 
         const {squad, context, date, location, hours, minutes } = request.body
 
@@ -37,15 +36,12 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
 
         const checkJobErrors = validateJobInput(squad, context, date, location, intHours, intMinutes)
 
-
         if (checkJobErrors.length > 0) {
             return response.status(401).json({ error: `${checkJobErrors}` })
 
         }
 
-
         const workhours = hoursToDecimal(intHours, intMinutes)
-
 
         const finduser = await User.findByPk(request.decodedToken.id)
 
@@ -65,11 +61,9 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
 
         const savedJob = await Job.create(job.dataValues)
 
-
-
         return response.status(200).json(savedJob)
  
-    }catch(error){
+    } catch (error) {
         return response.status(400)
     }
 })
@@ -87,22 +81,21 @@ jobRouter.get('/', tokenExtractor, async (request, response) => {
 })
 
 jobRouter.get('/:id', tokenExtractor, async (request, response) => {
-    try{
-
+    try {
         const job = await Job.findByPk(request.params.id)
 
-        if(job ){
+        if (job) {
             if (job.createdById === request.decodedToken.id) {
                 return response.json(job) }
             else{
                 return response.status(400).json({error: 'Virheellinen käyttäjän id'}).end()
             }
         
-        }else{
+        } else {
             return response.status(404).end()
         }
 
-    }catch(error){
+    } catch (error) {
         return response.status(400).end()
     }
 })

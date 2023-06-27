@@ -28,7 +28,7 @@ describe('Menu', function() {
         })
     })
 
-    describe('Menu when user is logged in', function() {
+    describe('Menu when user is logged in as a worker', function() {
 
         beforeEach(function() {
             const user = {
@@ -89,4 +89,56 @@ describe('Menu', function() {
         })
 
     })
+
+    describe('Menu when user is logged in as a foreman', function() {
+
+        beforeEach(function() {
+            const user = {
+                firstName: 'Tiina',
+                lastName: 'Testaaja',
+                address: 'Testauskatu 10',
+                postalCode: '00100',
+                city: 'Helsinki',
+                phoneNumber: '0401234567',
+                email: 'tiina.testaaja@keskitty.com',
+                username: 'Tiina14',
+                password: 'salainen1234',
+                passwordConfirm: 'salainen1234'
+            }
+
+            const role = {
+                isForeman : 1,
+                isSupervisor: 0,
+                isWorker : 0,
+                isCoach : 0
+            }
+
+            cy.request('POST', 'http://localhost:3001/api/register/', user)
+                .then((response) => {
+                    const id = response.body.id
+
+                    cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
+                })
+            cy.get('#username').type('Tiina14')
+            cy.get('#password').type('salainen1234')
+            cy.get('#login-button').click()
+        })
+
+        it('Navigation bar contains correct buttons', function() {
+            cy.get('#navigationbar').should('exist')
+            cy.get('#frontpage-link').should('exist')
+            cy.get('#addevent-link').should('not.exist')
+            cy.get('#addjob-link').should('not.exist')
+            cy.get('#logout-button').should('exist')
+        })
+
+        it('Logout button logs out the user', function() {
+            cy.get('#logout-button').click()
+            cy.contains('Käyttäjänimi')
+            cy.contains('Salasana')
+            cy.url().should('include', '/')
+        })
+
+    })
 })
+
