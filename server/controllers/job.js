@@ -4,6 +4,7 @@ const { Job } = require('../models')
 const { User } = require('../models')
 const { tokenExtractor } = require('../utils/middleware')
 const { validateJobInput } = require('../utils/validate_input.js')
+const { checkMissing } = require('../utils/checks')
 
 function hoursToDecimal(hours,minutes) {
 
@@ -21,6 +22,13 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
 
         const intHours = parseInt(hours)
         const intMinutes = parseInt(minutes)
+
+        checkMissing(squad, 'Virheellinen ryhmä', response)
+        checkMissing(date, 'Virheellinen päivämäärä', response)
+        checkMissing(time, 'Virheellinen aikaleima', response)
+        checkMissing(location, 'Virheellinen sijainti', response)
+        checkMissing(hours, 'Virheelliset työtunnit', response)
+        checkMissing(minutes, 'Virheelliset minuutit', response)
 
         const checkJobErrors = validateJobInput(squad, context, date, time, location, intHours, intMinutes)
 

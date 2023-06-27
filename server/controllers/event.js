@@ -5,6 +5,7 @@ const { User } = require('../models')
 const { Team } = require('../models')
 const { validateEventInput } = require('../utils/validate_input.js')
 const { tokenExtractor } = require('../utils/middleware')
+const { checkMissing } = require('../utils/checks')
 
 
 
@@ -13,6 +14,12 @@ eventRouter.post('/', tokenExtractor, async (request, response) => {
 
     try {
         const { team, opponent, location, date, time, description } = request.body
+
+        checkMissing(team, 'Virheellinen tiimi', response)
+        checkMissing(opponent, 'Virheellinen vastustaja', response)
+        checkMissing(location, 'Virheellinen sijainti', response)
+        checkMissing(date,'Virheellinen päivämäärä' , response)
+        checkMissing(time ,'Virheellinen aika', response)
 
         const checkEventErrors = validateEventInput(team, opponent, date, time, location, description)
 
