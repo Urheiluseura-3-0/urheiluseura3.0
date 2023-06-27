@@ -8,13 +8,6 @@ const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
-const handleToken = (token) => {
-
-    const finalToken = token.split(';')[0]
-    return finalToken
-    
-}
-
 const expectTruthyAddedJob = async (newJob, token) => {
     await api
         .post('/api/job')
@@ -34,22 +27,16 @@ const expectFalsyAddedJob = async (newJob, token, message) => {
     expect(response.body.error).toContain(message)   
 }
 
-
-
 let user
 let loggedUser 
 let cookies
 let cryptedToken
-<<<<<<< HEAD
 let job
 
-=======
->>>>>>> main
 let finalToken
 let newJob
 
 beforeEach(async () => {
-
 
     const initialUsers = await testhelper.initializeInitialUsers()
 
@@ -105,7 +92,7 @@ beforeEach(async () => {
     cookies = new Cookies(loggedUser.headers['set-cookie'])
     cryptedToken = cookies.cookies[0]
 
-    finalToken = handleToken(cryptedToken)
+    finalToken = testhelper.handleToken(cryptedToken)
 
     newJob = {
 
@@ -135,8 +122,6 @@ test('job can be added without context', async () =>{
 test('cannot add a job if squad is missing', async () =>{
 
     newJob = {...newJob, squad:''}
-
-    
 
     await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen ryhmä')
 })
@@ -188,7 +173,6 @@ test('cannot add a job if hours are too high', async () =>{
 
 })
 
-
 test('cannot add a job if minutes are missing', async () =>{
 
     newJob = {...newJob, minutes:''}
@@ -213,16 +197,13 @@ test('cannot add a job if minutes are too high', async () =>{
 
 })
 
-
 test('cannot add a job if token is invalid', async () =>{
-
 
     await expectFalsyAddedJob(newJob, 'invalidToken', 'Kirjaudu ensin sisään')
 
 })
 
 test('correct number of events in database', async () =>{
-
 
     await api
         .post('/api/job')

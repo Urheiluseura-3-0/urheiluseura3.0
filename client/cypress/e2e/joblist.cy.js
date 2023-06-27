@@ -26,8 +26,6 @@ describe('Joblist', function () {
 
         const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
 
-
-
         const jobs = [
             {
                 squad: 'Pojat-19',
@@ -149,11 +147,11 @@ describe('Joblist', function () {
             cy.get('#date').click()
             cy.get('#jobs').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/2?1\/0?6\/2023|0?6\/2?1\/2023/)
+                    expect(text).to.match(/2?1[/|.]0?6[/|.]2023|0?6[/|.]2?1[/|.]2023/)
                 })
             cy.get('#jobs').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/0?5\/22\/2023|22\/0?5\/2023/)
+                    expect(text).to.match(/0?5[/|.]22[/|.]2023|22[/|.]0?5[/|.]2023/)
                 })
         })
 
@@ -188,7 +186,6 @@ describe('Joblist', function () {
                 .should('contain', 'Odottaa hyväksyntää')
                 .should('contain', 'Luotu')
                 .should('contain', 'Hyväksyjän nimi')
-
 
         })
 
@@ -233,11 +230,11 @@ describe('Joblist', function () {
             cy.get('#date').click()
             cy.get('#jobs').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/2?1\/0?6\/2023|0?6\/2?1\/2023/)
+                    expect(text).to.match(/2?1[/|.]0?6[/|.]2023|0?6[/|.]2?1[/|.]2023/)
                 })
             cy.get('#jobs').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/0?5\/22\/2023|22\/0?5\/2023/)
+                    expect(text).to.match(/0?5[/|.]22[/|.]2023|22[/|.]0?5[/|.]2023/)
                 })
         })
 
