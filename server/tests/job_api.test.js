@@ -42,7 +42,7 @@ let cookies
 let cryptedToken
 let finalToken
 let newJob
-
+let job
 beforeEach(async () => {
 
 
