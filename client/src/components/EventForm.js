@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import eventService from '../services/event'
 import teamService from '../services/team'
 import Notification from './Notification'
+import FormField from './FormField'
+import SendButton from './SendButton'
+import FormDropdown from './FormDropdown'
 
 const EventForm = () => {
     const [team, setTeam] = useState('0')
@@ -85,29 +88,6 @@ const EventForm = () => {
         setTeams(teams)
     }
 
-    const renderFormError = (parameter, parameterValid, errorid, errorMessage) => {
-
-        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
-
-        return (
-            changedParameter || parameterValid ? null : (
-                <p id={errorid} className='peer-focus:hidden text-red-500 text-sm'>
-                    {errorMessage}
-                </p>
-            )
-        )
-    }
-
-    const renderClassName = (parameter, parameterValid) => {
-
-        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
-
-        return (
-            `peer border rounded p-2 w-full ${changedParameter || parameterValid ? 'border-gray-300' : 'border-red-500'
-            }`
-        )
-    }
-
     useEffect(() => {
         validateFields()
     }, [team, opponent, location, date, time, description])
@@ -123,90 +103,63 @@ const EventForm = () => {
             {showAlert && <Notification type={alertType} message={alertMessage} />}
             <form>
                 <div className='space-y-3'>
-                    <div className='pt-3'>
-                        <label className='block'>Joukkue</label>
-                        <select id='team' value={team} onChange={({ target }) => {
+                    <FormDropdown label='Joukkue' id='team' value={team}
+                        onChange={({ target }) => {
                             setTeam(target.value)
                             setIsTeamValid(target.value > 0)
                         }}
-                        className={`peer border rounded p-2 w-full ${!isOpponentValid || isTeamValid
-                            ? 'border-gray-300'
-                            : 'border-red-500'}`}
-                        >
-                            <option value='0'>Valitse joukkue</option>
-                            {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
-                        </select>
-                        {!isOpponentValid || isTeamValid ? null : (
-                            <p id='team-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                Valitse jokin joukkue
-                            </p>
-                        )}
-                    </div>
-                    <div>
-                        <label className='block'>Vastustaja</label>
-                        <input id='opponent' type='text' value={opponent} maxLength={40}
-                            onChange={({ target }) => {
-                                setOpponent(target.value)
-                                setIsOpponentValid(target.value.length >= 2 && target.value.length <= 40)
-                            }}
-                            className={renderClassName(opponent.length, isOpponentValid)}
-                        />{renderFormError(opponent.length, isOpponentValid,
-                            'opponent-error', 'Vastustajan on oltava vähintään 2 merkkiä')}
-                    </div>
-                    <div>
-                        <label className='block'>Paikka</label>
-                        <input id='location' type='text' value={location} maxLength={40}
-                            onChange={({ target }) => {
-                                setLocation(target.value)
-                                setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
-                            }}
-                            className={renderClassName(location.length, isLocationValid)}
-                        />{renderFormError(location.length, isLocationValid,
-                            'location-error', 'Paikan on oltava vähintään 2 merkkiä')}
-                    </div>
-                    <div>
-                        <label className='block'>Päivämäärä</label>
-                        <input id='date' type='date' value={date}
-                            onChange={({ target }) => {
-                                setDate(target.value)
-                                setIsDateValid(validateDate(target.value))
-                            }}
-                            className={renderClassName(date, isDateValid)}
-                        />{renderFormError(date, isDateValid, 'date-error', 'Tarkista päivämäärä')}
-                    </div>
-                    <div>
-                        <label className='block'>Kellonaika</label>
-                        <input id='time' type='time' value={time}
-                            onChange={({ target }) => {
-                                setTime(target.value)
-                                setIsTimeValid(validateTime(target.value))
-                            }}
-                            className={renderClassName(time, isTimeValid)}
-                        />{renderFormError(time, isTimeValid, 'time-error', 'Tarkista kellonaika')}
-                    </div>
-                    <div>
-                        <label className='block'>Lisätietoja</label>
-                        <input id='description' type='text' value={description} maxLength={200}
-                            onChange={({ target }) => {
-                                setDescription(target.value)
-                                setIsDescriptionValid(target.value.length <= 200)
-                            }}
-                            className={'peer border rounded p-2 w-full border-gray-300'}
-                        />
-                    </div>
-                    <div className='flex'>
-                        <button
-                            id='add-event'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
-                                ? ''
-                                : 'opacity-30 cursor-not-allowed hover:'}
-                                font-semibold text-white
-                                `}
-                            disabled={!isInputValid}
-                            title={isInputValid ? null : 'Täytä puuttuvat kentät'}
-                            onClick={handleEvent}>Lisää tapahtuma</button>
+                        isValid={(!isOpponentValid || isTeamValid)}
+                        title='Valitse joukkue'
+                        dropdown={teams}
+                        errorId='team-error'
+                        errorMessage='Valitse jokin joukkue'
+                    />
+                    <FormField label='Vastustaja' id='opponent' type='text' value={opponent} maxLength={40}
+                        onChange={({ target }) => {
+                            setOpponent(target.value)
+                            setIsOpponentValid(target.value.length >= 2 && target.value.length <= 40)
+                        }}
+                        isValid={isOpponentValid}
+                        errorId='opponent-error'
+                        errorMessage='Vastustajan on oltava vähintään 2 merkkiä'
+                    />
+                    <FormField label='Paikka' id='location' type='text' value={location} maxLength={40}
+                        onChange={({ target }) => {
+                            setLocation(target.value)
+                            setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
+                        }}
+                        isValid={isLocationValid}
+                        errorId='location-error'
+                        errorMessage='Paikan on oltava vähintään 2 merkkiä'
+                    />
+                    <FormField label='Päivämäärä' id='date' type='date' value={date}
+                        onChange={({ target }) => {
+                            setDate(target.value)
+                            setIsDateValid(validateDate(target.value))
+                        }}
+                        isValid={isDateValid}
+                        errorId='date-error'
+                        errorMessage='Tarkista päivämäärä'
+                    />
+                    <FormField label='Kellonaika' id='time' type='time' value={time}
+                        onChange={({ target }) => {
+                            setTime(target.value)
+                            setIsTimeValid(validateTime(target.value))
+                        }}
+                        isValid={isTimeValid}
+                        errorId='time-error'
+                        errorMessage='Tarkista kellonaika'
+                    />
+                    <FormField label='Lisätietoja' id='description' type='text' value={description} maxLength={200}
+                        onChange={({ target }) => {
+                            setDescription(target.value)
+                            setIsDescriptionValid(target.value.length <= 200)
+                        }}
+                        isValid={isDescriptionValid}
+                    />
 
-                    </div>
+                    <SendButton id='add-event' isInputValid={isInputValid} handleSubmit={handleEvent}
+                        message='Täytä puuttuvat kentät' text='Lisää tapahtuma' />
                 </div>
             </form>
         </div>

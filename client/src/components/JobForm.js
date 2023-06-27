@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import jobService from '../services/job'
 import Notification from './Notification'
+import FormField from './FormField'
+import SendButton from './SendButton'
 
 const JobForm = () => {
     const [squad, setSquad] = useState('')
@@ -100,30 +102,6 @@ const JobForm = () => {
     }
 
 
-    const renderFormError = (parameter, parameterValid, errorid, errorMessage) => {
-
-        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
-
-        return (
-            changedParameter || parameterValid ? null : (
-                <p id={errorid} className='peer-focus:hidden text-red-500 text-sm'>
-                    {errorMessage}
-                </p>
-            )
-        )
-    }
-
-    const renderClassName = (parameter, parameterValid) => {
-
-        const changedParameter = Number.isInteger(parameter) ? parameter === 0 : parameter.valueOf() === ''
-
-        return (
-            `peer border rounded p-2 w-full ${changedParameter || parameterValid ? 'border-gray-300' : 'border-red-500'
-            }`
-        )
-    }
-
-
     useEffect(() => {
         validateFields()
     }, [squad, location, date, time, context, hours, minutes])
@@ -135,106 +113,71 @@ const JobForm = () => {
             <form>
                 <div className='space-y-3'>
 
-                    <div>
-                        <label className='block'>Ryhmä</label>
-                        <input id='squad' type='text' value={squad} maxLength={40}
-                            onChange={({ target }) => {
-                                setSquad(target.value)
-                                setIsSquadValid(target.value.length >= 2 && target.value.length <= 40)
-                            }}
-                            className={renderClassName(squad.length, isSquadValid)}
-                        />{
-                            renderFormError(squad.length, isSquadValid,
-                                'squad-error', 'Ryhmän nimen on oltava vähintään 2 merkkiä')
-                        }
-                    </div>
-                    <div>
-                        <label className='block'>Paikka</label>
-                        <input id='location' type='text' value={location} maxLength={40}
-                            onChange={({ target }) => {
-                                setLocation(target.value)
-                                setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
-                            }}
-                            className={renderClassName(location.length, isLocationValid)}
-                        />{renderFormError(location.length, isLocationValid,
-                            'location-error', 'Paikan nimen on oltava vähintään 2 merkkiä')}
-                    </div>
-                    <div>
-                        <label className='block'>Päivämäärä</label>
-                        <input id='date' type='date' value={date}
-                            onChange={({ target }) => {
-                                setDate(target.value)
-                                setIsDateValid(validateDate(target.value))
-                            }}
-                            className={renderClassName(date, isDateValid)}
-                        />{renderFormError(date, isDateValid, 'date-error', 'Tarkista päivämäärä')}
-                    </div>
-                    <div>
-                        <label className='block'>Aloitusaika</label>
-                        <input id='start-time' type='time' value={time}
-                            onChange={({ target }) => {
-                                setTime(target.value)
-                                setIsTimeValid(validateTime(target.value))
-                            }}
-                            className={renderClassName(time, isTimeValid)}
-                        />{renderFormError(time, isTimeValid, 'start-time-error', 'Tarkista aloitusaika')}
-                    </div>
+                    <FormField label='Ryhmä' id='squad' type='text' value={squad} maxLength={40}
+                        onChange={({ target }) => {
+                            setSquad(target.value)
+                            setIsSquadValid(target.value.length >= 2 && target.value.length <= 40)
+                        }}
+                        isValid={isSquadValid}
+                        errorId='squad-error'
+                        errorMessage={'Ryhmän nimen on oltava vähintään 2 merkkiä'}
+                    />
+                    <FormField label='Paikka' id='location' type='text' value={location} maxLength={40}
+                        onChange={({ target }) => {
+                            setLocation(target.value)
+                            setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
+                        }}
+                        isValid={isLocationValid}
+                        errorId='location-error'
+                        errorMessage={'Paikan on oltava vähintään 2 merkkiä'}
+                    />
+                    <FormField label='Päivämäärä' id='date' type='date' value={date}
+                        onChange={({ target }) => {
+                            setDate(target.value)
+                            setIsDateValid(validateDate(target.value))
+                        }}
+                        isValid={isDateValid}
+                        errorId='date-error'
+                        errorMessage={'Tarkista päivämäärä'}
+                    />
+                    <FormField label='Aloitusaika' id='start-time' type='time' value={time}
+                        onChange={({ target }) => {
+                            setTime(target.value)
+                            setIsTimeValid(validateTime(target.value))
+                        }}
+                        isValid={isTimeValid}
+                        errorId='start-time-error'
+                        errorMessage={'Tarkista aloitusaika'}
+                    />
                     <h3 className='text-l'>Työaika</h3>
                     <div className='flex space-x-8'>
                         <div>
-                            <label className='block'>Tunnit</label>
-                            <div>
-                                <input
-                                    className='peer border rounded p-2 w-full border-gray-300'
-                                    id='hours'
-                                    type='number'
-                                    value={hours}
-                                    min={0} max={24}
-                                    onChange={({ target }) => {
-                                        setHours(target.value)
-                                        setIsWorkedTimeValid(validateHours(target.value))
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label className='block'>Minuutit</label>
-                            <input
-                                className='peer border rounded p-2 w-full border-gray-300'
-                                id='minutes'
-                                type='number'
-                                value={minutes}
-                                min={0} max={59}
+                            <FormField label='Tunnit' id='hours' type='number' value={hours} min={0} max={24}
+                                onChange={({ target }) => {
+                                    setHours(target.value)
+                                    setIsWorkedTimeValid(validateHours(target.value))
+                                }}
+                                isValid={isWorkedTimeValid}
+                            />
+                            <FormField label='Minuutit' id='minutes' type='number' value={minutes} min={0} max={59}
                                 onChange={({ target }) => {
                                     setMinutes(target.value)
                                     setIsWorkedTimeValid(validateMinutes(target.value))
                                 }}
+                                isValid={isWorkedTimeValid}
                             />
                         </div>
                     </div>
-                    <div>
-                        <label className='block'>Lisätietoja</label>
-                        <input id='context' type='text' value={context} maxLength={200}
-                            onChange={({ target }) => {
-                                setContext(target.value)
-                                setIsContextValid(target.value.length <= 200)
-                            }}
-                            className={'peer border rounded p-2 w-full border-gray-300'}
-                        />
-                    </div>
-                    <div className='flex'>
-                        <button
-                            id='add-job'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
-                                ? ''
-                                : 'opacity-30 cursor-not-allowed hover:'}
-                                font-semibold text-white 
-                            `}
-                            disabled={!isInputValid}
-                            title={isInputValid ? null : 'Täytä puuttuvat kentät'}
-                            onClick={handleSubmit}>Lähetä</button>
+                    <FormField label='Lisätietoja' id='context' type='text' value={context} maxLength={200}
+                        onChange={({ target }) => {
+                            setContext(target.value)
+                            setIsContextValid(target.value.length <= 200)
+                        }}
+                        isValid={isContextValid}
+                    />
 
-                    </div>
+                    <SendButton id='add-job' isInputValid={isInputValid} handleSubmit={handleSubmit}
+                        message='Täytä puuttuvat kentät' text='Lähetä' />
                 </div>
             </form>
         </div>
