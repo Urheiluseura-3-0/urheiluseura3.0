@@ -41,7 +41,7 @@ beforeEach(async () => {
     
     user = await User.create(initialUser)
     user = { username: 'Pekka35', password: 'salainen1234' }
-    loggedUser = await api.post('/api/login').send(user)
+    loggedUser = await api.post('/api/auth/login').send(user)
     cookies = new Cookies(loggedUser.headers['set-cookie'])
     cryptedToken = cookies.cookies[0]
 

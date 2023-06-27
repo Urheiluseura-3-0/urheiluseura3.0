@@ -23,7 +23,7 @@ test('User role is worker and coach when a new user is created', async () => {
 
 test('Role changes when a request is made', async () => {
     const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
+    const loggedUser = await api.post('/api/auth/login').send(user)
     const cookies = new Cookies(loggedUser.headers['set-cookie'])
     const cryptedToken = cookies.cookies[0]
     const finalToken = testhelper.handleToken(cryptedToken)
@@ -59,7 +59,7 @@ test('Role changes when a request is made', async () => {
 
 test('Cannot change roles of id that does not exist', async () => {
     const user = {username: 'Pekka35', password: 'salainen1234'}
-    const loggedUser = await api.post('/api/login').send(user)
+    const loggedUser = await api.post('/api/auth/login').send(user)
     const cookies = new Cookies(loggedUser.headers['set-cookie'])
     const cryptedToken = cookies.cookies[0]
     const finalToken = testhelper.handleToken(cryptedToken)
