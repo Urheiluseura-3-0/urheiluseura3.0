@@ -59,7 +59,12 @@ registerRouter.post('/', async (request, response) => {
 
         const userForToken = {
             username: savedUser.username,
-            id: savedUser.id
+            id: savedUser.id,
+            isWorker: savedUser.isWorker,
+            isForeman: savedUser.isForeman,
+            isCoach: savedUser.isCoach,
+            isSupervisor: savedUser.isSupervisor,
+            isAdmin: savedUser.isAdmin
         }
         const token = jwt.sign(
             userForToken,
