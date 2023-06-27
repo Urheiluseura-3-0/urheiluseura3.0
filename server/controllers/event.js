@@ -14,7 +14,6 @@ eventRouter.post('/', tokenExtractor, async (request, response) => {
 
     try {
         const { team, opponent, location, date, time, description } = request.body
-
         checkMissing(team, 'Virheellinen tiimi', response)
         checkMissing(opponent, 'Virheellinen vastustaja', response)
         checkMissing(location, 'Virheellinen sijainti', response)

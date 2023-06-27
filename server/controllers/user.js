@@ -4,12 +4,15 @@ const userRouter = require('express').Router()
 const config = require('../utils/config')
 const { User } = require('../models')
 const { validateLoginInput } = require('../utils/validate_input.js')
+const { checkMissing } = require('../utils/checks')
 
 userRouter.post('/login', async (request, response) => {
 
     try {
 
         const { username, password } = request.body
+        checkMissing(username, 'Käyttäjänimi puuttuu', response)
+        checkMissing(password,'Salasana puuttuu', response)
 
         const checkInputErrors = validateLoginInput(username, password)
 

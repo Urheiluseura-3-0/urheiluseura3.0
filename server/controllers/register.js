@@ -4,6 +4,7 @@ const registerRouter = require('express').Router()
 const config = require('../utils/config')
 const { User } = require('../models')
 const { validateRegisterInput } = require('../utils/validate_input.js')
+const { checkMissing } = require('../utils/checks')
 
 registerRouter.post('/', async (request, response) => {
     try {
@@ -11,6 +12,16 @@ registerRouter.post('/', async (request, response) => {
         const {
             username, password, passwordConfirm, firstName, lastName, address, city, postalCode, phoneNumber, email
         } = request.body
+        checkMissing(username, 'Käyttäjänimi puuttuu', response)
+        checkMissing(password,'Salasana puuttuu', response)
+        checkMissing(passwordConfirm, 'Salasanan varmistus puuttuu', response)
+        checkMissing(firstName, 'Etunimi puuttuu', response)
+        checkMissing(lastName, 'Sukunimi puuttuu', response)
+        checkMissing(address, 'Osoite puuttuu', response)
+        checkMissing(city, 'Kaupunki puuttuu', response)
+        checkMissing(postalCode, 'Postiosoite puuttuu', response)
+        checkMissing(phoneNumber, 'Puhelinnumero puuttuu', response)
+        checkMissing(email, 'Sähköpostiosoite puuttuu', response)
 
         if (password != passwordConfirm) {
             return response.status(401).json({ error: 'Salasanat eivät täsmää.' })
