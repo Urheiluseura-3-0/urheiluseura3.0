@@ -9,7 +9,7 @@ const DATABASE_URL =
         : process.env.DATABASE_URL
 
 let BASEURL = process.env.NODE_ENV === 'production'
-    ? 'https://urheiluseura.fly.dev'
+    ? process.env.BASE_URL
     : 'http://localhost:3000'
 
 if (process.env.NODE_ENV === 'test'){
