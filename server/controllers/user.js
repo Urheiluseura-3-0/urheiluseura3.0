@@ -5,7 +5,7 @@ const config = require('../utils/config')
 const { User } = require('../models')
 const { validateLoginInput } = require('../utils/validate_input.js')
 
-userRouter.post('/', async (request, response) => {
+userRouter.post('/login', async (request, response) => {
 
     try {
 
@@ -64,8 +64,8 @@ userRouter.post('/', async (request, response) => {
 
 })
 
-//Log out
-userRouter.get('/', async (request, response) => {
+userRouter.post('/logout', async (request, response) => {
+
     try {
         return response
             .clearCookie('Token')
@@ -74,6 +74,7 @@ userRouter.get('/', async (request, response) => {
     } catch (error) {
         return response.status(400)
     }
+
 })
 
 
