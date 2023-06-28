@@ -40,7 +40,7 @@ describe('Routing', function() {
 
     })
 
-    describe('Routing when user is a worker', function() {
+    describe('Routing when user is a worker and coach', function() {
         beforeEach(function() {
             const user = {
                 firstName: 'Tiina',
