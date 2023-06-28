@@ -14,7 +14,7 @@ Riippumatta siitä minne sovellusta olet laittamassa, tarvitsee se toimiakseen p
 | EMAIL_USER | Sähköpostipalvelun käyttäjänimi |
 | EMAIL_PASSWORD | Sähköpostipalvelun salasana |
 | PORT | Portti, jota sovellus palvelimella käyttää |
-| SECRET | Salainen avain, jota käytetään salasanojen ja tokeneiden kryptaukseen |
+| SECRET | Salainen avain, jota käytetään tokeneiden kryptaukseen |
 
 ## Dockerfile
 
