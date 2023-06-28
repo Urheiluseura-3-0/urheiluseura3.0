@@ -1,4 +1,5 @@
 const { recurse } = require('cypress-recurse')
+import '../support/testHelpers'
 
 let userEmail
 
@@ -6,18 +7,7 @@ describe('Password request', function () {
     beforeEach(function () {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
 
-        const firstUser = {
-            firstName: 'Tiina',
-            lastName: 'Testaaja',
-            address: 'Testauskatu 10',
-            postalCode: '00100',
-            city: 'Helsinki',
-            phoneNumber: '0401234567',
-            email: 'tiina.testaaja@keskitty.com',
-            username: 'Tiina14',
-            password: 'salainen1234',
-            passwordConfirm: 'salainen1234'
-        }
+        const firstUser = Cypress.env('user')
         cy.request('POST', 'http://localhost:3001/api/register/', firstUser)
 
         recurse(

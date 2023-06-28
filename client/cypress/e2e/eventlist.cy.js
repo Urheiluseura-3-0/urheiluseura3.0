@@ -4,42 +4,10 @@ describe('Eventlist', function () {
 
 
     beforeEach(function () {
-        cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = Cypress.env('user')
+        cy.createUserForTesting()
+        cy.addTeams()
 
-        cy.request('POST', 'http://localhost:3001/api/register/', user)
-        const teams = [
-            {
-                name: 'Miehet IB',
-                category: 'edustus'
-            },
-            {
-                name: 'EBT Naiset',
-                category: 'edustus'
-            },
-
-            {
-                name: 'Pojat UI19 ',
-                category: 'u19'
-            }
-        ]
-
-
-        cy.request('POST', 'http://localhost:3001/api/team', teams[0])
-
-        cy.request('POST', 'http://localhost:3001/api/team', teams[1])
-
-        cy.request('POST', 'http://localhost:3001/api/team', teams[2])
-
-
-
-        const loggedUserInfo =
-        {
-            username: 'Tiina14',
-            password: 'salainen1234'
-        }
-
-        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', loggedUserInfo)
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', Cypress.env('loggedUserInfo'))
 
 
 
@@ -189,16 +157,13 @@ describe('Eventlist', function () {
         it('User can sort unconfirmed events by location', function () {
             cy.wait(1000)
             cy.get('#location').click()
-            cy.get('#events').find('tbody').find('tr').first().find('td').eq(1).should('have.text', 'Espoo')
-            cy.get('#events').find('tbody').find('tr').last().find('td').eq(1).should('have.text', 'Vantaa')
-
+            cy.tableColumnHasValues('#events',1, 'Espoo', 'Vantaa')
         })
 
         it('User can sort unconfirmed events by Team', function () {
             cy.wait(1000)
             cy.get('#team').click()
-            cy.get('#events').find('tbody').find('tr').first().find('td').eq(2).should('have.text', 'EBT Naiset')
-            cy.get('#events').find('tbody').find('tr').last().find('td').eq(2).should('have.text', 'Pojat UI19 ')
+            cy.tableColumnHasValues('#events',2, 'EBT Naiset', 'Pojat UI19 ')
 
         })
 
@@ -275,15 +240,13 @@ describe('Eventlist', function () {
         it('User can sort all events by location', function () {
             cy.wait(1000)
             cy.get('#location').click()
-            cy.get('#events').find('tbody').find('tr').first().find('td').eq(1).should('have.text', 'Espoo')
-            cy.get('#events').find('tbody').find('tr').last().find('td').eq(1).should('have.text', 'Vantaa')
+            cy.tableColumnHasValues('#events', 1, 'Espoo', 'Vantaa')
 
         })
 
         it('User can sort all events by Team', function () {
             cy.get('#team').click()
-            cy.get('#events').find('tbody').find('tr').first().find('td').eq(2).should('have.text', 'EBT Naiset')
-            cy.get('#events').find('tbody').find('tr').last().find('td').eq(2).should('have.text', 'Pojat UI19 ')
+            cy.tableColumnHasValues('#events',2, 'EBT Naiset', 'Pojat UI19 ')
 
         })
 

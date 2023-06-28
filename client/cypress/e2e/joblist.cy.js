@@ -1,30 +1,13 @@
+import '../support/testHelpers'
+
 describe('Joblist', function () {
 
     beforeEach(function () {
-        cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = {
-            firstName: 'Tiina',
-            lastName: 'Testaaja',
-            address: 'Testauskatu 10',
-            postalCode: '00100',
-            city: 'Helsinki',
-            phoneNumber: '0401234567',
-            email: 'tiina.testaaja@keskitty.com',
-            username: 'Tiina14',
-            password: 'salainen1234',
-            passwordConfirm: 'salainen1234'
 
-        }
+        cy.createUserForTesting()
 
-        cy.request('POST', 'http://localhost:3001/api/register/', user)
 
-        const loggedUserInfo =
-        {
-            username: 'Tiina14',
-            password: 'salainen1234'
-        }
-
-        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', loggedUserInfo)
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', Cypress.env('loggedUserInfo'))
 
         const jobs = [
             {
@@ -164,15 +147,13 @@ describe('Joblist', function () {
         it('User can sort unconfirmed jobs by hours', function() {
             cy.wait(1000)
             cy.get('#hours').click()
-            cy.get('#jobs').find('tbody').find('tr').first().find('td').eq(1).should('have.text', '1h 30min')
-            cy.get('#jobs').find('tbody').find('tr').last().find('td').eq(1).should('have.text', '4h 30min')
+            cy.tableColumnHasValues('#jobs', 1,'1h 30min', '4h 30min')
         })
 
         it('User can sort unconfirmed jobs by squad', function () {
             cy.wait(1000)
             cy.get('#squad').click()
-            cy.get('#jobs').find('tbody').find('tr').first().find('td').eq(2).should('have.text', 'Aikuiset')
-            cy.get('#jobs').find('tbody').find('tr').last().find('td').eq(2).should('have.text', 'Tytöt-15')
+            cy.tableColumnHasValues('#jobs', 2,'Aikuiset', 'Tytöt-15')
         })
 
         it('User can see detailed information when clicking job', function () {
@@ -247,15 +228,13 @@ describe('Joblist', function () {
         it('User can sort all jobs by hours', function() {
             cy.wait(1000)
             cy.get('#hours').click()
-            cy.get('#jobs').find('tbody').find('tr').first().find('td').eq(1).should('have.text', '1h 30min')
-            cy.get('#jobs').find('tbody').find('tr').last().find('td').eq(1).should('have.text', '4h 30min')
+            cy.tableColumnHasValues('#jobs', 1,'1h 30min', '4h 30min')
         })
 
         it('User can sort all jobs by squad', function () {
             cy.wait(1000)
             cy.get('#squad').click()
-            cy.get('#jobs').find('tbody').find('tr').first().find('td').eq(2).should('have.text', 'Aikuiset')
-            cy.get('#jobs').find('tbody').find('tr').last().find('td').eq(2).should('have.text', 'Tytöt-15')
+            cy.tableColumnHasValues('#jobs', 2,'Aikuiset', 'Tytöt-15')
         })
 
     })

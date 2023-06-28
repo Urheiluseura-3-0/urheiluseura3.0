@@ -1,4 +1,4 @@
-
+import '../support/testHelpers'
 
 describe('Register', () => {
     beforeEach(() => {
@@ -24,34 +24,29 @@ describe('Register', () => {
 
         beforeEach(() => {
 
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="postalCode"]').type('02670')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
+            cy.get('input[name="firstname"]').clear()
         })
 
         it ('user cannot click next if first name is too short', function() {
             cy.get('input[name="firstname"]').type('O')
             cy.contains('label', 'Etunimi').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#firstname-error')
-                .should('be.visible')
+            cy.checkErrorExist('#firstname-error')
         })
 
 
         it ('user first name will not be too long', function() {
             cy.get('input[name="firstname"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-            cy.get('input[name="firstname"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[name="firstname"]', 40)
         })
     })
 
     describe('Last name check', function() {
 
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="postalCode"]').type('02670')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
+            cy.get('input[name="lastname"]').clear()
         })
 
         it ('user cannot click next if last name is too short', function() {
@@ -59,15 +54,14 @@ describe('Register', () => {
             cy.get('input[name="lastname"]').type('O')
             cy.contains('label', 'Sukunimi').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#lastname-error')
-                .should('be.visible')
+            cy.checkErrorExist('#lastname-error')
         })
 
 
         it ('user last name will not be too long', function() {
 
             cy.get('input[name="lastname"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-            cy.get('input[name="lastname"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[name="lastname"]', 40)
         })
 
     })
@@ -77,10 +71,8 @@ describe('Register', () => {
     describe('Address check', function() {
 
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="postalCode"]').type('02670')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
+            cy.get('input[name="address"]').clear()
         })
 
         it ('user cannot click next if address is too short', function() {
@@ -88,14 +80,14 @@ describe('Register', () => {
             cy.get('input[name="address"]').type('O')
             cy.contains('label', 'Osoite').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#address-error').should('be.visible')
+            cy.checkErrorExist('#address-error')
 
         })
 
         it ('user address will not be too long', function() {
 
             cy.get('input[name="address"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-            cy.get('input[name="address"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[name="address"]', 40)
         })
 
     })
@@ -103,24 +95,22 @@ describe('Register', () => {
     describe('Postal code check', function() {
 
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
+            cy.get('input[name="postalCode"]').clear()
         })
 
         it ('user cannot click next if postal code is too short', function(){
 
             cy.get('input[name="postalCode"]').type('12')
             cy.contains('label', 'Postinumero').click()
-            cy.get('#postalCode-error').should('be.visible')
+            cy.checkErrorExist('#postalCode-error')
             cy.get('#next-button').should('be.disabled')
         })
 
         it ('postal code will not be too long', function(){
 
             cy.get('input[name="postalCode"]').type('098740')
-            cy.get('input[name="postalCode"]').invoke('val').should('have.length', 5)
+            cy.checkCorrectLength('input[name="postalCode"]', 5)
         })
 
         it ('postal code only contains numbers', function(){
@@ -128,9 +118,7 @@ describe('Register', () => {
             cy.get('input[name="postalCode"]').type('ABCDE')
             cy.contains('label', 'Postinumero').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#postalCode-error')
-
-                .should('be.visible')
+            cy.checkErrorExist('#postalCode-error')
 
         })
     })
@@ -138,16 +126,14 @@ describe('Register', () => {
     describe('City check', function() {
 
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="postalCode"]').type('02670')
+            cy.setUpRegisterValuesStep1()
+            cy.get('input[name="city"]').clear()
         })
         it ('name of the city must contain at least two characters', function(){
 
             cy.get('input[name="city"]').type('A')
             cy.contains('label', 'Postitoimipaikka').click()
-            cy.get('#city-error').should('be.visible')
+            cy.checkErrorExist('#city-error')
             cy.get('#next-button').should('be.disabled')
 
         })
@@ -155,7 +141,7 @@ describe('Register', () => {
         it ('user cannot click next if city name is too long', function(){
 
             cy.get('input[name="city"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-            cy.get('input[name="city"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[name="city"]', 40)
         })
     })
 
@@ -163,11 +149,7 @@ describe('Register', () => {
     describe('Step changes', function () {
 
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="postalCode"]').type('02670')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
         })
 
         it('Step1 follows when step0 is ready', function() {
@@ -185,8 +167,7 @@ describe('Register', () => {
         it('Step2 follows when step1 is ready', function() {
             cy.get('#next-button').click()
 
-            cy.get('input[name="phoneNumber"]').type('0450985677')
-            cy.get('input[name="email"]').type('esimerkki@jippii.fi')
+            cy.setUpRegisterValuesStep2()
 
             cy.get('#next-button').click()
 
@@ -196,8 +177,7 @@ describe('Register', () => {
         it ('Back button changes views on step2', function() {
             cy.get('#next-button').click()
 
-            cy.get('input[name="phoneNumber"]').type('0450985677')
-            cy.get('input[name="email"]').type('esimerkki@jippii.fi')
+            cy.setUpRegisterValuesStep2()
 
             cy.get('#next-button').click()
 
@@ -209,14 +189,11 @@ describe('Register', () => {
         it('User is logged in when registration is succesful', function() {
             cy.get('#next-button').click()
 
-            cy.get('input[name="phoneNumber"]').type('0450985677')
-            cy.get('input[name="email"]').type('esimerkki@jippii.fi')
+            cy.setUpRegisterValuesStep2()
 
             cy.get('#next-button').click()
 
-            cy.get('input[name="username"]').type('OlliKor')
-            cy.get('input[name="password"]').type('salainen123')
-            cy.get('input[name="passwordConfirm"]').type('salainen123')
+            cy.setUpRegisterValuesStep3()
 
             cy.get('#register-button').click()
             cy.contains('Kirjaudu ulos')
@@ -227,11 +204,7 @@ describe('Register', () => {
 
     describe('Registration step1', function () {
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="postalCode"]').type('02670')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
             cy.get('#next-button').click()
         })
 
@@ -244,8 +217,7 @@ describe('Register', () => {
             cy.get('input[name="phoneNumber"]').type('24')
             cy.contains('label', 'Puhelinnumero').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#phoneNumber-error')
-                .should('be.visible')
+            cy.checkErrorExist('#phoneNumber-error')
         })
 
         it('Phone number must only contain numbers', function() {
@@ -253,13 +225,12 @@ describe('Register', () => {
             cy.get('input[name="phoneNumber"]').type('abcdefghijklmnopqr')
             cy.contains('label', 'Puhelinnumero').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#phoneNumber-error')
-                .should('be.visible')
+            cy.checkErrorExist('#phoneNumber-error')
         })
 
         it ('phone number maximum is 15 characters', function() {
             cy.get('input[name="phoneNumber"]').type('034035454039583745')
-            cy.get('input[name="phoneNumber"]').invoke('val').should('have.length', 15)
+            cy.checkCorrectLength('input[name="phoneNumber"]', 15)
         })
 
         it ('email length must be over 4', function() {
@@ -267,14 +238,13 @@ describe('Register', () => {
             cy.get('input[name="email"]').type('i@fi')
             cy.contains('label', 'Sähköposti').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#email-error')
-                .should('be.visible')
+            cy.checkErrorExist('#email-error')
         })
 
         it ('email length max is 40 characters', function() {
             cy.get('input[name="phoneNumber"]').type('0450985677')
             cy.get('input[name="email"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg@email.fi')
-            cy.get('input[name="email"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[name="email"]', 40)
         })
 
         it('email must contain at sign', function () {
@@ -282,8 +252,7 @@ describe('Register', () => {
             cy.get('input[name="email"]').type('thisemailisfalsy.fi')
             cy.contains('label', 'Sähköposti').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#email-error')
-                .should('be.visible')
+            cy.checkErrorExist('#email-error')
         })
 
         it('email must contain dot', function () {
@@ -291,24 +260,18 @@ describe('Register', () => {
             cy.get('input[name="email"]').type('thisemailisfalsy@fi')
             cy.contains('label', 'Sähköposti').click()
             cy.get('#next-button').should('be.disabled')
-            cy.get('#email-error')
-                .should('be.visible')
+            cy.checkErrorExist('#email-error')
         })
     })
 
     describe('Registration step2', function() {
 
         beforeEach(() => {
-            cy.get('input[name="firstname"]').type('Olli')
-            cy.get('input[name="lastname"]').type('Korhonen')
-            cy.get('input[name="address"]').type('Kotkakuja 5')
-            cy.get('input[name="postalCode"]').type('02670')
-            cy.get('input[name="city"]').type('Akaa')
+            cy.setUpRegisterValuesStep1()
 
             cy.get('#next-button').click()
 
-            cy.get('input[name="phoneNumber"]').type('0450985677')
-            cy.get('input[name="email"]').type('esimerkki@jippii.fi')
+            cy.setUpRegisterValuesStep2()
             cy.get('#next-button').click()
         })
 
@@ -327,7 +290,7 @@ describe('Register', () => {
 
                 cy.get('input[name="username"]').type('A')
                 cy.contains('label', 'Käyttäjänimi').click()
-                cy.get('#username-error').should('be.visible')
+                cy.checkErrorExist('#username-error')
                 cy.get('#register-button').should('be.disabled')
 
             })
@@ -335,7 +298,7 @@ describe('Register', () => {
             it ('username max length is 15 characters', function(){
 
                 cy.get('input[name="username"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-                cy.get('input[name="username"]').invoke('val').should('have.length', 15)
+                cy.checkCorrectLength('input[name="username"]', 15)
             })
         })
 
@@ -349,16 +312,14 @@ describe('Register', () => {
                 cy.get('input[name="passwordConfirm"]').type('sala12')
                 cy.contains('label', 'Salasana').click()
                 cy.get('#register-button').should('be.disabled')
-                cy.get('#passwordConfirm-error')
-
-                    .should('be.visible')
+                cy.checkErrorExist('#password-error')
             })
 
             it('password max length is 30', function() {
                 cy.get('input[name="password"]').type('salainensalasananionylikolmekymmentä')
                 cy.get('input[name="passwordConfirm"]').type('salainensalasananionylikolmekymmentä')
-                cy.get('input[name="password"]').invoke('val').should('have.length', 30)
-                cy.get('input[name="passwordConfirm"]').invoke('val').should('have.length', 30)
+                cy.checkCorrectLength('input[name="password"]', 30)
+                cy.checkCorrectLength('input[name="passwordConfirm"]', 30)
 
             })
 

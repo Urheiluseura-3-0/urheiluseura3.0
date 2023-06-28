@@ -4,10 +4,9 @@ describe('Event', function() {
 
 
     beforeEach(function() {
-        cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = Cypress.env('user')
 
-        cy.request('POST', 'http://localhost:3001/api/register/', user)
+        cy.createUserForTesting()
+
         const team = {
             name: 'Joukkue 1',
             category: 'm20'
@@ -25,7 +24,7 @@ describe('Event', function() {
         })
 
         it('user cannot send form if fields are empty',function() {
-            cy.get('#add-event').should('be.disabled')
+            cy.checkButtonIsDisabled('#add-event')
         })
     })
 
@@ -36,7 +35,7 @@ describe('Event', function() {
         })
 
         it('user cannot send form without inputing team', function() {
-            cy.get('#add-event').should('be.disabled')
+            cy.checkButtonIsDisabled('#add-event')
         })
     })
 
@@ -50,11 +49,12 @@ describe('Event', function() {
         it('user cannot send form if opponent name is too short', function() {
             cy.get('input[id="opponent"]').type('A')
             cy.checkErrorExist('#opponent-error')
+            cy.checkButtonIsDisabled('#add-event')
         })
 
         it ('opponent name will not be too long', function() {
             cy.get('input[id="opponent"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-            cy.get('input[id="opponent"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[id="opponent"]', 40)
         })
     })
 
@@ -67,11 +67,12 @@ describe('Event', function() {
         it('user cannot send form if location name is too short', function() {
             cy.get('input[id="location"]').type('E')
             cy.checkErrorExist('#location-error')
+            cy.checkButtonIsDisabled('#add-event')
         })
 
         it ('location name will not be too long', function() {
             cy.get('input[id="location"]').type('Chargoggagoggmanchauggagoggchaubunagungamaugg')
-            cy.get('input[id="location"]').invoke('val').should('have.length', 40)
+            cy.checkCorrectLength('input[id="location"]', 40)
         })
     })
 
@@ -82,12 +83,12 @@ describe('Event', function() {
         })
 
         it('user cannot send form without inputing date', function() {
-            cy.get('#add-event').should('be.disabled')
+            cy.checkButtonIsDisabled('#add-event')
         })
 
         it('user cannot send form if year format isnt 20xx', function() {
             cy.get('input[id="date"]').type('2123-06-01')
-            cy.get('#add-event').should('be.disabled')
+            cy.checkButtonIsDisabled('#add-event')
         })
     })
 
@@ -98,7 +99,7 @@ describe('Event', function() {
         })
 
         it('user cannot send form without inputing time', function() {
-            cy.get('#add-event').should('be.disabled')
+            cy.checkButtonIsDisabled('#add-event')
         })
     })
 
@@ -108,7 +109,7 @@ describe('Event', function() {
             EBT on Espoon Akilleksen ja EPS-Basketin fuusiona vuonna 1993 perustettu koripallon erikoisseura. \
             Seura järjestää lasten, nuorten ja aikuisten koripallotoimintaa, \
             niin harraste-, kilpa- kuin huipputasolla.')
-            cy.get('input[id="description"]').invoke('val').should('have.length', 200)
+            cy.checkCorrectLength('input[id="description"]', 200)
         })
     })
 

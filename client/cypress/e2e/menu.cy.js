@@ -1,3 +1,6 @@
+import '../support/testHelpers'
+
+
 describe('Menu', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -31,18 +34,7 @@ describe('Menu', function() {
     describe('Menu when user is logged in as a worker', function() {
 
         beforeEach(function() {
-            const user = {
-                firstName: 'Tiina',
-                lastName: 'Testaaja',
-                address: 'Testauskatu 10',
-                postalCode: '00100',
-                city: 'Helsinki',
-                phoneNumber: '0401234567',
-                email: 'tiina.testaaja@keskitty.com',
-                username: 'Tiina14',
-                password: 'salainen1234',
-                passwordConfirm: 'salainen1234'
-            }
+            const user = Cypress.env('user')
             cy.request('POST', 'http://localhost:3001/api/register/', user)
             cy.get('#username').type('Tiina14')
             cy.get('#password').type('salainen1234')
@@ -93,18 +85,7 @@ describe('Menu', function() {
     describe('Menu when user is logged in as a foreman', function() {
 
         beforeEach(function() {
-            const user = {
-                firstName: 'Tiina',
-                lastName: 'Testaaja',
-                address: 'Testauskatu 10',
-                postalCode: '00100',
-                city: 'Helsinki',
-                phoneNumber: '0401234567',
-                email: 'tiina.testaaja@keskitty.com',
-                username: 'Tiina14',
-                password: 'salainen1234',
-                passwordConfirm: 'salainen1234'
-            }
+            const user = Cypress.env('user')
 
             const role = {
                 isForeman : 1,
