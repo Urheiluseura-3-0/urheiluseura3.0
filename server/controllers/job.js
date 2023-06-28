@@ -78,7 +78,7 @@ jobRouter.get('/unconfirmed', tokenExtractor, async (request, response) => {
 
     try {
         const finduser = await User.findByPk(request.decodedToken.id)
-        if (finduser.isForeman === 1) {
+        if (finduser.isForeman === 1 || finduser.isAdmin === 1) {
             const jobs = await Job.findAll({
                 where: {
                     status: 0

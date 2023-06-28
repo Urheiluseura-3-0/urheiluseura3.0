@@ -62,7 +62,7 @@ const App = () => {
                             acceptedRoles={['worker', 'coach', 'foreman', 'supervisor', 'admin']}/>}>
                             <Route path="/home" element={<FrontPage token={token}/>} />
                         </Route>
-                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach']}/>}>
+                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach', 'admin']}/>}>
                             <Route path="/event" element={<EventForm />} />
                             <Route path="/events" element={<EventList />} />
                             <Route path="/job" element={<JobForm />} />
