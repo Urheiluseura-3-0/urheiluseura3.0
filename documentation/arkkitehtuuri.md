@@ -44,7 +44,7 @@ Backendin koodi löytyy kansiosta [**server**](https://github.com/Urheiluseura-3
   * palvelimen suoritusympäristö
 
 - [Express](https://expressjs.com/)
-  * hoitaa tietokannan ja palvelimen välisen kommunikoinnin
+  * http-pyynnöt ja -vastaukset, reittien määrittely, middlewarejen hallinta
 
 - [Sequelize](https://sequelize.org/docs/v6/)
     * ORM-kirjasto, eli mahdollistaa Javascript-olioiden tallentamisen tietokantaan ilman SQL-kielen käyttöä
