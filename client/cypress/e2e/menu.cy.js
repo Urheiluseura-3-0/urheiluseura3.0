@@ -605,5 +605,75 @@ describe('Menu', function() {
 
     })
 
+    describe('Menu when user is logged in as a foreman and a supervisor', function() {
+
+        beforeEach(function() {
+            const user = {
+                firstName: 'Tiina',
+                lastName: 'Testaaja',
+                address: 'Testauskatu 10',
+                postalCode: '00100',
+                city: 'Helsinki',
+                phoneNumber: '0401234567',
+                email: 'tiina.testaaja@keskitty.com',
+                username: 'Tiina14',
+                password: 'salainen1234',
+                passwordConfirm: 'salainen1234'
+            }
+
+            const role = {
+                isForeman : 1,
+                isSupervisor: 1,
+                isWorker : 0,
+                isCoach : 0
+            }
+
+            cy.request('POST', 'http://localhost:3001/api/register/', user)
+                .then((response) => {
+                    const id = response.body.id
+
+                    cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
+                })
+            cy.get('#username').type('Tiina14')
+            cy.get('#password').type('salainen1234')
+            cy.get('#login-button').click()
+        })
+
+        it('User sees the correct frontpage', function() {
+            cy.contains('Hyväksymättömät työtunnit')
+        })
+        it('Navigation bar contains correct buttons', function() {
+            cy.get('#navigationbar').should('exist')
+            cy.get('#frontpage-link').should('exist')
+            cy.get('#addevent-link').should('not.exist')
+            cy.get('#user-events-link').should('not.exist')
+            cy.get('#addjob-link').should('not.exist')
+            cy.get('#user-jobs-link').should('not.exist')
+            cy.get('#unconfirmed-jobs-link').should('exist')
+            cy.get('#logout-button').should('exist')
+        })
+
+        it('Unconfirmed jobs button routes to a page with event form', function() {
+            cy.get('#unconfirmed-jobs-link').click()
+            cy.contains('Hyväksymättömät työtunnit')
+            cy.url().should('include', '/unconfirmed')
+        })
+
+        it('Frontpage button routes back to frontpage', function() {
+            cy.get('#unconfirmed-jobs-link').click()
+            cy.get('#frontpage-link').click()
+            cy.contains('Hyväksymättömät työtunnit')
+            cy.url().should('include', '/home')
+
+        })
+
+        it('Logout button logs out the user', function() {
+            cy.get('#logout-button').click()
+            cy.contains('Käyttäjänimi')
+            cy.contains('Salasana')
+            cy.url().should('include', '/')
+        })
+
+    })
 
 })
