@@ -62,15 +62,19 @@ describe('Menu', function() {
             cy.get('#login-button').click()
         })
 
-        it('Worker sees  correct frontpage', function() {
+        it('Worker sees the correct frontpage', function() {
             cy.contains('Tapahtumat')
         })
 
         it('Navigation bar contains correct buttons', function() {
-            cy.get('#navigationbar')
-                .should('contain', 'Etusivu')
-                .should('contain', 'Lisää tapahtuma')
-                .should('contain', 'Kirjaudu ulos')
+            cy.get('#navigationbar').should('exist')
+            cy.get('#frontpage-link').should('exist')
+            cy.get('#addevent-link').should('exist')
+            cy.get('#user-events-link').should('exist')
+            cy.get('#addjob-link').should('not.exist')
+            cy.get('#user-jobs-link').should('not.exist')
+            cy.get('#unconfirmed-jobs-link').should('not.exist')
+            cy.get('#logout-button').should('exist')
         })
 
         it('Add event button routes to a page with event form', function() {
@@ -132,12 +136,17 @@ describe('Menu', function() {
             cy.get('#password').type('salainen1234')
             cy.get('#login-button').click()
         })
-
+        it('Foreman sees the correct frontpage', function() {
+            cy.contains('Hyväksymättömät työtunnit')
+        })
         it('Navigation bar contains correct buttons', function() {
             cy.get('#navigationbar').should('exist')
             cy.get('#frontpage-link').should('exist')
             cy.get('#addevent-link').should('not.exist')
+            cy.get('#user-events-link').should('not.exist')
             cy.get('#addjob-link').should('not.exist')
+            cy.get('#user-jobs-link').should('not.exist')
+            cy.get('#unconfirmed-jobs-link').should('exist')
             cy.get('#logout-button').should('exist')
         })
 
@@ -149,5 +158,117 @@ describe('Menu', function() {
         })
 
     })
-})
 
+    describe('Menu when user is logged in as a coach', function() {
+
+        beforeEach(function() {
+            const user = {
+                firstName: 'Tiina',
+                lastName: 'Testaaja',
+                address: 'Testauskatu 10',
+                postalCode: '00100',
+                city: 'Helsinki',
+                phoneNumber: '0401234567',
+                email: 'tiina.testaaja@keskitty.com',
+                username: 'Tiina14',
+                password: 'salainen1234',
+                passwordConfirm: 'salainen1234'
+            }
+
+            const role = {
+                isForeman : 0,
+                isSupervisor: 0,
+                isWorker : 0,
+                isCoach : 1
+            }
+
+            cy.request('POST', 'http://localhost:3001/api/register/', user)
+                .then((response) => {
+                    const id = response.body.id
+
+                    cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
+                })
+            cy.get('#username').type('Tiina14')
+            cy.get('#password').type('salainen1234')
+            cy.get('#login-button').click()
+        })
+
+        it('Coach sees the correct frontpage', function() {
+            cy.contains('Työtunnit')
+        })
+        it('Navigation bar contains correct buttons', function() {
+            cy.get('#navigationbar').should('exist')
+            cy.get('#frontpage-link').should('exist')
+            cy.get('#addevent-link').should('not.exist')
+            cy.get('#user-events-link').should('not.exist')
+            cy.get('#addjob-link').should('exist')
+            cy.get('#user-jobs-link').should('exist')
+            cy.get('#unconfirmed-jobs-link').should('not.exist')
+            cy.get('#logout-button').should('exist')
+        })
+        it('Logout button logs out the user', function() {
+            cy.get('#logout-button').click()
+            cy.contains('Käyttäjänimi')
+            cy.contains('Salasana')
+            cy.url().should('include', '/')
+        })
+
+    })
+
+    describe('Menu when user is logged in as an admin', function() {
+
+        beforeEach(function() {
+            const user = {
+                firstName: 'Tiina',
+                lastName: 'Testaaja',
+                address: 'Testauskatu 10',
+                postalCode: '00100',
+                city: 'Helsinki',
+                phoneNumber: '0401234567',
+                email: 'tiina.testaaja@keskitty.com',
+                username: 'Tiina14',
+                password: 'salainen1234',
+                passwordConfirm: 'salainen1234'
+            }
+
+            const role = {
+                isForeman : 0,
+                isSupervisor: 0,
+                isWorker : 0,
+                isCoach : 0,
+                isAdmin: 1
+            }
+
+            cy.request('POST', 'http://localhost:3001/api/register/', user)
+                .then((response) => {
+                    const id = response.body.id
+
+                    cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
+                })
+            cy.get('#username').type('Tiina14')
+            cy.get('#password').type('salainen1234')
+            cy.get('#login-button').click()
+        })
+
+        it('Admin sees the correct frontpage', function() {
+            cy.contains('Hyväksymättömät työtunnit').should('not.exist')
+        })
+        it('Navigation bar contains correct buttons', function() {
+            cy.get('#navigationbar').should('exist')
+            cy.get('#frontpage-link').should('exist')
+            cy.get('#addevent-link').should('exist')
+            cy.get('#user-events-link').should('exist')
+            cy.get('#addjob-link').should('exist')
+            cy.get('#user-jobs-link').should('exist')
+            cy.get('#unconfirmed-jobs-link').should('exist')
+            cy.get('#logout-button').should('exist')
+        })
+        it('Logout button logs out the user', function() {
+            cy.get('#logout-button').click()
+            cy.contains('Käyttäjänimi')
+            cy.contains('Salasana')
+            cy.url().should('include', '/')
+        })
+
+    })
+})
