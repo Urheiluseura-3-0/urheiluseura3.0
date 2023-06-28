@@ -1,3 +1,6 @@
+import '../support/testHelpers'
+
+
 describe('Routing', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -42,18 +45,7 @@ describe('Routing', function() {
 
     describe('Routing when user is a worker', function() {
         beforeEach(function() {
-            const user = {
-                firstName: 'Tiina',
-                lastName: 'Testaaja',
-                address: 'Testauskatu 10',
-                postalCode: '00100',
-                city: 'Helsinki',
-                phoneNumber: '0401234567',
-                email: 'tiina.testaaja@keskitty.com',
-                username: 'Tiina14',
-                password: 'salainen1234',
-                passwordConfirm: 'salainen1234'
-            }
+            const user = Cypress.env('user')
             cy.request('POST', 'http://localhost:3001/api/register/', user)
             cy.get('#username').type('Tiina14')
             cy.get('#password').type('salainen1234')
@@ -99,18 +91,7 @@ describe('Routing', function() {
 
     describe('Routing when user is a foreman', function() {
         beforeEach(function() {
-            const user = {
-                firstName: 'Tiina',
-                lastName: 'Testaaja',
-                address: 'Testauskatu 10',
-                postalCode: '00100',
-                city: 'Helsinki',
-                phoneNumber: '0401234567',
-                email: 'tiina.testaaja@keskitty.com',
-                username: 'Tiina14',
-                password: 'salainen1234',
-                passwordConfirm: 'salainen1234'
-            }
+            const user = Cypress.env('user')
 
             const role = {
                 isForeman : 1,
