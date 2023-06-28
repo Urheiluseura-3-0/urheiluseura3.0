@@ -1,7 +1,7 @@
 describe('Foremanview', function () {
 
     beforeEach(function () {
-        cy.request('POST', 'http://localhost:3000/api/testing/reset')
+        cy.request('POST', 'http://localhost:3001/api/testing/reset')
         const user = {
             firstName: 'Tiina',
             lastName: 'Testaaja',
@@ -16,7 +16,19 @@ describe('Foremanview', function () {
 
         }
 
-        cy.request('POST', 'http://localhost:3000/api/register/', user)
+        const role = {
+            isForeman : 1,
+            isSupervisor: 0,
+            isWorker : 0,
+            isCoach : 0
+        }
+
+        cy.request('POST', 'http://localhost:3001/api/register/', user)
+            .then((response) => {
+                const id = response.body.id
+
+                cy.request('PUT', `http://localhost:3001/api/userrole/${id}`, role)
+            })
 
         const loggedUserInfo =
         {
@@ -24,7 +36,7 @@ describe('Foremanview', function () {
             password: 'salainen1234'
         }
 
-        const loggedUser = cy.request('POST', 'http://localhost:3000/api/login', loggedUserInfo)
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
 
 
 
@@ -81,31 +93,31 @@ describe('Foremanview', function () {
         ]
 
         cy.request({
-            method: 'POST', url: 'http://localhost:3000/api/job',
+            method: 'POST', url: 'http://localhost:3001/api/job',
             headers: { Cookie: loggedUser.cookie }, body: jobs[0]
         })
         cy.request({
-            method: 'POST', url: 'http://localhost:3000/api/job',
+            method: 'POST', url: 'http://localhost:3001/api/job',
             headers: { Cookie: loggedUser.cookie }, body: jobs[1]
         })
         cy.request({
-            method: 'POST', url: 'http://localhost:3000/api/job',
+            method: 'POST', url: 'http://localhost:3001/api/job',
             headers: { Cookie: loggedUser.cookie }, body: jobs[2]
         })
         cy.request({
-            method: 'POST', url: 'http://localhost:3000/api/job',
+            method: 'POST', url: 'http://localhost:3001/api/job',
             headers: { Cookie: loggedUser.cookie }, body: jobs[3]
         })
         cy.request({
-            method: 'POST', url: 'http://localhost:3000/api/job',
+            method: 'POST', url: 'http://localhost:3001/api/job',
             headers: { Cookie: loggedUser.cookie }, body: jobs[4]
         })
         cy.request({
-            method: 'POST', url: 'http://localhost:3000/api/job',
+            method: 'POST', url: 'http://localhost:3001/api/job',
             headers: { Cookie: loggedUser.cookie }, body: jobs[5]
         })
 
-        cy.visit('http://localhost:3000/foremanview')
+        cy.visit('http://localhost:3001/unconfirmed')
     })
 
     it('User can see all unaccepted jobs', function () {
@@ -113,9 +125,6 @@ describe('Foremanview', function () {
     })
 
     it('The first visible job is not accepted', function () {
-        cy.get('#unconfirmedJobs-button')
-            .should('have.class', 'bg-rose-400')
-            .should('have.class', 'ring-rose-600')
         cy.get('#jobsrow').each(($row) => {
             cy.wrap($row)
                 .find('td:nth-child(4)')
@@ -154,15 +163,15 @@ describe('Foremanview', function () {
         cy.get('#jobs').find('tbody').find('tr').first().click()
         cy.get('#jobdetail')
             .should('contain', 'Ryhmä')
-            .should('contain', 'Lapset')
+            .should('contain', 'Pojat-19')
             .should('contain', 'Tunnit')
-            .should('contain', '2h 15min')
+            .should('contain', '2h 0min')
             .should('contain', 'Paikka')
-            .should('contain', 'Espoon alakoulu')
+            .should('contain', 'Helsinki')
             .should('contain', 'Päivä')
             .should('contain', 'Kellonaika')
             .should('contain', 'Lisätiedot')
-            .should('contain', 'Lasten koripallovalmennus')
+            .should('contain', 'Valmennus')
             .should('contain', 'Status')
             .should('contain', 'Odottaa hyväksyntää')
             .should('contain', 'Luotu')
