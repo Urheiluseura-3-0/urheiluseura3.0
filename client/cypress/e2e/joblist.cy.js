@@ -24,15 +24,14 @@ describe('Joblist', function () {
             password: 'salainen1234'
         }
 
-        const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
-
-
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', loggedUserInfo)
 
         const jobs = [
             {
                 squad: 'Pojat-19',
                 context: 'Valmennus',
                 date: '2023-05-27',
+                time: '10:00',
                 location: 'Helsinki',
                 hours: '2',
                 minutes: '0'
@@ -41,6 +40,7 @@ describe('Joblist', function () {
                 squad: 'Tytöt-15',
                 context: 'Harjoitukset',
                 date: '2023-05-22',
+                time: '10:00',
                 location: 'Espoo',
                 hours: '1',
                 minutes: '30'
@@ -49,6 +49,7 @@ describe('Joblist', function () {
                 squad: 'Aikuiset',
                 context: 'Kevyt palloilu',
                 date: '2023-06-07',
+                time: '12:00',
                 location: 'Helsinki',
                 hours: '3',
                 minutes: '15'
@@ -57,6 +58,7 @@ describe('Joblist', function () {
                 squad: 'Lapset',
                 context: 'Lasten koripallovalmennus',
                 date: '2023-06-21',
+                time: '14:30',
                 location: 'Espoon alakoulu',
                 hours: '2',
                 minutes: '15'
@@ -65,6 +67,7 @@ describe('Joblist', function () {
                 squad: 'Pojat-19',
                 context: 'Valmennus',
                 date: '2023-05-29',
+                time: '15:30',
                 location: 'Helsinki',
                 hours: '1',
                 minutes: '45'
@@ -73,6 +76,7 @@ describe('Joblist', function () {
                 squad: 'Miehet',
                 context: 'Miesten treenit',
                 date: '2023-06-15',
+                time: '19:00',
                 location: 'Helsinki',
                 hours: '4',
                 minutes: '30'
@@ -149,11 +153,11 @@ describe('Joblist', function () {
             cy.get('#date').click()
             cy.get('#jobs').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/2?1\/0?6\/2023|0?6\/2?1\/2023/)
+                    expect(text).to.match(/2?1[/|.]0?6[/|.]2023|0?6[/|.]2?1[/|.]2023/)
                 })
             cy.get('#jobs').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/0?5\/22\/2023|22\/0?5\/2023/)
+                    expect(text).to.match(/0?5[/|.]22[/|.]2023|22[/|.]0?5[/|.]2023/)
                 })
         })
 
@@ -188,7 +192,6 @@ describe('Joblist', function () {
                 .should('contain', 'Odottaa hyväksyntää')
                 .should('contain', 'Luotu')
                 .should('contain', 'Hyväksyjän nimi')
-
 
         })
 
@@ -233,11 +236,11 @@ describe('Joblist', function () {
             cy.get('#date').click()
             cy.get('#jobs').find('tbody').find('tr').first().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/2?1\/0?6\/2023|0?6\/2?1\/2023/)
+                    expect(text).to.match(/2?1[/|.]0?6[/|.]2023|0?6[/|.]2?1[/|.]2023/)
                 })
             cy.get('#jobs').find('tbody').find('tr').last().find('td').first().invoke('text')
                 .then((text) => {
-                    expect(text).to.match(/0?5\/22\/2023|22\/0?5\/2023/)
+                    expect(text).to.match(/0?5[/|.]22[/|.]2023|22[/|.]0?5[/|.]2023/)
                 })
         })
 

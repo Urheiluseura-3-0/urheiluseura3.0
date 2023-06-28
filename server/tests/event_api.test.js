@@ -41,6 +41,7 @@ let finalToken
 let team
 let teams
 let event
+let mikkosEvent
 
 let newEvent
 
@@ -109,9 +110,10 @@ beforeEach(async () => {
     await Event.bulkCreate(initialEvents)
 
     event = await Event.findOne({where: {opponent: 'Honka I B'}})
+    mikkosEvent = await Event.findOne({where: {opponent: 'Honka III B'}})
 
     user = {username: 'Pekka35', password: 'salainen1234'}
-    loggedUser = await api.post('/api/login').send(user)
+    loggedUser = await api.post('/api/auth/login').send(user)
     cookies = new Cookies(loggedUser.headers['set-cookie'])
     cryptedToken = cookies.cookies[0]
 
@@ -268,6 +270,23 @@ test('Get by event returns error code if id is invalid', async () => {
         .get(`/api/event/${invalidId}`)
         .set('Cookie', finalToken)
         .expect(400)
+})
+
+test('Get by event returns missing code if event is not found', async () => {
+    const invalidId = mikkosEvent.id+15
+    await api
+        .get(`/api/event/${invalidId}`)
+        .set('Cookie', finalToken)
+        .expect(404)
+})
+
+test('Get by event id does not allow fetching others events', async() => {
+    const response = await api
+        .get(`/api/event/${mikkosEvent.id}`)
+        .set('Cookie', finalToken)
+        .expect(401)
+
+    expect(response.body.error).toContain('Ei pääsyoikeutta')
 })
 
 test('Get by event id returns teamname', async() => {

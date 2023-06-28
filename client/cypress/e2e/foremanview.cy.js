@@ -36,7 +36,7 @@ describe('Foremanview', function () {
             password: 'salainen1234'
         }
 
-        const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', loggedUserInfo)
 
 
 
@@ -45,6 +45,7 @@ describe('Foremanview', function () {
                 squad: 'Pojat-19',
                 context: 'Valmennus',
                 date: '2023-05-27',
+                time: '20:00',
                 location: 'Helsinki',
                 hours: '2',
                 minutes: '0'
@@ -53,6 +54,7 @@ describe('Foremanview', function () {
                 squad: 'Tytöt-15',
                 context: 'Harjoitukset',
                 date: '2023-05-22',
+                time: '16:00',
                 location: 'Espoo',
                 hours: '1',
                 minutes: '30'
@@ -61,6 +63,7 @@ describe('Foremanview', function () {
                 squad: 'Aikuiset',
                 context: 'Kevyt palloilu',
                 date: '2023-06-07',
+                time: '17:30',
                 location: 'Helsinki',
                 hours: '3',
                 minutes: '15'
@@ -69,6 +72,7 @@ describe('Foremanview', function () {
                 squad: 'Lapset',
                 context: 'Lasten koripallovalmennus',
                 date: '2023-06-21',
+                time: '11:00',
                 location: 'Espoon alakoulu',
                 hours: '2',
                 minutes: '15'
@@ -77,6 +81,7 @@ describe('Foremanview', function () {
                 squad: 'Pojat-19',
                 context: 'Valmennus',
                 date: '2023-05-29',
+                time: '19:00',
                 location: 'Helsinki',
                 hours: '1',
                 minutes: '45'
@@ -85,6 +90,7 @@ describe('Foremanview', function () {
                 squad: 'Miehet',
                 context: 'Miesten treenit',
                 date: '2023-06-15',
+                time: '20:00',
                 location: 'Helsinki',
                 hours: '4',
                 minutes: '30'

@@ -8,13 +8,6 @@ const testhelper = require('../tests/test.helper')
 
 const api = supertest(app)
 
-const handleToken = (token) => {
-
-    const finalToken = token.split(';')[0]
-    return finalToken
-    
-}
-
 const expectTruthyAddedJob = async (newJob, token) => {
     await api
         .post('/api/job')
@@ -34,17 +27,16 @@ const expectFalsyAddedJob = async (newJob, token, message) => {
     expect(response.body.error).toContain(message)   
 }
 
-
-
 let user
 let loggedUser 
 let cookies
 let cryptedToken
+let job
+
 let finalToken
 let newJob
-let job
-beforeEach(async () => {
 
+beforeEach(async () => {
 
     const initialUsers = await testhelper.initializeInitialUsers()
 
@@ -107,17 +99,18 @@ beforeEach(async () => {
     job = await Job.findOne({where: {squad: 'EBT Naiset'}})
 
     user = {username: 'Pekka35', password: 'salainen1234'}
-    loggedUser = await api.post('/api/login').send(user)
+    loggedUser = await api.post('/api/auth/login').send(user)
     cookies = new Cookies(loggedUser.headers['set-cookie'])
     cryptedToken = cookies.cookies[0]
 
-    finalToken = handleToken(cryptedToken)
+    finalToken = testhelper.handleToken(cryptedToken)
 
     newJob = {
 
         squad: 'EBT Tytöt',
         context: 'Lajivalmennus',
         date: '2023-06-11',
+        time: '16:00',
         location: 'Leppävaara',
         hours: '3',
         minutes: '45'
@@ -142,8 +135,6 @@ test('cannot add a job if squad is missing', async () =>{
 
     newJob = {...newJob, squad:''}
 
-    
-
     await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen ryhmä')
 })
 
@@ -160,6 +151,22 @@ test('cannot add a job if date is invalid', async () =>{
     newJob = {...newJob, date:'Kolmastoista viidettä 2023'}
 
     await expectFalsyAddedJob(newJob, finalToken, 'Päivä on virheellinen')
+
+})
+
+test('cannot add a job if time is missing', async () =>{
+
+    newJob = {...newJob, time:''}
+
+    await expectFalsyAddedJob(newJob, finalToken, 'Virheellinen aikaleima')
+
+})
+
+test('cannot add a job if time is invalid', async () =>{
+
+    newJob = {...newJob, time:'Viisitoista kolmekymmentä'}
+
+    await expectFalsyAddedJob(newJob, finalToken, 'Aika on virheellinen')
 
 })
 
@@ -194,7 +201,6 @@ test('cannot add a job if hours are too high', async () =>{
 
 })
 
-
 test('cannot add a job if minutes are missing', async () =>{
 
     newJob = {...newJob, minutes:''}
@@ -219,16 +225,13 @@ test('cannot add a job if minutes are too high', async () =>{
 
 })
 
-
 test('cannot add a job if token is invalid', async () =>{
-
 
     await expectFalsyAddedJob(newJob, 'invalidToken', 'Kirjaudu ensin sisään')
 
 })
 
 test('correct number of events in database', async () =>{
-
 
     await api
         .post('/api/job')
@@ -283,46 +286,6 @@ test('hoursToDecimal returns correct value', async () => {
 
     const result3 = hoursToDecimal(0, 45)
     expect(result3).toBe(0.75)
-})
-
-test('basic user can not fetch unconfirmed events', async () => {
-    const response = await api
-        .get('/api/job/unconfirmed')
-        .set('Cookie', finalToken)
-        .expect(403)
-    expect(response.body.error).toContain('Oikeudet puuttuu')
-})
-
-test('foreman can fetch unconfirmed events', async () => {
-
-    user = {username: 'Teemu35', password: 'salainen1234'}
-    loggedUser = await api.post('/api/login').send(user)
-    cookies = new Cookies(loggedUser.headers['set-cookie'])
-    cryptedToken = cookies.cookies[0]
-
-    finalToken = handleToken(cryptedToken)
-
-    const response = await api
-        .get('/api/job/unconfirmed')
-        .set('Cookie', finalToken)
-        .expect(200)
-    expect(response.body).toHaveLength(3)
-})
-
-test('admin can fetch unconfirmed events', async () => {
-
-    user = {username: 'Jimi35', password: 'salainen1234'}
-    loggedUser = await api.post('/api/login').send(user)
-    cookies = new Cookies(loggedUser.headers['set-cookie'])
-    cryptedToken = cookies.cookies[0]
-
-    finalToken = handleToken(cryptedToken)
-
-    const response = await api
-        .get('/api/job/unconfirmed')
-        .set('Cookie', finalToken)
-        .expect(200)
-    expect(response.body).toHaveLength(3)
 })
 
 test('jobs for user return squads', async () => {
@@ -400,4 +363,44 @@ test('Get by job id returns teamname', async() => {
         .get(`/api/job/${job.id}`)
         .set('Cookie', finalToken)
     expect(response.body.squad).toContain('EBT Naiset')
+})
+
+test('basic user can not fetch unconfirmed events', async () => {
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(403)
+    expect(response.body.error).toContain('Oikeudet puuttuu')
+})
+
+test('foreman can fetch unconfirmed events', async () => {
+
+    user = {username: 'Teemu35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/auth/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = testhelper.handleToken(cryptedToken)
+
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(200)
+    expect(response.body).toHaveLength(3)
+})
+
+test('admin can fetch unconfirmed events', async () => {
+
+    user = {username: 'Jimi35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/auth/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = testhelper.handleToken(cryptedToken)
+
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(200)
+    expect(response.body).toHaveLength(3)
 })

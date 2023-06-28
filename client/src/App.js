@@ -24,17 +24,17 @@ import ForemanView from './components/ForemanView'
 const App = () => {
     const navigate = useNavigate()
     const cookies = new Cookies()
-    const [token, setToken] = useState(cookies.get('Token'))
+    const [token, setToken] = useState(cookies.get('UrheiluseuraToken'))
 
     const handleLogout = () => {
         UserService.logout()
-        cookies.remove('Token')
+        cookies.remove('UrheiluseuraToken')
         setToken('')
         navigate('/')
     }
 
     const handleSetToken = () => {
-        const value = (cookies.get('Token'))
+        const value = (cookies.get('UrheiluseuraToken'))
         setToken(value)
     }
 

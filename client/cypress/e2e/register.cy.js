@@ -206,7 +206,7 @@ describe('Register', () => {
             cy.contains('Puhelinnumero')
         })
 
-        it('Login view is followed when step2 is ready', function() {
+        it('User is logged in when registration is succesful', function() {
             cy.get('#next-button').click()
 
             cy.get('input[name="phoneNumber"]').type('0450985677')
@@ -219,7 +219,7 @@ describe('Register', () => {
             cy.get('input[name="passwordConfirm"]').type('salainen123')
 
             cy.get('#register-button').click()
-            cy.contains('Lisää tapahtuma')
+            cy.contains('Kirjaudu ulos')
 
         })
 
