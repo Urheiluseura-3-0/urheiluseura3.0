@@ -47,12 +47,13 @@ beforeEach(async () => {
     const dateString = '2023-06-19T12:30:00.000Z'
     const timestamp = Date.parse(dateString)
     const dateTime = new Date(timestamp)
-    user = await User.findOne({where: {username: 'Pekka35'}})
+    const pekka = await User.findOne({where: {username: 'Pekka35'}})
     const mikko = await User.findOne({where: {username: 'Mikko35'}})
+    const teemu = await User.findOne({where: {username: 'Teemu35'}})
 
     const initialJobs = [
         {
-            createdById: user.id,
+            createdById: pekka.id,
             squad: 'EBT Naiset',
             context: 'Psykologinen valmennus',
             dateTime: dateTime,
@@ -60,7 +61,7 @@ beforeEach(async () => {
             hours: 1.25
         },
         {
-            createdById: user.id,
+            createdById: pekka.id,
             squad: 'EBT PojatU19',
             context: 'Psykologinen valmennus',
             dateTime: dateTime,
@@ -74,6 +75,16 @@ beforeEach(async () => {
             dateTime: dateTime,
             location: 'Leppävaara',
             hours: 4.75
+        },
+        {
+            createdById: mikko.id,
+            squad: 'EBT Miehet',
+            context: 'Lajivalmennus',
+            dateTime: dateTime,
+            location: 'Espoo',
+            hours: 1.5,
+            status: 1,
+            confirmedById: teemu.id
         }
 
     ]
@@ -229,7 +240,7 @@ test('correct number of events in database', async () =>{
         .expect(200)
 
     const jobs = await Job.findAll()
-    expect(jobs.length).toBe(4)
+    expect(jobs.length).toBe(5)
 })
 
 test('validation does not accept too short squad name', async () =>{
@@ -352,4 +363,44 @@ test('Get by job id returns teamname', async() => {
         .get(`/api/job/${job.id}`)
         .set('Cookie', finalToken)
     expect(response.body.squad).toContain('EBT Naiset')
+})
+
+test('basic user can not fetch unconfirmed events', async () => {
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(403)
+    expect(response.body.error).toContain('Oikeudet puuttuu')
+})
+
+test('foreman can fetch unconfirmed events', async () => {
+
+    user = {username: 'Teemu35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/auth/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = testhelper.handleToken(cryptedToken)
+
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(200)
+    expect(response.body).toHaveLength(3)
+})
+
+test('admin can fetch unconfirmed events', async () => {
+
+    user = {username: 'Jimi35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/auth/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = testhelper.handleToken(cryptedToken)
+
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(200)
+    expect(response.body).toHaveLength(3)
 })

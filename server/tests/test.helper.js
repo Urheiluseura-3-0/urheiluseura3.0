@@ -75,6 +75,30 @@ const initializeInitialUsers = async () => {
             city: 'Helsinki',
             phoneNumber: '0509876543',
             email: 'testi@email.com'
+        },
+        {
+            firstName: 'Teemu',
+            lastName: 'Testinen',
+            username: 'Teemu35',
+            password: passwordHash,
+            address: 'Osoite',
+            postalCode: '00300',
+            city: 'Helsinki',
+            phoneNumber: '0509876543',
+            email: 'teemu35@email.com',
+            isForeman: 1
+        },
+        {
+            firstName: 'Jimi',
+            lastName: 'Testinen',
+            username: 'Jimi35',
+            password: passwordHash,
+            address: 'Osoite',
+            postalCode: '00300',
+            city: 'Helsinki',
+            phoneNumber: '0509876543',
+            email: 'jimi35@email.com',
+            isAdmin: 1
         }
     ]
 

@@ -97,7 +97,7 @@ describe('Eventlist', function () {
             headers: { Cookie: loggedUser.cookie }, body: events[5]
         })
 
-        cy.visit('http://localhost:3001/home')
+        cy.visit('http://localhost:3001/events')
 
         cy.get('#timeline-button').click()
         cy.get('#datefrom').type('2023-05-19')
