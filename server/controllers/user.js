@@ -53,11 +53,11 @@ userRouter.post('/login', async (request, response) => {
         const token = jwt.sign(
             userForToken,
             config.SECRET,
-            { expiresIn: 60 * 60 }
+            { expiresIn: 60 * 30 }
         )
 
         return response
-            .cookie('UrheiluseuraToken', token, { maxAge: 900000 })
+            .cookie('UrheiluseuraToken', token, { maxAge: 1800000 })
             .status(200)
             .send({ username: user.username, name: user.name })
 
