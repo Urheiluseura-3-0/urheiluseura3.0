@@ -1,30 +1,19 @@
+import '../support/testHelpers'
+
 describe('Event', function() {
+
+
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = {
-            firstName: 'Tiina',
-            lastName: 'Testaaja',
-            address: 'Testauskatu 10',
-            postalCode: '00100',
-            city: 'Helsinki',
-            phoneNumber: '0401234567',
-            email: 'tiina.testaaja@keskitty.com',
-            username: 'Tiina14',
-            password: 'salainen1234',
-            passwordConfirm: 'salainen1234'
+        const user = Cypress.env('user')
 
-        }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
         const team = {
             name: 'Joukkue 1',
             category: 'm20'
         }
         cy.request('POST', 'http://localhost:3001/api/team', team)
-        cy.request('GET', 'http://localhost:3001/api/login')
-        cy.visit('http://localhost:3001')
-        cy.get('#username').type('Tiina14')
-        cy.get('#password').type('salainen1234')
-        cy.get('#login-button').click()
+        cy.logUserIn()
         cy.get('#addevent-link').click()
     })
 
@@ -42,11 +31,8 @@ describe('Event', function() {
 
     describe('Team check', function() {
         beforeEach(function() {
-            cy.get('input[id="opponent"]').type('honka')
-            cy.get('input[id="location"]').type('espoon halli')
-            cy.get('input[id="date"]').type('2023-06-01')
-            cy.get('input[id="time"]').type('11:00')
-            cy.get('input[id="description"]').type('tuomarointi')
+            cy.setupEvent()
+            cy.get('select[id="team"]').select('Valitse joukkue')
         })
 
         it('user cannot send form without inputing team', function() {
@@ -56,19 +42,14 @@ describe('Event', function() {
 
     describe('Opponent check', function() {
         beforeEach(function() {
-            cy.get('select[id="team"]').select('Joukkue 1')
-            cy.get('input[id="location"]').type('espoon halli')
-            cy.get('input[id="date"]').type('2023-06-01')
-            cy.get('input[id="time"]').type('11:00')
-            cy.get('input[id="description"]').type('tuomarointi')
+            cy.setupEvent()
+            cy.get('input[id="opponent"]').clear()
+
         })
 
         it('user cannot send form if opponent name is too short', function() {
             cy.get('input[id="opponent"]').type('A')
-            cy.contains('label', 'Vastustaja').click()
-            cy.get('#add-event').should('be.disabled')
-            cy.get('#opponent-error')
-                .should('be.visible')
+            cy.checkErrorExist('#opponent-error')
         })
 
         it ('opponent name will not be too long', function() {
@@ -79,19 +60,13 @@ describe('Event', function() {
 
     describe('Location check', function() {
         beforeEach(function() {
-            cy.get('select[id="team"]').select('Joukkue 1')
-            cy.get('input[id="opponent"]').type('honka')
-            cy.get('input[id="date"]').type('2023-06-01')
-            cy.get('input[id="time"]').type('11:00')
-            cy.get('input[id="description"]').type('tuomarointi')
+            cy.setupEvent()
+            cy.get('input[id="location"]').clear()
         })
 
         it('user cannot send form if location name is too short', function() {
             cy.get('input[id="location"]').type('E')
-            cy.contains('label', 'Vastustaja').click()
-            cy.get('#add-event').should('be.disabled')
-            cy.get('#location-error')
-                .should('be.visible')
+            cy.checkErrorExist('#location-error')
         })
 
         it ('location name will not be too long', function() {
@@ -102,11 +77,8 @@ describe('Event', function() {
 
     describe('Date check', function() {
         beforeEach(function() {
-            cy.get('select[id="team"]').select('Joukkue 1')
-            cy.get('input[id="opponent"]').type('honka')
-            cy.get('input[id="location"]').type('espoon halli')
-            cy.get('input[id="time"]').type('11:00')
-            cy.get('input[id="description"]').type('tuomarointi')
+            cy.setupEvent()
+            cy.get('input[id="date"]').clear()
         })
 
         it('user cannot send form without inputing date', function() {
@@ -121,11 +93,8 @@ describe('Event', function() {
 
     describe('Time check', function() {
         beforeEach(function() {
-            cy.get('select[id="team"]').select('Joukkue 1')
-            cy.get('input[id="opponent"]').type('honka')
-            cy.get('input[id="location"]').type('espoon halli')
-            cy.get('input[id="date"]').type('2023-06-01')
-            cy.get('input[id="description"]').type('tuomarointi')
+            cy.setupEvent()
+            cy.get('input[id="time"]').clear()
         })
 
         it('user cannot send form without inputing time', function() {
@@ -145,13 +114,7 @@ describe('Event', function() {
 
     describe('Add event', function() {
         it('user can add event with correct information', function() {
-            cy.get('select[id="team"]').select('Joukkue 1')
-            cy.get('input[id="opponent"]').type('Honka')
-            cy.get('input[id="location"]').type('espoon halli')
-            cy.get('input[id="date"]').type('2023-06-01')
-            cy.get('input[id="time"]').type('11:00')
-            cy.get('input[id="description"]').type('tuomarointi')
-
+            cy.setupEvent()
             cy.get('#add-event').click()
 
             cy.contains('Tapahtuma lisätty')
