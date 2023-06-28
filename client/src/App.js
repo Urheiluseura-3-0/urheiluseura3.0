@@ -15,7 +15,10 @@ import Cookies from 'universal-cookie'
 import './style.css'
 import ResetPasswordRequest from './components/ResetPasswordRequest'
 import ResetPasswordForm from './components/ResetPasswordForm'
+//import ForemanView from './components/ForemanView'
 import ProtectedPath from './components/ProtectedPath'
+import EventList from './components/EventList'
+import ForemanView from './components/ForemanView'
 
 
 
@@ -57,12 +60,17 @@ const App = () => {
                         </Route>
                         <Route element={<ProtectedPath token={token}
                             acceptedRoles={['worker', 'coach', 'foreman', 'supervisor', 'admin']}/>}>
-                            <Route path="/home" element={<FrontPage logout={handleLogout} />} />
+                            <Route path="/home" element={<FrontPage token={token}/>} />
                         </Route>
                         <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach']}/>}>
                             <Route path="/event" element={<EventForm />} />
+                            <Route path="/events" element={<EventList />} />
                             <Route path="/job" element={<JobForm />} />
                             <Route path="/jobs" element={<JobList />} />
+                        </Route>
+                        <Route element={<ProtectedPath token={token}
+                            acceptedRoles={['foreman', 'admin']}/>}>
+                            <Route path="/unconfirmed" element={<ForemanView />} />
                         </Route>
                         <Route element={<ProtectedPath token={token} acceptedRoles={[]}/>}>
                             <Route path="*"/>

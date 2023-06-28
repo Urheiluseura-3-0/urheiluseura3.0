@@ -63,7 +63,7 @@ describe('Routing', function() {
         it('User can go to home page', function() {
             cy.visit('http://localhost:3001/home')
             cy.url().should('include', 'home')
-            cy.contains('Tapahtumat')
+            cy.contains('Työtunnit')
         })
 
         it('User can go to add an event page', function() {
@@ -81,18 +81,18 @@ describe('Routing', function() {
         it('User gets redirected to home page if they try to go to login,password reset, request or register',
             function() {
                 cy.visit('http://localhost:3001/')
-                cy.contains('Tapahtumat')
+                cy.contains('Työtunnit')
                 cy.visit('http://localhost:3001/resetpassword/123')
-                cy.contains('Tapahtumat')
+                cy.contains('Työtunnit')
                 cy.visit('http://localhost:3001/requestpassword')
-                cy.contains('Tapahtumat')
+                cy.contains('Työtunnit')
                 cy.visit('http://localhost:3001/register')
-                cy.contains('Tapahtumat')
+                cy.contains('Työtunnit')
             })
 
         it('User gets redirected to home page if they try to go somewhere that does not exist', function() {
             cy.visit('http://localhost:3001/olematonosoite')
-            cy.contains('Tapahtumat')
+            cy.contains('Työtunnit')
         })
 
     })
@@ -133,6 +133,11 @@ describe('Routing', function() {
         it('User can go to home page', function() {
             cy.visit('http://localhost:3001/home')
             cy.url().should('include', 'home')
+        })
+
+        it('User can go to unconfirmed page', function() {
+            cy.visit('http://localhost:3001/unconfirmed')
+            cy.url().should('include', 'unconfirmed')
         })
 
         it('User gets redirected to home page if they try to go pages for other users', function() {
