@@ -63,9 +63,16 @@ const Step2 = ({
                     errorMessage='Salasanat eivät täsmää tai se on liian lyhyt'
                 />
                 <div className='flex justify-between items-center space-x-5'>
-                    <BackButton id='back-button' onClick={handleBack} text='Takaisin' />
-                    <SendButton id='register-button' isInputValid={isInputValid} onClick={handleSubmit}
-                        message='Täytä puuttuvat kentät' text='Rekisteröidy' />
+                    <BackButton
+                        id='back-button'
+                        onClick={handleBack}
+                        text='Takaisin' />
+                    <SendButton
+                        id='register-button'
+                        isInputValid={isInputValid}
+                        onClick={handleSubmit}
+                        message='Täytä puuttuvat kentät'
+                        text='Rekisteröidy' />
                 </div>
                 <div>
                     <TextAndLink text='Onko sinulla jo käyttäjätunnus? ' linktext='Kirjaudu' to='/' />

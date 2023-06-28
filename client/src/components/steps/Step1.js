@@ -1,8 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import FormField from '../FormField'
 import SendButton from '../SendButton'
 import BackButton from '../BackButton'
+import TextAndLink from '../TextAndLink'
 
 const Step1 = ({
     onNext,
@@ -49,13 +49,19 @@ const Step1 = ({
                     errorMessage='Tarkista sähköpostiosoite'
                 />
                 <div className='flex justify-between items-center space-x-5'>
-                    <BackButton id='back-button' onClick={handleBack} text='Takaisin'/>
-                    <SendButton id='next-button' isInputValid={isInputValid} onClick={handleNext}
-                        message='Täytä puuttuvat kentät' text='Seuraava' />
+                    <BackButton
+                        id='back-button'
+                        onClick={handleBack}
+                        text='Takaisin'/>
+                    <SendButton
+                        id='next-button'
+                        isInputValid={isInputValid}
+                        onClick={handleNext}
+                        message='Täytä puuttuvat kentät'
+                        text='Seuraava' />
                 </div>
                 <div className='flex-end'>
-                    <span className='text-sm text-teal-500'>Onko sinulla jo käyttäjätunnus? </span>
-                    <Link className='text-sm text-blue-700 underline' to='/'>Kirjaudu</Link>
+                    <TextAndLink text='Onko sinulla jo käyttäjätunnus? ' linktext='Kirjaudu' to='/' />
                 </div>
 
             </div>

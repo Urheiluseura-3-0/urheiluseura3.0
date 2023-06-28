@@ -1,4 +1,4 @@
-const FormDropdown = ({ label, id, value, onChange, isValid, title, dropdown, errorId, errorMessage }) => {
+const FormDropdown = ({ label, id, value, onChange, isValid, defaultOption, options, errorId, errorMessage }) => {
     return (
         <div className='pt-3'>
             <label className='block'>{label}</label>
@@ -7,8 +7,8 @@ const FormDropdown = ({ label, id, value, onChange, isValid, title, dropdown, er
                     ? 'border-gray-300'
                     : 'border-red-500'}`}
             >
-                <option value='0'>{title}</option>
-                {dropdown.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                <option value='0'>{defaultOption}</option>
+                {options.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </select>
             {isValid ? null : (
                 <p id={errorId} className='peer-focus:hidden text-red-500 text-sm'>

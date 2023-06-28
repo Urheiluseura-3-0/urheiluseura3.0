@@ -103,18 +103,26 @@ const EventForm = () => {
             {showAlert && <Notification type={alertType} message={alertMessage} />}
             <form>
                 <div className='space-y-3'>
-                    <FormDropdown label='Joukkue' id='team' value={team}
+                    <FormDropdown
+                        label='Joukkue'
+                        id='team'
+                        value={team}
                         onChange={({ target }) => {
                             setTeam(target.value)
                             setIsTeamValid(target.value > 0)
                         }}
                         isValid={(!isOpponentValid || isTeamValid)}
-                        title='Valitse joukkue'
-                        dropdown={teams}
+                        defaultOption='Valitse joukkue'
+                        options={teams}
                         errorId='team-error'
                         errorMessage='Valitse jokin joukkue'
                     />
-                    <FormField label='Vastustaja' id='opponent' type='text' value={opponent} maxLength={40}
+                    <FormField
+                        label='Vastustaja'
+                        id='opponent'
+                        type='text'
+                        value={opponent}
+                        maxLength={40}
                         onChange={({ target }) => {
                             setOpponent(target.value)
                             setIsOpponentValid(target.value.length >= 2 && target.value.length <= 40)
@@ -123,7 +131,12 @@ const EventForm = () => {
                         errorId='opponent-error'
                         errorMessage='Vastustajan on oltava vähintään 2 merkkiä'
                     />
-                    <FormField label='Paikka' id='location' type='text' value={location} maxLength={40}
+                    <FormField
+                        label='Paikka'
+                        id='location'
+                        type='text'
+                        value={location}
+                        maxLength={40}
                         onChange={({ target }) => {
                             setLocation(target.value)
                             setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
@@ -132,7 +145,11 @@ const EventForm = () => {
                         errorId='location-error'
                         errorMessage='Paikan on oltava vähintään 2 merkkiä'
                     />
-                    <FormField label='Päivämäärä' id='date' type='date' value={date}
+                    <FormField
+                        label='Päivämäärä'
+                        id='date'
+                        type='date'
+                        value={date}
                         onChange={({ target }) => {
                             setDate(target.value)
                             setIsDateValid(validateDate(target.value))
@@ -141,7 +158,11 @@ const EventForm = () => {
                         errorId='date-error'
                         errorMessage='Tarkista päivämäärä'
                     />
-                    <FormField label='Kellonaika' id='time' type='time' value={time}
+                    <FormField
+                        label='Kellonaika'
+                        id='time'
+                        type='time'
+                        value={time}
                         onChange={({ target }) => {
                             setTime(target.value)
                             setIsTimeValid(validateTime(target.value))
@@ -150,7 +171,12 @@ const EventForm = () => {
                         errorId='time-error'
                         errorMessage='Tarkista kellonaika'
                     />
-                    <FormField label='Lisätietoja' id='description' type='text' value={description} maxLength={200}
+                    <FormField
+                        label='Lisätietoja'
+                        id='description'
+                        type='text'
+                        value={description}
+                        maxLength={200}
                         onChange={({ target }) => {
                             setDescription(target.value)
                             setIsDescriptionValid(target.value.length <= 200)
@@ -158,8 +184,12 @@ const EventForm = () => {
                         isValid={isDescriptionValid}
                     />
                     <div className='flex'>
-                        <SendButton id='add-event' isInputValid={isInputValid} onClick={handleEvent}
-                            message='Täytä puuttuvat kentät' text='Lisää tapahtuma' />
+                        <SendButton
+                            id='add-event'
+                            isInputValid={isInputValid}
+                            onClick={handleEvent}
+                            message='Täytä puuttuvat kentät'
+                            text='Lisää tapahtuma' />
                     </div>
                 </div>
             </form>

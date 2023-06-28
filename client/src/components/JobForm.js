@@ -113,7 +113,12 @@ const JobForm = () => {
             <form>
                 <div className='space-y-3'>
 
-                    <FormField label='Ryhmä' id='squad' type='text' value={squad} maxLength={40}
+                    <FormField
+                        label='Ryhmä'
+                        id='squad'
+                        type='text'
+                        value={squad}
+                        maxLength={40}
                         onChange={({ target }) => {
                             setSquad(target.value)
                             setIsSquadValid(target.value.length >= 2 && target.value.length <= 40)
@@ -122,7 +127,12 @@ const JobForm = () => {
                         errorId='squad-error'
                         errorMessage={'Ryhmän nimen on oltava vähintään 2 merkkiä'}
                     />
-                    <FormField label='Paikka' id='location' type='text' value={location} maxLength={40}
+                    <FormField
+                        label='Paikka'
+                        id='location'
+                        type='text'
+                        value={location}
+                        maxLength={40}
                         onChange={({ target }) => {
                             setLocation(target.value)
                             setIsLocationValid(target.value.length >= 2 && target.value.length <= 40)
@@ -131,7 +141,11 @@ const JobForm = () => {
                         errorId='location-error'
                         errorMessage={'Paikan on oltava vähintään 2 merkkiä'}
                     />
-                    <FormField label='Päivämäärä' id='date' type='date' value={date}
+                    <FormField
+                        label='Päivämäärä'
+                        id='date'
+                        type='date'
+                        value={date}
                         onChange={({ target }) => {
                             setDate(target.value)
                             setIsDateValid(validateDate(target.value))
@@ -140,7 +154,11 @@ const JobForm = () => {
                         errorId='date-error'
                         errorMessage={'Tarkista päivämäärä'}
                     />
-                    <FormField label='Aloitusaika' id='start-time' type='time' value={time}
+                    <FormField
+                        label='Aloitusaika'
+                        id='start-time'
+                        type='time'
+                        value={time}
                         onChange={({ target }) => {
                             setTime(target.value)
                             setIsTimeValid(validateTime(target.value))
@@ -151,14 +169,26 @@ const JobForm = () => {
                     />
                     <h3 className='text-l'>Työaika</h3>
                     <div className='flex space-x-8'>
-                        <FormField label='Tunnit' id='hours' type='number' value={hours} min={0} max={24}
+                        <FormField
+                            label='Tunnit'
+                            id='hours'
+                            type='number'
+                            value={hours}
+                            min={0}
+                            max={24}
                             onChange={({ target }) => {
                                 setHours(target.value)
                                 setIsWorkedTimeValid(validateHours(target.value))
                             }}
                             isValid={isWorkedTimeValid}
                         />
-                        <FormField label='Minuutit' id='minutes' type='number' value={minutes} min={0} max={59}
+                        <FormField
+                            label='Minuutit'
+                            id='minutes'
+                            type='number'
+                            value={minutes}
+                            min={0}
+                            max={59}
                             onChange={({ target }) => {
                                 setMinutes(target.value)
                                 setIsWorkedTimeValid(validateMinutes(target.value))
@@ -166,7 +196,12 @@ const JobForm = () => {
                             isValid={isWorkedTimeValid}
                         />
                     </div>
-                    <FormField label='Lisätietoja' id='context' type='text' value={context} maxLength={200}
+                    <FormField
+                        label='Lisätietoja'
+                        id='context'
+                        type='text'
+                        value={context}
+                        maxLength={200}
                         onChange={({ target }) => {
                             setContext(target.value)
                             setIsContextValid(target.value.length <= 200)
@@ -174,8 +209,12 @@ const JobForm = () => {
                         isValid={isContextValid}
                     />
                     <div className='flex'>
-                        <SendButton id='add-job' isInputValid={isInputValid} onClick={handleSubmit}
-                            message='Täytä puuttuvat kentät' text='Lähetä' />
+                        <SendButton
+                            id='add-job'
+                            isInputValid={isInputValid}
+                            onClick={handleSubmit}
+                            message='Täytä puuttuvat kentät'
+                            text='Lähetä' />
                     </div>
                 </div>
             </form>

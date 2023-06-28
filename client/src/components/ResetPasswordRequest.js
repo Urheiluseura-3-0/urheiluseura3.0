@@ -47,16 +47,26 @@ const ResetPasswordRequest = () => {
             <p>Anna sähköpostiosoitteesi, niin sinulle lähetetään ohjeet salasanan vaihtamiseksi.</p>
             <form>
                 <div className='space-y-3'>
-                    <FormField label='Sähköposti' id='email' type='text' maxlength={40} value={email}
+                    <FormField
+                        label='Sähköposti'
+                        id='email'
+                        type='text'
+                        maxlength={40}
+                        value={email}
                         onChange={({ target }) => {
                             setEmail(target.value)
                             setIsEmailValid(target.value.length >= 5 && target.value.length <= 40)
                         }}
-                        isValid={isEmailValid} errorId='email-error' errorMessage='Tarkista sähköpostiosoite'
+                        isValid={isEmailValid}
+                        errorId='email-error'
+                        errorMessage='Tarkista sähköpostiosoite'
                     />
-                    <SendButton id='send-request-button' isInputValid={isEmailValid}
+                    <SendButton
+                        id='send-request-button'
+                        isInputValid={isEmailValid}
                         onClick={handlePasswordResetRequest}
-                        message='Anna kelvollinen sähköpostiosoite' text='Lähetä' />
+                        message='Anna kelvollinen sähköpostiosoite'
+                        text='Lähetä' />
                 </div>
             </form>
             <div>

@@ -51,7 +51,12 @@ const ResetPasswordForm = () => {
             <h1 className='font-bold text-2xl text-center text-teal-500'>Vaihda salasana</h1>
             {showAlert && <Notification message={alertMessage} type={alertType} />}
             <form>
-                <FormField label='Salasana' id='password' type='password' maxLength={30} value={password}
+                <FormField
+                    label='Salasana'
+                    id='password'
+                    type='password'
+                    maxLength={30}
+                    value={password}
                     onChange={({ target }) => {
                         setPassword(target.value)
                         setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
@@ -59,9 +64,14 @@ const ResetPasswordForm = () => {
                                                 target.value.localeCompare(password) === 0)
                     }}
                     isValid={password.length === 0 || isPasswordValid}
-                    errorid='password-error' errorMessage='Salasanan minimipituus on 10 merkkiä'
+                    errorId='password-error'
+                    errorMessage='Salasanan minimipituus on 10 merkkiä'
                 />
-                <FormField label='Vahvista salasana' id='passwordConfirmed' type='password' maxLength={30}
+                <FormField
+                    label='Vahvista salasana'
+                    id='passwordConfirmed'
+                    type='password'
+                    maxLength={30}
                     value={passwordConfirm}
                     onChange={({ target }) => {
                         setPasswordConfirm(target.value)
@@ -69,10 +79,13 @@ const ResetPasswordForm = () => {
                             target.value.localeCompare(password) === 0)
                     }}
                     isValid={passwordConfirm.length === 0 || isPasswordConfirmValid}
-                    errorid='passwordConfirm-error' errorMessage='Salasanat eivät täsmää tai se on liian lyhyt'
+                    errorId='passwordConfirm-error'
+                    errorMessage='Salasanat eivät täsmää tai se on liian lyhyt'
                 />
             </form>
-            <SendButton id='send' isInputValid={isPasswordValid && isPasswordConfirmValid}
+            <SendButton
+                id='send'
+                isInputValid={isPasswordValid && isPasswordConfirmValid}
                 onClick={handleReset}
                 message={'Tarkista salasanat'} text='Lähetä'/>
             <div>

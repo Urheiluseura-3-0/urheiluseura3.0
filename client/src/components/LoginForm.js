@@ -62,7 +62,12 @@ const LoginForm = ({ tokenHandler }) => {
             {showAlert && <Notification message={alertMessage} />}
             <form onSubmit={handleLogin}>
                 <div className='space-y-3'>
-                    <FormField label='Käyttäjänimi' id='username' type='text' value={username} maxLength={15}
+                    <FormField
+                        label='Käyttäjänimi'
+                        id='username'
+                        type='text'
+                        value={username}
+                        maxLength={15}
                         onChange={({ target }) => {
                             setUsername(target.value)
                             setIsUsernameValid(target.value.length >= 5 && target.value.length <= 15)
@@ -71,8 +76,12 @@ const LoginForm = ({ tokenHandler }) => {
                         errorId='username-error'
                         errorMessage={'Käyttäjänimen minimipituus on 5 merkkiä'}
                     />
-
-                    <FormField label='Salasana' id='password' type='password' value={password} maxLength={30}
+                    <FormField
+                        label='Salasana'
+                        id='password'
+                        type='password'
+                        value={password}
+                        maxLength={30}
                         onChange={({ target }) => {
                             setPassword(target.value)
                             setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
@@ -82,15 +91,25 @@ const LoginForm = ({ tokenHandler }) => {
                         errorMessage={'Salasanan minimipituus on 10 merkkiä'}
                     />
 
-                    <SendButton id='login-button' isInputValid={isInputValid} onClick={handleLogin}
-                        message='Syötä käyttäjätunnus ja salasana' text='Kirjaudu'
+                    <SendButton
+                        id='login-button'
+                        isInputValid={isInputValid}
+                        onClick={handleLogin}
+                        message='Syötä käyttäjätunnus ja salasana'
+                        text='Kirjaudu'
                     />
                     <div>
-                        <TextAndLink text='Unohditko salasanasi? ' linktext='Palauta tästä'
-                            to='/requestpassword' id='reset-password-link'/>
+                        <TextAndLink
+                            text='Unohditko salasanasi? '
+                            linktext='Palauta tästä'
+                            to='/requestpassword'
+                            id='reset-password-link'/>
                     </div>
-                    <TextAndLink text='Eikö sinulla ole vielä käyttäjää? ' linktext='Rekisteröidy'
-                        to='/register' id='register-link'/>
+                    <TextAndLink
+                        text='Eikö sinulla ole vielä käyttäjää? '
+                        linktext='Rekisteröidy'
+                        to='/register'
+                        id='register-link'/>
                 </div>
             </form>
         </div>

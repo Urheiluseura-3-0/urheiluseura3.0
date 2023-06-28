@@ -1,5 +1,4 @@
 const SendButton = ({ id, isInputValid, onClick, message, text }) => {
-    //<div className='flex'>
     return (
         <>
             <button
