@@ -169,7 +169,6 @@ describe('Routing', function() {
     describe('Routing when user is a worker and coach', function() {
         beforeEach(function() {
             const user = Cypress.env('user')
-            
             cy.request('POST', 'http://localhost:3001/api/register/', user)
             cy.get('#username').type('Tiina14')
             cy.get('#password').type('salainen1234')
