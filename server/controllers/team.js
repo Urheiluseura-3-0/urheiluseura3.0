@@ -2,6 +2,7 @@ const teamRouter = require('express').Router()
 const {Team} = require('../models')
 const {validateTeamInput} = require('../utils/validate_input.js')
 const { tokenExtractor } = require('../utils/middleware')
+const { checkMissing } = require('../utils/checks')
 
 teamRouter.get('/', tokenExtractor, async (request,response) => {
 
@@ -31,6 +32,8 @@ teamRouter.post('/', tokenExtractor, async (request, response) => {
 
     try {
         const {name, category } = request.body
+        checkMissing(name, 'Nimi puuttuu', response)
+
         const checkInputErrors = validateTeamInput(name, category)
         if (checkInputErrors.length > 0) {
             return response.status(401).json({error: `${checkInputErrors}`})

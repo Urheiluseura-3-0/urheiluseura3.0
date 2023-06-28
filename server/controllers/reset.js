@@ -8,11 +8,15 @@ const { sendResetEmail } = require('../utils/email')
 const { User } = require('../models')
 const { Reset } = require('../models')
 const { validateEmail, validateResetPasswordInput } = require('../utils/validate_input.js')
+const { checkMissing } = require('../utils/checks')
+
 
 
 resetRouter.post('/', async (request, response) => {
     try {
         const { email } = request.body
+        checkMissing(email, 'Sähköpostiosoite puuttuu', response)
+        
         const checkInputIsCorrect = validateEmail(email)
         if (!checkInputIsCorrect) {
             return response.status(400).json({ error: 'Virheellinen sähköpostiosoite' })

@@ -4,12 +4,15 @@ const userRouter = require('express').Router()
 const config = require('../utils/config')
 const { User } = require('../models')
 const { validateLoginInput } = require('../utils/validate_input.js')
+const { checkMissing } = require('../utils/checks')
 
-userRouter.post('/', async (request, response) => {
+userRouter.post('/login', async (request, response) => {
 
     try {
 
         const { username, password } = request.body
+        checkMissing(username, 'Käyttäjänimi puuttuu', response)
+        checkMissing(password,'Salasana puuttuu', response)
 
         const checkInputErrors = validateLoginInput(username, password)
 
@@ -50,11 +53,11 @@ userRouter.post('/', async (request, response) => {
         const token = jwt.sign(
             userForToken,
             config.SECRET,
-            { expiresIn: 60 * 60 }
+            { expiresIn: 60 * 30 }
         )
 
         return response
-            .cookie('Token', token, { maxAge: 900000 })
+            .cookie('UrheiluseuraToken', token, { maxAge: 1800000 })
             .status(200)
             .send({ username: user.username, name: user.name })
 
@@ -64,16 +67,17 @@ userRouter.post('/', async (request, response) => {
 
 })
 
-//Log out
-userRouter.get('/', async (request, response) => {
+userRouter.post('/logout', async (request, response) => {
+
     try {
         return response
-            .clearCookie('Token')
+            .clearCookie('UrheiluseuraToken')
             .status(200)
             .json({ message: 'Uloskirjautuminen onnistui' })
     } catch (error) {
         return response.status(400)
     }
+
 })
 
 

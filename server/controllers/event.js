@@ -5,6 +5,7 @@ const { User } = require('../models')
 const { Team } = require('../models')
 const { validateEventInput } = require('../utils/validate_input.js')
 const { tokenExtractor } = require('../utils/middleware')
+const { checkMissing } = require('../utils/checks')
 
 
 
@@ -12,26 +13,12 @@ const { tokenExtractor } = require('../utils/middleware')
 eventRouter.post('/', tokenExtractor, async (request, response) => {
 
     try {
-
         const { team, opponent, location, date, time, description } = request.body
-        if (!team) {
-            return response.status(401).json({ error: 'Virheellinen tiimi' })
-        }
-        if (!opponent) {
-            return response.status(401).json({ error: 'Virheellinen vastustaja' })
-        }
-
-        if (!location) {
-            return response.status(401).json({ error: 'Virheellinen sijainti' })
-        }
-
-        if (!date) {
-            return response.status(401).json({ error: 'Virheellinen päivämäärä' })
-        }
-
-        if (!time) {
-            return response.status(401).json({ error: 'Virheellinen aika' })
-        }
+        checkMissing(team, 'Virheellinen tiimi', response)
+        checkMissing(opponent, 'Virheellinen vastustaja', response)
+        checkMissing(location, 'Virheellinen sijainti', response)
+        checkMissing(date,'Virheellinen päivämäärä' , response)
+        checkMissing(time ,'Virheellinen aika', response)
 
         const checkEventErrors = validateEventInput(team, opponent, date, time, location, description)
 
@@ -39,6 +26,7 @@ eventRouter.post('/', tokenExtractor, async (request, response) => {
             return response.status(401).json({ error: `${checkEventErrors}` })
 
         }
+
         const finduser = await User.findByPk(request.decodedToken.id)
 
         if (!finduser) {
@@ -50,8 +38,6 @@ eventRouter.post('/', tokenExtractor, async (request, response) => {
 
         newdate.setHours(hours)
         newdate.setMinutes(minutes)
-
-
 
         const findteam = await Team.findByPk(team)
 
@@ -70,9 +56,8 @@ eventRouter.post('/', tokenExtractor, async (request, response) => {
 
         const savedEvent = await Event.create(event.dataValues)
 
-
-
         return response.status(200).json(savedEvent)
+
     } catch (error) {
         return response.status(400)
     }
@@ -89,6 +74,7 @@ eventRouter.get('/', tokenExtractor, async (request, response) => {
                 as: 'EventTeam'
             },
         })
+
         return response.json(events)
 
     } catch (error) {
@@ -106,7 +92,13 @@ eventRouter.get('/:id', tokenExtractor, async (request, response) => {
             },
         })
         if (event) {
-            return response.json(event)
+            if (event.createdById === request.decodedToken.id){
+                return response.json(event)
+            }
+            else{
+                return response.status(401).json({error: 'Ei pääsyoikeutta'}).end()
+            }
+            
         } else {
             return response.status(404).end()
         }

@@ -49,7 +49,7 @@ describe('Eventlist', function () {
             password: 'salainen1234'
         }
 
-        const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', loggedUserInfo)
 
 
 
