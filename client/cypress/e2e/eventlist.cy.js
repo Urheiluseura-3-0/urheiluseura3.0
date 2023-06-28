@@ -1,21 +1,11 @@
+import '../support/testHelpers'
+
 describe('Eventlist', function () {
 
 
     beforeEach(function () {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = {
-            firstName: 'Tiina',
-            lastName: 'Testaaja',
-            address: 'Testauskatu 10',
-            postalCode: '00100',
-            city: 'Helsinki',
-            phoneNumber: '0401234567',
-            email: 'tiina.testaaja@keskitty.com',
-            username: 'Tiina14',
-            password: 'salainen1234',
-            passwordConfirm: 'salainen1234'
-
-        }
+        const user = Cypress.env('user')
 
         cy.request('POST', 'http://localhost:3001/api/register/', user)
         const teams = [
@@ -49,7 +39,7 @@ describe('Eventlist', function () {
             password: 'salainen1234'
         }
 
-        const loggedUser = cy.request('POST', 'http://localhost:3001/api/login', loggedUserInfo)
+        const loggedUser = cy.request('POST', 'http://localhost:3001/api/auth/login', loggedUserInfo)
 
 
 
