@@ -308,6 +308,23 @@ test('foreman can fetch unconfirmed events', async () => {
         .expect(200)
     expect(response.body).toHaveLength(3)
 })
+
+test('admin can fetch unconfirmed events', async () => {
+
+    user = {username: 'Jimi35', password: 'salainen1234'}
+    loggedUser = await api.post('/api/login').send(user)
+    cookies = new Cookies(loggedUser.headers['set-cookie'])
+    cryptedToken = cookies.cookies[0]
+
+    finalToken = handleToken(cryptedToken)
+
+    const response = await api
+        .get('/api/job/unconfirmed')
+        .set('Cookie', finalToken)
+        .expect(200)
+    expect(response.body).toHaveLength(3)
+})
+
 test('jobs for user return squads', async () => {
     const response = await api
         .get('/api/job')
