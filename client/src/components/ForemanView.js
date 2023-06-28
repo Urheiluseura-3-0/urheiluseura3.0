@@ -18,6 +18,7 @@ const ForemanView = () => {
         jobService.getUnconfirmedJobs().then(allUnconfirmed => {
             setUnconfirmedJobs(allUnconfirmed)
         })
+        console.log(unconfirmedJobs)
     }, [])
 
     const sortBySquad = (event) => {
@@ -157,18 +158,12 @@ const ForemanView = () => {
             render: (job) => job.squad,
         },
         {
-            id: 'status',
-            text: 'Status',
+            id: 'createdBy',
+            text: 'Tekijä',
             sort: sortByStatus,
-            render: (job) => (
-                <span
-                    className={
-                        String(job.status) === '0' ? 'text-rose-400' : 'text-emerald-400'
-                    }
-                >
-                    {String(job.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}
-                </span>
-            )
+            render: (job) => {
+                return `${job.CreatedBy.firstName} ${job.CreatedBy.lastName}`
+            }
         },
     ]
     return (
@@ -182,7 +177,7 @@ const ForemanView = () => {
                 handleItemClick={handleEventClick}
             />
             <div>
-                {clickedUnconfirmed !== '' && <JobDetail oneJob={clickedUnconfirmed} />}
+                {clickedUnconfirmed !== '' && <JobDetail oneJob={clickedUnconfirmed} unconfirmed={true}/>}
             </div>
         </div>
     )

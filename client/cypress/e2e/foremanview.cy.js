@@ -134,7 +134,7 @@ describe('Foremanview', function () {
         cy.get('#jobsrow').each(($row) => {
             cy.wrap($row)
                 .find('td:nth-child(4)')
-                .should('contain', 'Odottaa hyväksyntää')
+                .should('contain', 'Tiina Testaaja')
         })
     })
 
