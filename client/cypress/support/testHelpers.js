@@ -36,57 +36,6 @@ Cypress.env('teams', [
     }
 ])
 
-Cypress.env('events', [
-    {
-        team: 'Miehet IB',
-        opponent: 'Joukkue2',
-        date: '2023-05-27',
-        time: '20:30',
-        location: 'Helsinki',
-        description: 'Toimitsija'
-    },
-    {
-        team: 'Miehet IB',
-        opponent: 'Joukkue2',
-        date: '2023-05-25',
-        time: '20:30',
-        location: 'Helsinki',
-        description: 'Toimitsija'
-    },
-    {
-        team: 'EBT Naiset',
-        opponent: 'Honka naiset',
-        date: '2023-05-27',
-        time: '18:00',
-        location: 'Hyvinkää',
-        description: 'Lipunmyynti'
-    },
-    {
-        team: 'EBT Naiset',
-        opponent: 'Honka naiset',
-        date: '2023-05-29',
-        time: '20:00',
-        location: 'Helsinki',
-        description: 'Lipunmyynti'
-    },
-    {
-        team: 'Pojat UI19 ',
-        opponent: 'Honka U19',
-        date: '2023-06-05',
-        time: '20:30',
-        location: 'Vantaa',
-        description: 'Tuomarointi'
-    },
-    {
-        team: 'Pojat UI19 ',
-        opponent: 'Pojat U20',
-        date: '2023-05-20',
-        time: '19:00',
-        location: 'Espoo',
-        description: 'Toimitsija'
-    }
-
-])
 
 Cypress.Commands.add('logUserIn', () => {
 
