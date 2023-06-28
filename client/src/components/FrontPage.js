@@ -14,11 +14,11 @@ const FrontPage = ({ token }) => {
     if (decodedToken.isAdmin === 1) {
         view = null
     }
-    else if (decodedToken.isSupervisor === 1) {
-        view = null
-    }
     else if (decodedToken.isForeman === 1) {
         view = <ForemanView/>
+    }
+    else if (decodedToken.isSupervisor === 1) {
+        view = null
     }
     else if (decodedToken.isCoach === 1) {
         view = <JobList />
