@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import userService from '../services/user'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Notification from './Notification'
 import FormField from './FormField'
 import SendButton from './SendButton'
+import TextAndLink from './TextAndLink'
 
 const LoginForm = ({ tokenHandler }) => {
     const navigate = useNavigate()
@@ -85,22 +86,11 @@ const LoginForm = ({ tokenHandler }) => {
                         message='Syötä käyttäjätunnus ja salasana' text='Kirjaudu'
                     />
                     <div>
-                        <span className='text-sm text-teal-500'>Unohditko salasanasi? </span>
-                        <Link
-                            id='reset-password-link'
-                            className='text-sm text-blue-700 underline'
-                            to="/requestpassword">
-                            Palauta tästä
-                        </Link>
+                        <TextAndLink text='Unohditko salasanasi? ' linktext='Palauta tästä'
+                            to='/requestpassword' id='reset-password-link'/>
                     </div>
-
-                    <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
-                    <Link
-                        id='register-link'
-                        className='text-sm text-blue-700 underline'
-                        to="/register">
-                        Rekisteröidy
-                    </Link>
+                    <TextAndLink text='Eikö sinulla ole vielä käyttäjää? ' linktext='Rekisteröidy'
+                        to='/register' id='register-link'/>
                 </div>
             </form>
         </div>

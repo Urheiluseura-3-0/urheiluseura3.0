@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Notification from './Notification'
 import { Link, useParams } from 'react-router-dom'
 import resetPasswordService from '../services/resetpassword'
+import FormField from './FormField'
+import SendButton from './SendButton'
 
 const ResetPasswordForm = () => {
     const [password, setPassword] = useState('')
@@ -49,62 +51,30 @@ const ResetPasswordForm = () => {
             <h1 className='font-bold text-2xl text-center text-teal-500'>Vaihda salasana</h1>
             {showAlert && <Notification message={alertMessage} type={alertType} />}
             <form>
-                <div>
-                    <label className='block'>Salasana</label>
-                    <input
-                        id='password'
-                        type='password'
-                        className='peer border rounded p-2 w-full border-gray-300'
-                        maxLength={30}
-                        value={password}
-                        onChange={({ target }) => {
-                            setPassword(target.value)
-                            setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
-                            setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
-                                target.value.localeCompare(password) === 0)
-                        }} />
-                    {password.length === 0 || isPasswordValid
-                        ? null
-                        : (
-                            <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                Salasanan minimipituus on 10 merkkiä
-                            </p>
-                        )}
-                </div>
-                <div>
-                    <label className='block'>Vahvista salasana</label>
-                    <input
-                        id='passwordConfirmed'
-                        type='password'
-                        className='peer border rounded p-2 w-full border-gray-300'
-                        maxLength={30}
-                        value={passwordConfirm}
-                        onChange={({ target }) => {
-                            setPasswordConfirm(target.value)
-                            setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
-                                target.value.localeCompare(password) === 0)
-                        }} />
-                    {passwordConfirm.length === 0 || isPasswordConfirmValid
-                        ? null
-                        : (
-                            <p id='passwordConfirm-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                Salasanat eivät täsmää tai se on liian lyhyt
-                            </p>
-                        )}
-                </div>
+                <FormField label='Salasana' id='password' type='password' maxLength={30} value={password}
+                    onChange={({ target }) => {
+                        setPassword(target.value)
+                        setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
+                        setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
+                                                target.value.localeCompare(password) === 0)
+                    }}
+                    isValid={password.length === 0 || isPasswordValid}
+                    errorid='password-error' errorMessage='Salasanan minimipituus on 10 merkkiä'
+                />
+                <FormField label='Vahvista salasana' id='passwordConfirmed' type='password' maxLength={30}
+                    value={passwordConfirm}
+                    onChange={({ target }) => {
+                        setPasswordConfirm(target.value)
+                        setIsPasswordConfirmValid(target.value.length >= 10 && target.value.length <= 30 &&
+                            target.value.localeCompare(password) === 0)
+                    }}
+                    isValid={passwordConfirm.length === 0 || isPasswordConfirmValid}
+                    errorid='passwordConfirm-error' errorMessage='Salasanat eivät täsmää tai se on liian lyhyt'
+                />
             </form>
-            <button
-                id='send'
-                type='submit'
-                className={`bg-teal-400 hover:bg-teal-600 px-5 py-1  ${(isPasswordValid && isPasswordConfirmValid)
-                    ? ''
-                    : 'opacity-30 cursor-not-allowed hover:'}
-                leading-5 rounded-full font-semibold text-white`}
-                disabled={!(isPasswordValid && isPasswordConfirmValid)}
-                title={(isPasswordValid && isPasswordConfirmValid)
-                    ? ''
-                    : 'Tarkista salasanat'}
-                onClick={handleReset}>Lähetä</button>
+            <SendButton id='send' isInputValid={isPasswordValid && isPasswordConfirmValid}
+                onClick={handleReset}
+                message={'Tarkista salasanat'} text='Lähetä'/>
             <div>
                 <Link id='front-page-link' className='text-sm text-blue-700 underline' to="/">Takaisin etusivulle</Link>
             </div>

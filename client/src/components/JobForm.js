@@ -151,22 +151,20 @@ const JobForm = () => {
                     />
                     <h3 className='text-l'>Työaika</h3>
                     <div className='flex space-x-8'>
-                        <div>
-                            <FormField label='Tunnit' id='hours' type='number' value={hours} min={0} max={24}
-                                onChange={({ target }) => {
-                                    setHours(target.value)
-                                    setIsWorkedTimeValid(validateHours(target.value))
-                                }}
-                                isValid={isWorkedTimeValid}
-                            />
-                            <FormField label='Minuutit' id='minutes' type='number' value={minutes} min={0} max={59}
-                                onChange={({ target }) => {
-                                    setMinutes(target.value)
-                                    setIsWorkedTimeValid(validateMinutes(target.value))
-                                }}
-                                isValid={isWorkedTimeValid}
-                            />
-                        </div>
+                        <FormField label='Tunnit' id='hours' type='number' value={hours} min={0} max={24}
+                            onChange={({ target }) => {
+                                setHours(target.value)
+                                setIsWorkedTimeValid(validateHours(target.value))
+                            }}
+                            isValid={isWorkedTimeValid}
+                        />
+                        <FormField label='Minuutit' id='minutes' type='number' value={minutes} min={0} max={59}
+                            onChange={({ target }) => {
+                                setMinutes(target.value)
+                                setIsWorkedTimeValid(validateMinutes(target.value))
+                            }}
+                            isValid={isWorkedTimeValid}
+                        />
                     </div>
                     <FormField label='Lisätietoja' id='context' type='text' value={context} maxLength={200}
                         onChange={({ target }) => {
@@ -175,9 +173,10 @@ const JobForm = () => {
                         }}
                         isValid={isContextValid}
                     />
-
-                    <SendButton id='add-job' isInputValid={isInputValid} handleSubmit={handleSubmit}
-                        message='Täytä puuttuvat kentät' text='Lähetä' />
+                    <div className='flex'>
+                        <SendButton id='add-job' isInputValid={isInputValid} onClick={handleSubmit}
+                            message='Täytä puuttuvat kentät' text='Lähetä' />
+                    </div>
                 </div>
             </form>
         </div>

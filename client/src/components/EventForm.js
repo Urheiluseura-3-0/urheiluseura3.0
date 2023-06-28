@@ -157,9 +157,10 @@ const EventForm = () => {
                         }}
                         isValid={isDescriptionValid}
                     />
-
-                    <SendButton id='add-event' isInputValid={isInputValid} handleSubmit={handleEvent}
-                        message='Täytä puuttuvat kentät' text='Lisää tapahtuma' />
+                    <div className='flex'>
+                        <SendButton id='add-event' isInputValid={isInputValid} onClick={handleEvent}
+                            message='Täytä puuttuvat kentät' text='Lisää tapahtuma' />
+                    </div>
                 </div>
             </form>
         </div>
