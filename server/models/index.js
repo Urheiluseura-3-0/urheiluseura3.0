@@ -23,7 +23,6 @@ Event.belongsTo(User, { foreignKey: 'confirmedById', as: 'ConfirmedBy' })
 Job.belongsTo(User, { foreignKey: 'createdById', as: 'CreatedBy' })
 Job.belongsTo(User, { foreignKey: 'confirmedById', as: 'ConfirmedBy'})
 
-
 Supervisor.belongsTo(User)
 Supervisor.belongsTo(Team)
 

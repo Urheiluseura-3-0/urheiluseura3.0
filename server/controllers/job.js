@@ -4,6 +4,7 @@ const { Job } = require('../models')
 const { User } = require('../models')
 const { tokenExtractor } = require('../utils/middleware')
 const { validateJobInput } = require('../utils/validate_input.js')
+const { checkMissing } = require('../utils/checks')
 
 function hoursToDecimal(hours,minutes) {
     if (minutes === 0) {
@@ -13,27 +14,20 @@ function hoursToDecimal(hours,minutes) {
     return decimalHours
 }
 
-function checkErrors(parameter, message, response) {
-    if (!parameter){
-        return response.status(401).json({ error: message})
-    }
-}
-
 jobRouter.post('/', tokenExtractor, async (request, response) => {
 
     try {
 
         const {squad, context, date, time, location, hours, minutes } = request.body
+        checkMissing(squad, 'Virheellinen ryhmä', response)
+        checkMissing(date, 'Virheellinen päivämäärä', response)
+        checkMissing(time, 'Virheellinen aikaleima', response)
+        checkMissing(location, 'Virheellinen sijainti', response)
+        checkMissing(hours, 'Virheelliset työtunnit', response)
+        checkMissing(minutes, 'Virheelliset minuutit', response)
 
         const intHours = parseInt(hours)
         const intMinutes = parseInt(minutes)
-
-        checkErrors(squad, 'Virheellinen ryhmä', response)
-        checkErrors(date, 'Virheellinen päivämäärä', response)
-        checkErrors(time, 'Virheellinen aikaleima', response)
-        checkErrors(location, 'Virheellinen sijainti', response)
-        checkErrors(hours, 'Virheelliset työtunnit', response)
-        checkErrors(minutes, 'Virheelliset minuutit', response)
 
         const checkJobErrors = validateJobInput(squad, context, date, time, location, intHours, intMinutes)
 
