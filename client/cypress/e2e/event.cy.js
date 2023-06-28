@@ -20,7 +20,7 @@ describe('Event', function() {
             category: 'm20'
         }
         cy.request('POST', 'http://localhost:3001/api/team', team)
-        cy.request('GET', 'http://localhost:3001/api/login')
+        cy.request('POST', 'http://localhost:3001/api/auth/logout')
         cy.visit('http://localhost:3001')
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')

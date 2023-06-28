@@ -36,7 +36,7 @@ describe('Password reset', function () {
                     passwordConfirm: 'lolleropollero'
                 }
                 cy.request('POST', 'http://localhost:3001/api/register/', user)
-                cy.request('GET', 'http://localhost:3001/api/login')
+                cy.request('POST', 'http://localhost:3001/api/auth/logout')
                 cy.visit('http://localhost:3001/requestpassword')
                 cy.get('#email').type(userEmail)
                 cy.get('#send-request-button').click()

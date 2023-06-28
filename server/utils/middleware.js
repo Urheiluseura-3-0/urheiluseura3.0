@@ -25,7 +25,7 @@ const errorHandler = (error, request, response, next) => {
 const tokenExtractor = (request, response, next) => {
 
     const cookies = new Cookies(request.headers.cookie)
-    const authorization = cookies.get('Token')
+    const authorization = cookies.get('UrheiluseuraToken')
 
     if (authorization) {
         try {
