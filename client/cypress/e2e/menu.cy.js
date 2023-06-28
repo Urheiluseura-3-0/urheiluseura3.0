@@ -624,7 +624,7 @@ describe('Menu', function() {
             const role = {
                 isForeman : 1,
                 isSupervisor: 1,
-                isWorker : 1,
+                isWorker : 0,
                 isCoach : 0
             }
 
@@ -660,7 +660,7 @@ describe('Menu', function() {
         })
 
         it('Frontpage button routes back to frontpage', function() {
-            cy.get('#unconfirmed-link').click()
+            cy.get('#unconfirmed-jobs-link').click()
             cy.get('#frontpage-link').click()
             cy.contains('Hyväksymättömät työtunnit')
             cy.url().should('include', '/home')
