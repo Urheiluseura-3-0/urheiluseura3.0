@@ -6,32 +6,31 @@
 
 2. Tapahtumien ja työtuntien hyväksymismahdollisuus
 
-3. Palkanmaksutietojen ulosottaminen CSV tiedostona
+3. Palkanmaksutietojen ulosottaminen CSV-tiedostona
+
+4. Eri käyttäjäroolien etusivunäkymän parantaminen
+
+5. Adminin toiminnallisuudet
 
 ## Koodiin ja ohjelmointiprosessiin liittyvät parannukset
 
 ### Testaus ja CI
 
 1. Frontendiin yksikkötestaus
-  - Frontendin testaamiseen käytetään ainoastaan end to end -testejä. E2E-testit sisältävät paljon sellaista, mitä voitasiin testata yksikkötesteillä. Yksikkötestien lisäämisellä nopeutetaan e2e-testien suorittamista. 
+   - Frontendin testaamiseen käytetään ainoastaan end to end -testejä. End to end -testit sisältävät paljon sellaista, mitä voitasiin testata yksikkötesteillä. Yksikkötestien lisäämisellä nopeutetaan end to end -testien suorittamista. 
 
 2. CI-putken tarkempi konfiguraatio
-  - Esim cypress testejä ei tarvitse ajaa joka puskun yhteydessä.
+   - Esim. Cypress-testejä ei tarvitse ajaa joka puskun yhteydessä.
+
+3. Cypressin password reset -testien korjaus
+   - Tämänhetkinen sähköpostinlähetys toimii välillä liian hitaasti, mikä johtaa testin satunnaiseen hajoamiseen.
+
+### Token
+
+1. Käyttäjän session token-logiikan parannus
+   - Token vanhentuu 30 minuutin kuluttua kirjautumisesta, jolloin käyttäjä kirjataan ulos ilman varoitusta.
+
+2. CSRF-tokenin lisäys lomakkeisiin
+   - Kun sovelluksen siirtää varsinaiseen tuotantoympäristöön, csrf-haavoittuvuus kannattaa ottaa huomioon. Katso lisätietoja [täältä](https://hy-tsoha.github.io/materiaali/osa-4/#tietoturva) kohdasta CSRF-haavoittuvuus.
 
 
-
-
-
-
-Toiminnallisuudet
--Valvojan näkymä 1.
--Tapahtumien ja työtuntien hyväksymismahdollisuus 2.
--Palkanmaksutietojen ulosottaminen CSV tiedostona 3.
-
-Koodin parannus
--Token logiikan parannus
--CSRF-tokenin lisäys
--Frontendiin yksikkötestaus 1.
--CI:sta pois cypress puskujen yhteydessä 2.
--Käyttäjän etusivunäkymä
--Cypress reset testien korjaus
