@@ -10,7 +10,7 @@ function hoursToDecimal(hours,minutes) {
     if (minutes === 0) {
         return hours
     }
-    const decimalHours = hours + minutes/60
+    const decimalHours = hours + minutes / 60
     return decimalHours
 }
 
@@ -41,7 +41,7 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
         const finduser = await User.findByPk(request.decodedToken.id)
 
         if (!finduser) {
-            return response.status(401).json({error: 'Virhe hakiessa käyttäjää'})
+            return response.status(401).json({ error: 'Virhe hakiessa käyttäjää' })
         }
 
         const newdate = new Date(date)
@@ -63,7 +63,28 @@ jobRouter.post('/', tokenExtractor, async (request, response) => {
         const savedJob = await Job.create(job.dataValues)
 
         return response.status(200).json(savedJob)
- 
+
+    } catch (error) {
+        return response.status(400)
+    }
+})
+
+jobRouter.get('/unconfirmed', tokenExtractor, async (request, response) => {
+
+    try {
+        const finduser = await User.findByPk(request.decodedToken.id)
+        if (finduser.isForeman === 1 || finduser.isAdmin === 1) {
+            const jobs = await Job.findAll({
+                where: {
+                    status: 0
+                }
+            })
+
+            return response.json(jobs)
+        } else {
+            return response.status(403).json({ error: 'Oikeudet puuttuu' })
+        }
+
     } catch (error) {
         return response.status(400)
     }
