@@ -199,7 +199,7 @@ describe('Joblist', function () {
 
     describe('Accepted jobs', () => {
 
-        it('Acepted jobs can be displayed by pressing the button', function () {
+        it('Accepted jobs can be displayed by pressing the button', function () {
             cy.get('#confirmedJobs-button').click()
             cy.get('#confirmedJobs-button')
                 .should('have.class', 'bg-emerald-400')

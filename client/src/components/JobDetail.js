@@ -1,19 +1,24 @@
 
-const JobDetail = ({  oneJob }) => {
+const JobDetail = ({ oneJob, unconfirmed }) => {
     const jobDetails = oneJob
     const dateTime = new Date(jobDetails.dateTime)
     const createdAtDate = new Date(jobDetails.createdAt)
 
     const hours = Math.floor(oneJob.hours)
     const minutes = Math.round((oneJob.hours - hours) * 60)
-    const hoursMinutes= `${hours}h ${minutes}min`
+    const hoursMinutes = `${hours}h ${minutes}min`
 
     return (
         <div className='p-6 max-w-lg bg-white rounded-xl shadow-lg space-y-3'>
             <h2 className='font-bold text-2xl text-center text-teal-500'>Tarkemmat tiedot</h2>
             <div className='peer border rounded border-gray-800 rounded-xs overflow-auto'>
-                <table id = 'jobdetail' className='w-full'>
+                <table id='jobdetail' className='w-full'>
                     <tbody>
+                        {unconfirmed &&
+                        <tr>
+                            <td className='p-2 font-semibold'>Tekijä</td>
+                            <td className='p-2'>{jobDetails.CreatedBy.firstName} {jobDetails.CreatedBy.lastName}</td>
+                        </tr>}
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Ryhmä</td>
                             <td className='p-2'>{jobDetails.squad}</td>
@@ -46,7 +51,7 @@ const JobDetail = ({  oneJob }) => {
                             <td className='p-2 font-semibold'>Luotu</td>
                             <td className='p-2'>
                                 {createdAtDate.toLocaleDateString() + ' '
-                                +  createdAtDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                                    + createdAtDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                         </tr>
                         <tr className='bg-stone-100'>
                             <td className='p-2 font-semibold'>Hyväksyjän nimi</td>

@@ -387,6 +387,7 @@ test('foreman can fetch unconfirmed events', async () => {
         .set('Cookie', finalToken)
         .expect(200)
     expect(response.body).toHaveLength(3)
+    expect(response.body.every(obj => 'CreatedBy' in obj)).toBe(true)
 })
 
 test('admin can fetch unconfirmed events', async () => {
@@ -403,4 +404,5 @@ test('admin can fetch unconfirmed events', async () => {
         .set('Cookie', finalToken)
         .expect(200)
     expect(response.body).toHaveLength(3)
+    expect(response.body.every(obj => 'CreatedBy' in obj)).toBe(true)
 })

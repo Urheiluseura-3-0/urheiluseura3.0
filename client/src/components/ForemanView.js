@@ -74,7 +74,7 @@ const ForemanView = () => {
         }
     }
 
-    const sortByStatus = (event) => {
+    const sortByFirstname = (event) => {
         event.preventDefault()
 
         setSortedByDate('')
@@ -83,9 +83,15 @@ const ForemanView = () => {
 
         const sorted = [...unconfirmedJobs]
         sorted.sort((a, b) => {
-            const statusA = a.status
-            const statusB = b.status
-            return statusA - statusB
+            const nameA = a.CreatedBy.firstName.toLowerCase()
+            const nameB = b.CreatedBy.firstName.toLowerCase()
+            if (nameA > nameB) {
+                return 1
+            } else if (nameA < nameB) {
+                return -1
+            } else {
+                return 0
+            }
         })
 
         if (sortedByStatus === 'confirmedFirst') {
@@ -106,11 +112,11 @@ const ForemanView = () => {
 
         const sorted = [...unconfirmedJobs]
         sorted.sort((a, b) => {
-            const teamA = a.hours
-            const teamB = b.hours
-            if (teamA > teamB) {
+            const hoursA = a.hours
+            const hoursB = b.hours
+            if (hoursA > hoursB) {
                 return 1
-            } else if (teamA < teamB) {
+            } else if (hoursA < hoursB) {
                 return -1
             } else {
                 return 0
@@ -157,18 +163,12 @@ const ForemanView = () => {
             render: (job) => job.squad,
         },
         {
-            id: 'status',
-            text: 'Status',
-            sort: sortByStatus,
-            render: (job) => (
-                <span
-                    className={
-                        String(job.status) === '0' ? 'text-rose-400' : 'text-emerald-400'
-                    }
-                >
-                    {String(job.status) === '0' ? 'Odottaa hyväksyntää' : 'Hyväksytty'}
-                </span>
-            )
+            id: 'createdBy',
+            text: 'Tekijä',
+            sort: sortByFirstname,
+            render: (job) => {
+                return `${job.CreatedBy.firstName} ${job.CreatedBy.lastName}`
+            }
         },
     ]
     return (
@@ -182,7 +182,7 @@ const ForemanView = () => {
                 handleItemClick={handleEventClick}
             />
             <div>
-                {clickedUnconfirmed !== '' && <JobDetail oneJob={clickedUnconfirmed} />}
+                {clickedUnconfirmed !== '' && <JobDetail oneJob={clickedUnconfirmed} unconfirmed={true}/>}
             </div>
         </div>
     )
