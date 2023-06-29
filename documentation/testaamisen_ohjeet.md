@@ -1,6 +1,6 @@
 # Ohjeet testien ajamiseen paikallisesti
 
-## Backend testit
+## Backend-testit
 
 1. Käynnistä testitietokanta (ks. tarvittaessa tietokantojen asennusohjeet: https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md)
 
@@ -19,7 +19,7 @@
 ```
 Konsoliin muodostuu yksinkertainen yhteenveto. Tarkempi testikattavuusraportti generoituu coverage-kansioon html-muodossa.
 
-## E2E-testit
+## End to end -testit
 
 1. Käynnistä testitietokanta (ks. tarvittaessa tietokantojen asennusohjeet: https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md)
 
