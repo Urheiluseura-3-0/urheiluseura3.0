@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 import userService from '../services/user'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Notification from './Notification'
+import FormField from './FormField'
+import SendButton from './SendButton'
+import TextAndLink from './TextAndLink'
 
 const LoginForm = ({ tokenHandler }) => {
     const navigate = useNavigate()
@@ -59,81 +62,54 @@ const LoginForm = ({ tokenHandler }) => {
             {showAlert && <Notification message={alertMessage} />}
             <form onSubmit={handleLogin}>
                 <div className='space-y-3'>
-                    <div className='pt-3'>
-                        <label className='block'>Käyttäjänimi</label>
-                        <input
-                            id='username'
-                            type='text'
-                            value={username}
-                            maxLength={15}
-                            name='username'
-                            onChange={({ target }) => {
-                                setUsername(target.value)
-                                setIsUsernameValid(target.value.length >= 5 && target.value.length <= 15)
-                            }}
-                            className={`peer border rounded p-2 w-full ${username.length === 0 || isUsernameValid
-                                ? 'border-gray-300'
-                                : 'border-red-500'
-                            }`}
-                        />{username.length === 0 || isUsernameValid ? null : (
-                            <p id='username-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                Käyttäjänimen minimipituus on 5 merkkiä
-                            </p>
-                        )}
-                    </div>
+                    <FormField
+                        label='Käyttäjänimi'
+                        id='username'
+                        type='text'
+                        value={username}
+                        maxLength={15}
+                        onChange={({ target }) => {
+                            setUsername(target.value)
+                            setIsUsernameValid(target.value.length >= 5 && target.value.length <= 15)
+                        }}
+                        isValid={isUsernameValid}
+                        errorId='username-error'
+                        errorMessage={'Käyttäjänimen minimipituus on 5 merkkiä'}
+                    />
+                    <FormField
+                        label='Salasana'
+                        id='password'
+                        type='password'
+                        value={password}
+                        maxLength={30}
+                        onChange={({ target }) => {
+                            setPassword(target.value)
+                            setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
+                        }}
+                        isValid={isPasswordValid}
+                        errorId='password-error'
+                        errorMessage={'Salasanan minimipituus on 10 merkkiä'}
+                    />
+
+                    <SendButton
+                        id='login-button'
+                        isInputValid={isInputValid}
+                        onClick={handleLogin}
+                        message='Syötä käyttäjätunnus ja salasana'
+                        text='Kirjaudu'
+                    />
                     <div>
-                        <label className='block'>Salasana</label>
-                        <input
-                            id='password'
-                            type='password'
-                            value={password}
-                            maxLength={30}
-                            name='password'
-                            onChange={({ target }) => {
-                                setPassword(target.value)
-                                setIsPasswordValid(target.value.length >= 10 && target.value.length <= 30)
-                            }}
-                            className={`peer border rounded p-2 w-full ${password.length === 0 || isPasswordValid
-                                ? 'border-gray-300'
-                                : 'border-red-500'
-                            }`}
-                        />{password.length === 0 || isPasswordValid ? null : (
-                            <p id='password-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                Salasanan minimipituus on 10 merkkiä
-                            </p>
-                        )}
+                        <TextAndLink
+                            text='Unohditko salasanasi? '
+                            linktext='Palauta tästä'
+                            to='/requestpassword'
+                            id='reset-password-link'/>
                     </div>
-                    <div>
-                        <button
-                            id='login-button'
-                            className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isInputValid
-                                ? ''
-                                : 'opacity-30 cursor-not-allowed hover:'}
-                                font-semibold text-white
-                            `}
-                            disabled={!isInputValid}
-                            title={isInputValid ? '' : 'Syötä käyttäjätunnus ja salasana'}
-                            type='submit'>
-                            Kirjaudu</button>
-                    </div>
-                    <div>
-                        <span className='text-sm text-teal-500'>Unohditko salasanasi? </span>
-                        <Link
-                            id='reset-password-link'
-                            className='text-sm text-blue-700 underline'
-                            to="/requestpassword">
-                            Palauta tästä
-                        </Link>
-                    </div>
-                </div>
-                <div>
-                    <span className='text-sm text-teal-500'>Eikö sinulla ole vielä käyttäjää? </span>
-                    <Link
-                        id='register-link'
-                        className='text-sm text-blue-700 underline'
-                        to="/register">
-                        Rekisteröidy
-                    </Link>
+                    <TextAndLink
+                        text='Eikö sinulla ole vielä käyttäjää? '
+                        linktext='Rekisteröidy'
+                        to='/register'
+                        id='register-link'/>
                 </div>
             </form>
         </div>

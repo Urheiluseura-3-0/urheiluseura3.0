@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import Notification from './Notification'
 import resetPasswordService from '../services/resetpassword'
+import FormField from './FormField'
+import SendButton from './SendButton'
 
 const ResetPasswordRequest = () => {
     const [email, setEmail] = useState('')
@@ -45,36 +47,26 @@ const ResetPasswordRequest = () => {
             <p>Anna sähköpostiosoitteesi, niin sinulle lähetetään ohjeet salasanan vaihtamiseksi.</p>
             <form>
                 <div className='space-y-3'>
-                    <div className='pt-3'>
-                        <label className='block'>Sähköposti</label>
-                        <input
-                            id='email'
-                            type='text'
-                            className='peer border rounded p-2 w-full border-gray-300'
-                            maxLength={40}
-                            value={email}
-                            onChange={({ target }) => {
-                                setEmail(target.value)
-                                setIsEmailValid(target.value.length >= 5 && target.value.length <= 40)
-                            }} />
-                        {email.length === 0 || isEmailValid
-                            ? null
-                            : (
-                                <p id='email-error' className='peer-focus:hidden text-red-500 text-sm'>
-                                    Tarkista sähköpostiosoite
-                                </p>
-                            )}
-                    </div>
-                    <button id='send-request-button'
-                        className={`bg-teal-400 hover:bg-teal-600 px-5 py-1 leading-5 rounded-full ${isEmailValid
-                            ? ''
-                            : 'opacity-30 cursor-not-allowed hover:'}
-                            font-semibold text-white
-                            `}
-                        disabled={!isEmailValid}
-                        title={isEmailValid ? '' : 'Anna kelvollinen sähköpostiosoite'}
-                        type='submit'
-                        onClick={handlePasswordResetRequest}>Lähetä</button>
+                    <FormField
+                        label='Sähköposti'
+                        id='email'
+                        type='text'
+                        maxlength={40}
+                        value={email}
+                        onChange={({ target }) => {
+                            setEmail(target.value)
+                            setIsEmailValid(target.value.length >= 5 && target.value.length <= 40)
+                        }}
+                        isValid={isEmailValid}
+                        errorId='email-error'
+                        errorMessage='Tarkista sähköpostiosoite'
+                    />
+                    <SendButton
+                        id='send-request-button'
+                        isInputValid={isEmailValid}
+                        onClick={handlePasswordResetRequest}
+                        message='Anna kelvollinen sähköpostiosoite'
+                        text='Lähetä' />
                 </div>
             </form>
             <div>
