@@ -20,7 +20,7 @@ Helsingin yliopiston Ohjelmistotuotantoprojekti, kesä 2023
 ### Projektin edistyminen
 * [Product backlog](https://github.com/orgs/Urheiluseura-3-0/projects/2)
 * [Task board](https://github.com/orgs/Urheiluseura-3-0/projects/2/views/3?layout=board)
-* [Tuntikirjanpito](https://github.com/orgs/Urheiluseura-3-0/projects/2/insights/6)
+* [Tuntikirjanpito](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/tuntikirjanpito.md)
 
 
 
