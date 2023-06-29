@@ -25,6 +25,9 @@
 3. Cypressin password reset -testien korjaus
    - Tämänhetkinen sähköpostinlähetys toimii välillä liian hitaasti, mikä johtaa testin satunnaiseen hajoamiseen.
 
+4. Frontendin testien refaktorointi
+   - Testien refaktorointi on jo aloitettu branchissa refactoring/frontendTest.
+
 ### Token
 
 1. Käyttäjän session token-logiikan parannus
@@ -33,4 +36,6 @@
 2. CSRF-tokenin lisäys lomakkeisiin
    - Kun sovelluksen siirtää varsinaiseen tuotantoympäristöön, csrf-haavoittuvuus kannattaa ottaa huomioon. Katso lisätietoja [täältä](https://hy-tsoha.github.io/materiaali/osa-4/#tietoturva) kohdasta CSRF-haavoittuvuus.
 
+## GDPR
 
+GDPR-selvitys tietokantaan tallennettavista henkilötiedoista.
