@@ -3,7 +3,7 @@
 Sovellus on toteutettu hyvin pitkälti [Full stack open](https://fullstackopen.com/en/#course-contents) kurssin materiaaleja hyödyntäen. Jos teknologia on merkitty tähdellä *, sitä ei löydy kurssin materiaaleista.
 ## Kehitysympäristö
 ### Yleisrakenne
-![Frontend-Backend-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/FRONTEND-BACKEND-database.drawio.png)
+![Frontend-Backend-Database-image](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/pictures/FRONTEND-BACKEND-database.drawio.png)
 
 ### Frontend
 Frontendin koodi löytyy kansiosta [**client**](https://github.com/Urheiluseura-3-0/urheiluseura3.0/tree/main/client).
@@ -76,7 +76,7 @@ Backendin koodi löytyy kansiosta [**server**](https://github.com/Urheiluseura-3
 Sovelluksen tietokantana käytetään [Postgresql-tietokantaa](https://www.postgresql.org/docs/), jota käsitellään jo aiemmin mainitun Sequelize ORM-kirjaston avulla.
 Tietokanta pyörii kehitysympäristössä Docker-kontissa. Kontteja on kaksi erillistä, [yksi kehityskäyttöön ja toinen testaukseen](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/dev_setup.md#tietokannan-ensimm%C3%A4inen-k%C3%A4ytt%C3%B6%C3%B6notto-kehitysymp%C3%A4rist%C3%B6%C3%A4-varten).
 
-[Kuva tietokantataulusta](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/documentation-up/documentation/pictures/Tietokantakaavio.png)
+[Kuva tietokantataulusta](https://github.com/Urheiluseura-3-0/urheiluseura3.0/blob/main/documentation/pictures/Tietokantakaavio.png)
 
 ## Tuotantoympäristö
 
