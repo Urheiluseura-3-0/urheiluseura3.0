@@ -12,4 +12,9 @@ const getJobs = async jobData => {
     return response.data
 }
 
-export default { addJob, getJobs }
+const getUnconfirmedJobs = async jobData => {
+    const response = await axios.get(`${baseUrl}/unconfirmed`, jobData)
+    return response.data
+}
+
+export default { addJob, getJobs, getUnconfirmedJobs }

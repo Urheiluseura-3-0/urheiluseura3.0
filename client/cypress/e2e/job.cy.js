@@ -15,7 +15,7 @@ describe('Job', function () {
 
         }
         cy.request('POST', 'http://localhost:3001/api/register/', user)
-        cy.request('GET', 'http://localhost:3001/api/login')
+        cy.request('POST', 'http://localhost:3001/api/auth/logout')
         cy.visit('http://localhost:3001')
         cy.get('#username').type('Tiina14')
         cy.get('#password').type('salainen1234')
@@ -68,7 +68,7 @@ describe('Job', function () {
 
         it('user cannot send form if location name is too short', function () {
             cy.get('input[id="location"]').type('E')
-            cy.get('Body').click({ x: 266, y: 32 })
+            cy.get('input[id="squad"]')
             cy.get('#add-job').should('be.disabled')
         })
 

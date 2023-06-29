@@ -10,7 +10,7 @@ let initialUser
 const expectLoginStatus = async (user, expectedStatus, message) => {
 
     const response = await api
-        .post('/api/login')
+        .post('/api/auth/login')
         .send(user)
     
     if(message){
@@ -63,11 +63,11 @@ test('existing user cannot log in with wrong password', async () => {
 test('logged in user can log out', async () => {
 
     await api
-        .post('/api/login')
+        .post('/api/auth/login')
         .send(existingUser)
     
     const response = await api
-        .get('/api/login')
+        .post('/api/auth/logout')
     
     expect(response.status).toBe(200)
     expect(response.body.message).toBe('Uloskirjautuminen onnistui')

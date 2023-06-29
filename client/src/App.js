@@ -8,6 +8,7 @@ import RegisterForm from './components/RegisterForm'
 import FrontPage from './components/FrontPage'
 import EventForm from './components/EventForm'
 import JobForm from './components/JobForm'
+import JobList from './components/JobList'
 import UserMenu from './components/UserMenu'
 import DefaultMenu from './components/DefaultMenu'
 import Cookies from 'universal-cookie'
@@ -15,23 +16,25 @@ import './style.css'
 import ResetPasswordRequest from './components/ResetPasswordRequest'
 import ResetPasswordForm from './components/ResetPasswordForm'
 import ProtectedPath from './components/ProtectedPath'
+import EventList from './components/EventList'
+import ForemanView from './components/ForemanView'
 
 
 
 const App = () => {
     const navigate = useNavigate()
     const cookies = new Cookies()
-    const [token, setToken] = useState(cookies.get('Token'))
+    const [token, setToken] = useState(cookies.get('UrheiluseuraToken'))
 
     const handleLogout = () => {
         UserService.logout()
-        cookies.remove('Token')
+        cookies.remove('UrheiluseuraToken')
         setToken('')
         navigate('/')
     }
 
     const handleSetToken = () => {
-        const value = (cookies.get('Token'))
+        const value = (cookies.get('UrheiluseuraToken'))
         setToken(value)
     }
 
@@ -56,11 +59,19 @@ const App = () => {
                         </Route>
                         <Route element={<ProtectedPath token={token}
                             acceptedRoles={['worker', 'coach', 'foreman', 'supervisor', 'admin']}/>}>
-                            <Route path="/home" element={<FrontPage logout={handleLogout} />} />
+                            <Route path="/home" element={<FrontPage token={token}/>} />
                         </Route>
-                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'coach']}/>}>
+                        <Route element={<ProtectedPath token={token} acceptedRoles={['worker', 'admin']}/>}>
                             <Route path="/event" element={<EventForm />} />
+                            <Route path="/events" element={<EventList />} />
+                        </Route>
+                        <Route element={<ProtectedPath token={token} acceptedRoles={['coach', 'admin']}/>}>
                             <Route path="/job" element={<JobForm />} />
+                            <Route path="/jobs" element={<JobList />} />
+                        </Route>
+                        <Route element={<ProtectedPath token={token}
+                            acceptedRoles={['foreman', 'admin']}/>}>
+                            <Route path="/unconfirmed" element={<ForemanView />} />
                         </Route>
                         <Route element={<ProtectedPath token={token} acceptedRoles={[]}/>}>
                             <Route path="*"/>

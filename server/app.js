@@ -24,7 +24,7 @@ app.use(express.static('build'))
 app.use(cookieParser())
 
 
-app.use('/api/login', userRouter)
+app.use('/api/auth', userRouter)
 app.use('/api/register', registerRouter)
 app.use('/api/event', eventRouter)
 app.use('/api/team', teamRouter)

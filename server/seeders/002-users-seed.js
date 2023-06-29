@@ -50,7 +50,7 @@ module.exports = {
                 updated_at: new Date(),
             },
             {
-                username: 'DuunariValmentajaJoJo',
+                username: 'DuunValmentJoJo',
                 password: '$2b$10$gsgDpYmJcG3zgMJmyNH0gu83c5OAARlc.ZqOtjDSGxoujNN/2bVFm',
                 first_name: 'Henkilö',
                 last_name: 'Henkilö',
@@ -70,7 +70,7 @@ module.exports = {
                 updated_at: new Date(),
             },
             {
-                username: 'JoukkueenJohtaja',
+                username: 'JoukkueJohtaja',
                 password: '$2b$10$gsgDpYmJcG3zgMJmyNH0gu83c5OAARlc.ZqOtjDSGxoujNN/2bVFm',
                 first_name: 'Henkilö',
                 last_name: 'Henkilö',
@@ -150,7 +150,7 @@ module.exports = {
                 updated_at: new Date(),
             },
             {
-                username: 'DuunariValmentaja',
+                username: 'DuunValment',
                 password: '$2b$10$gsgDpYmJcG3zgMJmyNH0gu83c5OAARlc.ZqOtjDSGxoujNN/2bVFm',
                 first_name: 'Henkilö',
                 last_name: 'Henkilö',
@@ -163,7 +163,7 @@ module.exports = {
                 admin_approved: 1,
                 is_admin: 0,
                 is_coach: 1,
-                is_worker: 0,
+                is_worker: 1,
                 is_supervisor: 0,
                 is_foreman: 0,
                 created_at: new Date(),
